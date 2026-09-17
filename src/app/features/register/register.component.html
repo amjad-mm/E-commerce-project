@@ -123,14 +123,14 @@
             <label class="sr-field-label">FIRST NAME // 01 *</label>
             <input type="text" placeholder="MARCUS" class="sr-field-input" formControlName="firstName" [class.sr-field-input--invalid]="isInvalid('firstName')" />
             @if (isInvalid('firstName')) {
-              <span class="sr-validation-error">First name is required.</span>
+              <span class="sr-validation-error">{{ nameError('firstName') }}</span>
             }
           </div>
           <div class="sr-form-field">
             <label class="sr-field-label">LAST NAME // 02 *</label>
             <input type="text" placeholder="VANCE" class="sr-field-input" formControlName="lastName" [class.sr-field-input--invalid]="isInvalid('lastName')" />
             @if (isInvalid('lastName')) {
-              <span class="sr-validation-error">Last name is required.</span>
+              <span class="sr-validation-error">{{ nameError('lastName') }}</span>
             }
           </div>
         </div>
@@ -161,14 +161,20 @@
         <div class="sr-form-row">
           <div class="sr-form-field">
             <label class="sr-field-label">PASSWORD // 05 *</label>
-            <input type="password" placeholder="••••••••••••" class="sr-field-input" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+            <div class="sr-password-wrap">
+              <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+              <button type="button" class="sr-eye-btn" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">{{ showPassword ? 'HIDE' : 'SHOW' }}</button>
+            </div>
             @if (isInvalid('password')) {
-              <span class="sr-validation-error">Password must be at least 8 characters.</span>
+              <span class="sr-validation-error">{{ passwordError() }}</span>
             }
           </div>
           <div class="sr-form-field">
             <label class="sr-field-label">CONFIRM PASSWORD // 06 *</label>
-            <input type="password" placeholder="••••••••••••" class="sr-field-input" formControlName="confirmPassword" [class.sr-field-input--invalid]="isInvalid('confirmPassword') || isPasswordMismatch()" />
+            <div class="sr-password-wrap">
+              <input [type]="showConfirmPassword ? 'text' : 'password'" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="confirmPassword" [class.sr-field-input--invalid]="isInvalid('confirmPassword') || isPasswordMismatch()" />
+              <button type="button" class="sr-eye-btn" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">{{ showConfirmPassword ? 'HIDE' : 'SHOW' }}</button>
+            </div>
             @if (isInvalid('confirmPassword')) {
               <span class="sr-validation-error">Please confirm your password.</span>
             } @else if (isPasswordMismatch()) {
@@ -188,7 +194,7 @@
           <span class="sr-validation-error">You must accept the terms to continue.</span>
         }
 
-        <button type="submit" class="sr-create-btn" [disabled]="isLoading">
+        <button type="submit" class="sr-create-btn" [disabled]="registerForm.invalid || isLoading">
           {{ isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT' }}
           <svg xmlns="http://www.w3.org/2000/svg" class="sr-create-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />

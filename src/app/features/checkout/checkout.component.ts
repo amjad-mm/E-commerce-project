@@ -57,11 +57,14 @@ import { OrderService } from '../../core/service/order.service';
             <section class="sr-panel">
               <div class="sr-panel__top"><span>02 // DELIVERY COORDINATES</span><b>INDIA</b></div>
               <div class="sr-panel__body sr-fields">
-                <label>
+                <label class="sr-address-field">
                   <span>DELIVERY ADDRESS</span>
-                  <textarea formControlName="address" rows="4" autocomplete="street-address" placeholder="HOUSE / STREET / CITY / PINCODE"></textarea>
+                  <textarea formControlName="address" rows="4" autocomplete="street-address" placeholder="HOUSE / STREET / LOCALITY"></textarea>
                   @if (checkoutForm.controls.address.invalid && checkoutForm.controls.address.touched) { <small>DELIVERY ADDRESS IS REQUIRED.</small> }
                 </label>
+                <label><span>CITY</span><input formControlName="city" autocomplete="address-level2" placeholder="ENTER CITY" />@if (checkoutForm.controls.city.invalid && checkoutForm.controls.city.touched) { <small>ENTER A VALID CITY.</small> }</label>
+                <label><span>STATE</span><input formControlName="state" autocomplete="address-level1" placeholder="ENTER STATE" />@if (checkoutForm.controls.state.invalid && checkoutForm.controls.state.touched) { <small>ENTER A VALID STATE.</small> }</label>
+                <label><span>PINCODE</span><input formControlName="pincode" inputmode="numeric" autocomplete="postal-code" placeholder="6-DIGIT PINCODE" />@if (checkoutForm.controls.pincode.invalid && checkoutForm.controls.pincode.touched) { <small>ENTER A VALID 6-DIGIT PINCODE.</small> }</label>
                 <div class="sr-delivery-note"><span>✓</span> EXPRESS COURIER // TRACKING ISSUED AFTER DISPATCH</div>
               </div>
             </section>
@@ -129,7 +132,7 @@ import { OrderService } from '../../core/service/order.service';
     .sr-panel, .sr-order { background: #fff; border: 1px solid #111; box-shadow: 6px 6px 0 rgba(17,17,17,.9); }
     .sr-panel__top, .sr-order__header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid #111; font: 800 11px 'Courier New', monospace; letter-spacing: .05em; }
     .sr-panel__top b { color: #6d9200; } .sr-panel__body { padding: 22px; }
-    .sr-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } .sr-fields label:last-child { grid-column: 1 / -1; }
+    .sr-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } .sr-address-field { grid-column: 1 / -1; }
     label, .sr-payment { display: grid; gap: 8px; font: 800 11px 'Courier New', monospace; letter-spacing: .04em; }
     input, textarea, select { width: 100%; border: 1px solid #bdbab3; border-radius: 0; padding: 13px; outline: none; color: #111; background: #fff; font: 700 13px Arial, sans-serif; }
     textarea { resize: vertical; min-height: 112px; } input:focus, textarea:focus, select:focus { border-color: #111; box-shadow: 3px 3px 0 #d9f13d; }
@@ -157,9 +160,12 @@ export class CheckoutComponent {
  
   readonly items$ = this.store.select(selectCartItems);
   readonly checkoutForm = this.formBuilder.nonNullable.group({
-    customerName: ['', Validators.required],
+    customerName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80), Validators.pattern(/^[\p{L}][\p{L}\s'-]*$/u)]],
     phone: ['', [Validators.required, Validators.pattern(/^[0-9+() -]{7,20}$/)]],
-    address: ['', Validators.required],
+    address: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]],
+    city: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60), Validators.pattern(/^[\p{L}][\p{L}\s'-]*$/u)]],
+    state: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60), Validators.pattern(/^[\p{L}][\p{L}\s'-]*$/u)]],
+    pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     paymentMethod: ['cash-on-delivery' as Order['paymentMethod'], Validators.required]
   });
   total = 0;
@@ -193,7 +199,10 @@ export class CheckoutComponent {
         userEmail: currentUser.email,
         customerName: formValues.customerName.trim(),
         phone: formValues.phone.trim(),
-        deliveryAddress: formValues.address.trim(),
+        deliveryAddress: `${formValues.address.trim()}, ${formValues.city.trim()}, ${formValues.state.trim()} - ${formValues.pincode.trim()}`,
+        city: formValues.city.trim(),
+        state: formValues.state.trim(),
+        pincode: formValues.pincode.trim(),
         items: items as CartItem[],
         total: this.total,
         paymentMethod: formValues.paymentMethod,

@@ -7,6 +7,9 @@ export interface Order {
   customerName: string;
   phone: string;
   deliveryAddress: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
   items: CartItem[];
   total: number;
   paymentMethod: 'cash-on-delivery' | 'online-payment';

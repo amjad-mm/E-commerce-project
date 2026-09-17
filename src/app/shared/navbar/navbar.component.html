@@ -37,11 +37,11 @@
 
       <!-- Nav links -->
       <nav class="sr-nav-links">
-        <a href="#">NEW</a>
-        <a href="#">MEN</a>
-        <a href="#">WOMEN</a>
-        <a href="#">SNEAKERS</a>
-        <a href="#">COLLECTIONS</a>
+        <a routerLink="/" routerLinkActive="sr-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">NEW</a>
+        <a routerLink="/" fragment="drops">MEN</a>
+        <a routerLink="/" fragment="drops">WOMEN</a>
+        <a routerLink="/" fragment="drops">SNEAKERS</a>
+        <a routerLink="/" fragment="drops">COLLECTIONS</a>
       </nav>
 
       <!-- Actions -->
@@ -63,7 +63,7 @@
           <button class="sr-account-btn" type="button" routerLink="/login">ACCOUNT</button>
         }
 
-        <button class="sr-bag-btn" routerLink="/cart">
+        <button class="sr-bag-btn" routerLink="/cart" routerLinkActive="sr-bag-btn--active">
           <svg xmlns="http://www.w3.org/2000/svg" class="sr-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1 13H5L6 7z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 7a3 3 0 016 0" />
@@ -71,7 +71,7 @@
           BAG ({{ (cartCount$ | async) ?? 0 }})
         </button>
 
-        <button class="sr-wishlist-nav-btn" type="button" routerLink="/wishlist">
+        <button class="sr-wishlist-nav-btn" type="button" routerLink="/wishlist" routerLinkActive="sr-wishlist-nav-btn--active">
           ♥ ({{ (wishlistCount$ | async) ?? 0 }})
         </button>
 

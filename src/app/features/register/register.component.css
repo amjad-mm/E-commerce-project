@@ -18,6 +18,11 @@
   font-weight: 700;
 }
 
+.sr-password-wrap { position: relative; }
+.sr-field-input--password { padding-right: 58px; }
+.sr-eye-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: #111; cursor: pointer; font: 800 10px 'Courier New', monospace; }
+.sr-create-btn:disabled, .sr-authorize-btn:disabled { cursor: not-allowed; opacity: .5; }
+
 .sr-form-message {
   margin: 0;
   padding: 10px 12px;

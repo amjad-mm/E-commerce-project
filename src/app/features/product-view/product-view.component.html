@@ -3,8 +3,20 @@
 
   @if (product$ | async; as product) {
     <section class="product-view__content">
-      <div class="product-view__image-wrap">
-        <img [src]="product.image" [alt]="product.name" class="product-view__image" />
+      <div class="product-view__gallery">
+        <div class="product-view__image-wrap">
+          <img [src]="selectedImage || getImages(product)[0]" [alt]="product.name" class="product-view__image" />
+          <span class="product-view__zoom-hint">HOVER TO INSPECT +</span>
+        </div>
+        @if (getImages(product).length > 1) {
+          <div class="product-view__thumbnails" aria-label="Product images">
+            @for (image of getImages(product); track image) {
+              <button type="button" [class.product-view__thumbnail--active]="(selectedImage || getImages(product)[0]) === image" (click)="selectImage(image)">
+                <img [src]="image" [alt]="product.name + ' view'" />
+              </button>
+            }
+          </div>
+        }
       </div>
 
       <div class="product-view__details">
@@ -21,9 +33,14 @@
           <div><dt>CATEGORY</dt><dd>{{ product.category }}</dd></div>
         </dl>
 
-        <button type="button" class="product-view__add" (click)="addToCart(product)">
-          ADD TO CART
-        </button>
+        <div class="product-view__purchase">
+          <div class="product-view__quantity" aria-label="Quantity selector">
+            <button type="button" (click)="updateQuantity(quantity - 1)" [disabled]="quantity <= 1" aria-label="Decrease quantity">−</button>
+            <input type="number" min="1" [max]="maxQuantity" [value]="quantity" (change)="updateQuantity(+$any($event.target).value)" aria-label="Quantity" />
+            <button type="button" (click)="updateQuantity(quantity + 1)" [disabled]="quantity >= maxQuantity" aria-label="Increase quantity">+</button>
+          </div>
+          <button type="button" class="product-view__add" (click)="addToCart(product)">ADD {{ quantity }} TO CART</button>
+        </div>
       </div>
     </section>
   } @else {

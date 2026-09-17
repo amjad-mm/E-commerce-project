@@ -6,6 +6,7 @@ import { Products } from '../../core/models/product.model';
 import { ProductService } from '../../core/service/product.service';
 import { CartService } from '../../core/service/cart.service';
 import { NotificationService } from '../../core/service/notification.service';
+import { MAX_ITEM_QUANTITY } from '../../core/constants/commerce.constants';
 
 @Component({
   selector: 'app-product-view',
@@ -34,9 +35,26 @@ export class ProductViewComponent {
     }),
     catchError(() => of(null))
   );
+  selectedImage = '';
+  quantity = 1;
+  readonly maxQuantity = MAX_ITEM_QUANTITY;
 
   addToCart(product: Products): void {
-    this.cartService.addToCart(product);
+    for (let count = 0; count < this.quantity; count += 1) {
+      this.cartService.addToCart(product);
+    }
     this.notificationService.show(`${product.name} added to cart`);
+  }
+
+  getImages(product: Products): string[] {
+    return product.images?.length ? product.images : [product.image];
+  }
+
+  selectImage(image: string): void {
+    this.selectedImage = image;
+  }
+
+  updateQuantity(quantity: number): void {
+    this.quantity = Math.min(Math.max(1, Math.floor(quantity) || 1), this.maxQuantity);
   }
 }

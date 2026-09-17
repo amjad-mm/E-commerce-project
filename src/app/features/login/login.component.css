@@ -20,6 +20,8 @@
   font-weight: 700;
 }
 
+.sr-authorize-btn:disabled { cursor: not-allowed; opacity: .5; }
+
 .sr-form-message {
   margin: 0;
   padding: 10px 12px;

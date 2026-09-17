@@ -77,21 +77,11 @@ export class AppComponent {
     });
   }
 
-  isCartRoute(): boolean {
-    return this.router.url.startsWith('/cart');
-  }
-
-  isRegisterRoute(): boolean {
-    return this.router.url.startsWith('/register');
+  isHomeRoute(): boolean {
+    return this.router.url === '/' || this.router.url === '';
   }
 
   isAuthRoute(): boolean {
-    return this.isRegisterRoute() || this.router.url.startsWith('/login') ||
-      this.router.url.startsWith('/product/') ||
-      this.router.url.startsWith('/checkout') ||
-      this.router.url.startsWith('/order-success/') ||
-      this.router.url.startsWith('/account') ||
-      this.router.url.startsWith('/orders') ||
-      this.router.url.startsWith('/wishlist');
+    return this.router.url.startsWith('/register') || this.router.url.startsWith('/login');
   }
 }

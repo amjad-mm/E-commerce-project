@@ -18,6 +18,8 @@ export class RegisterComponent {
   isLoading = false;
   serverError = '';
   successMessage = '';
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -25,11 +27,11 @@ export class RegisterComponent {
     private readonly router: Router
   ) {
     this.registerForm = this.formBuilder.nonNullable.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', nameValidator],
+      lastName: ['', nameValidator],
       email: ['', [Validators.required, Validators.email]],
       dateOfBirth: [''],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', passwordValidator],
       confirmPassword: ['', Validators.required],
       terms: [false, Validators.requiredTrue]
     }, { validators: passwordsMatchValidator });
@@ -43,6 +45,25 @@ export class RegisterComponent {
   isPasswordMismatch(): boolean {
     return this.registerForm.hasError('passwordMismatch') &&
       (this.registerForm.controls['confirmPassword'].touched || this.submitted);
+  }
+
+  passwordError(): string {
+    const errors = this.registerForm.controls['password'].errors;
+    if (!errors) return '';
+    if (errors['required']) return 'Password is required.';
+    if (errors['minlength']) return 'Use at least 8 characters.';
+    if (errors['uppercase']) return 'Include one uppercase letter.';
+    if (errors['lowercase']) return 'Include one lowercase letter.';
+    if (errors['number']) return 'Include one number.';
+    return 'Include one special character.';
+  }
+
+  nameError(controlName: 'firstName' | 'lastName'): string {
+    const errors = this.registerForm.controls[controlName].errors;
+    if (!errors) return '';
+    if (errors['required']) return 'This name is required.';
+    if (errors['nameLength']) return 'Use 2 to 50 characters.';
+    return 'Use letters, spaces, apostrophes, or hyphens only.';
   }
 
   submit(): void {
@@ -92,4 +113,21 @@ const passwordsMatchValidator: ValidatorFn = (control: AbstractControl): Validat
   const password = control.get('password')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
   return password === confirmPassword ? null : { passwordMismatch: true };
+};
+
+const nameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = String(control.value ?? '').trim();
+  if (!value) return { required: true };
+  if (value.length < 2 || value.length > 50) return { nameLength: true };
+  return /^[\p{L}][\p{L}\s'-]*$/u.test(value) ? null : { invalidName: true };
+};
+
+const passwordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = String(control.value ?? '');
+  if (!value) return { required: true };
+  if (value.length < 8) return { minlength: true };
+  if (!/[A-Z]/.test(value)) return { uppercase: true };
+  if (!/[a-z]/.test(value)) return { lowercase: true };
+  if (!/\d/.test(value)) return { number: true };
+  return /[^A-Za-z0-9]/.test(value) ? null : { specialCharacter: true };
 };

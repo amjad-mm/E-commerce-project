@@ -6,6 +6,7 @@ import { CartItem } from '../models/cart.model';
 import * as CartActions from '../store/cart.actions';
 import { CartState } from '../store/cart.reducer';
 import { selectCartItems } from '../store/cart.selectors';
+import { MAX_ITEM_QUANTITY } from '../constants/commerce.constants';
 
 export type { CartItem } from '../models/cart.model';
 
@@ -46,7 +47,7 @@ export class CartService {
   }
 
   updateQuantity(productId: number, quantity: number): void {
-    this.store.dispatch(CartActions.updateQuantity({ productId, quantity }));
+    this.store.dispatch(CartActions.updateQuantity({ productId, quantity: Math.floor(quantity) }));
   }
 
   removeFromCart(productId: number): void {
@@ -63,6 +64,10 @@ export class CartService {
 
   getSubtotal(items: CartItem[]): number {
     return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  }
+
+  get maxItemQuantity(): number {
+    return MAX_ITEM_QUANTITY;
   }
 
   private getStorageKey(email: string): string {

@@ -26,6 +26,10 @@
       "brand": "SOLE//RAW",
       "price": 8999,
       "image": "/asset/products/product1.png",
+      "images": [
+        "/asset/products/product1.png",
+        "/asset/products/modeladhil.png"
+      ],
       "description": "Lightweight performance runner with a lattice sole chassis.",
       "category": "Running",
       "tag": "FLAGSHIP DROP",

@@ -23,6 +23,7 @@ export class LoginComponent {
   isLoading = false;
   serverError = '';
   successMessage = '';
+  showPassword = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,

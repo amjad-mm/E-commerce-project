@@ -129,6 +129,8 @@
   color: #000;
 }
 
+.sr-nav-links a.sr-nav-link--active { color: #111; border-bottom: 2px solid #d9f13d; }
+
 /* Actions */
 
 .sr-nav-actions {
@@ -211,6 +213,8 @@
 .sr-wishlist-nav-btn:hover {
   background: #d9f13d;
 }
+
+.sr-wishlist-nav-btn.sr-wishlist-nav-btn--active, .sr-bag-btn.sr-bag-btn--active { background-color: #111; color: #fff; }
 
 .sr-bag-btn:hover {
   background-color: #c7e02f;

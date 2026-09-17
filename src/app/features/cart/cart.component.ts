@@ -14,6 +14,7 @@ export class CartComponent {
   private readonly cartService = inject(CartService);
 
   readonly items$ = this.cartService.items$;
+  readonly maxItemQuantity = this.cartService.maxItemQuantity;
 
   getItemCount(items: CartItem[]): number {
     return this.cartService.getTotalQuantity(items);

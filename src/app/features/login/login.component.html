@@ -124,13 +124,8 @@
             <span class="sr-field-hint-tag">MIN 8 CHARS</span>
           </div>
           <div class="sr-password-wrap">
-            <input type="password" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
-            <button type="button" class="sr-eye-btn" aria-label="Show password">
-              <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </button>
+            <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+            <button type="button" class="sr-eye-btn" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">{{ showPassword ? 'HIDE' : 'SHOW' }}</button>
           </div>
           @if (isInvalid('password')) {
             <span class="sr-validation-error">Password must be at least 8 characters.</span>
@@ -145,7 +140,7 @@
           <a href="#" class="sr-forgot-link">FORGOT PASSWORD?</a>
         </div>
 
-        <button type="submit" class="sr-authorize-btn" [disabled]="isLoading">
+        <button type="submit" class="sr-authorize-btn" [disabled]="loginForm.invalid || isLoading">
           {{ isLoading ? 'VERIFYING...' : 'AUTHORIZE ACCESS' }}
           <svg xmlns="http://www.w3.org/2000/svg" class="sr-authorize-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />

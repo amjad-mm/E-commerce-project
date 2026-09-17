@@ -93,7 +93,7 @@
                     <div class="sr-qty-stepper">
                       <button class="sr-qty-btn" aria-label="Decrease quantity" (click)="updateQuantity(item.product.id, item.quantity - 1)">-</button>
                       <span class="sr-qty-value">{{ item.quantity }}</span>
-                      <button class="sr-qty-btn" aria-label="Increase quantity" (click)="updateQuantity(item.product.id, item.quantity + 1)">+</button>
+                      <button class="sr-qty-btn" aria-label="Increase quantity" [disabled]="item.quantity >= maxItemQuantity" (click)="updateQuantity(item.product.id, item.quantity + 1)">+</button>
                     </div>
 
                     <div class="sr-item-links">
