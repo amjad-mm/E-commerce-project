@@ -1,0 +1,36 @@
+<main class="product-view">
+  <a routerLink="/" class="product-view__back">← BACK TO NEW DROPS</a>
+
+  @if (product$ | async; as product) {
+    <section class="product-view__content">
+      <div class="product-view__image-wrap">
+        <img [src]="product.image" [alt]="product.name" class="product-view__image" />
+      </div>
+
+      <div class="product-view__details">
+        <p class="product-view__eyebrow">{{ product.tag }} // {{ product.sku }}</p>
+        <h1>{{ product.name }}</h1>
+        <p class="product-view__brand">{{ product.brand }}</p>
+        <p class="product-view__price">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</p>
+        <p class="product-view__description">{{ product.description }}</p>
+
+        <dl class="product-view__specs">
+          <div><dt>COLORWAY</dt><dd>{{ product.colorway }}</dd></div>
+          <div><dt>WEIGHT</dt><dd>{{ product.weight }}</dd></div>
+          <div><dt>SPECIFICATION</dt><dd>{{ product.spec }}</dd></div>
+          <div><dt>CATEGORY</dt><dd>{{ product.category }}</dd></div>
+        </dl>
+
+        <button type="button" class="product-view__add" (click)="addToCart(product)">
+          ADD TO CART
+        </button>
+      </div>
+    </section>
+  } @else {
+    <section class="product-view__empty">
+      <h1>PRODUCT NOT FOUND</h1>
+      <p>That product is unavailable or could not be loaded.</p>
+      <a routerLink="/">RETURN TO NEW DROPS</a>
+    </section>
+  }
+</main>

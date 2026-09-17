@@ -1,0 +1,35 @@
+<section class="sr-drops">
+  <div class="sr-drops-inner">
+
+    <!-- Section header -->
+    <div class="sr-drops-header">
+      <div class="sr-drops-title-row">
+        <h2 class="sr-drops-title">NEW DROPS</h2>
+        <span class="sr-tag-available">[AVAILABLE NOW]</span>
+      </div>
+
+      <div class="sr-sort-row">
+        <span class="sr-sort-label">SORT:</span>
+
+        <button class="sr-sort-btn sr-sort-btn--active">
+          LATEST DEPLOYMENT
+        </button>
+
+        <button class="sr-sort-btn">
+          SPEC WEIGHT
+        </button>
+      </div>
+    </div>
+
+    <!-- Product grid -->
+    <div class="sr-grid">
+  @for (product of products; track product.id) {
+    <app-product-details
+      [product]="product"
+      (click)="openProduct(product.id, $event)">
+    </app-product-details>
+  }
+</div>
+
+  </div>
+</section>

@@ -1,0 +1,184 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Sign In Page (Plain CSS)             -->
+<!-- Left column: 40% width // Right column: 60%    -->
+<!-- Usage: signin.component.html                   -->
+<!-- Pair with signin.component.css                 -->
+<!-- ============================================= -->
+
+<section class="sr-signin">
+  <span class="sr-corner-mark sr-corner-mark--tl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--tr">+</span>
+  <span class="sr-corner-mark sr-corner-mark--bl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--br">+</span>
+
+  <div class="sr-signin-grid">
+
+    <!-- ===== Left column: brand / info (40%) ===== -->
+    <div class="sr-signin-left">
+
+      <div class="sr-left-topbar">
+        <span class="sr-member-tag">
+          <span class="sr-tag-dot"></span>
+          MEMBER ACCESS // 026
+        </span>
+        <span class="sr-archive-tag">[ARCHIVE: S-26]</span>
+      </div>
+
+      <p class="sr-terminal-line">// TERMINAL LOGIN SEQUENCE</p>
+
+      <h1 class="sr-welcome-heading">
+        WELCOME<br />
+        <span class="sr-welcome-highlight">BACK.</span>
+      </h1>
+
+      <p class="sr-tagline">"YOUR NEXT PAIR IS WAITING."</p>
+
+      <!-- Product photo card — swap placeholder image later -->
+      <figure class="sr-photo-card">
+        <div class="sr-photo-topbar">
+          <span class="sr-photo-spec">
+            <span class="sr-tag-dot sr-tag-dot--dark"></span>
+            CAM_01 // ASSET_ID #RAW-01
+          </span>
+          <span class="sr-photo-pool">ALLOCATED // 350 UNIT POOL</span>
+        </div>
+
+        <div class="sr-photo-image-wrap">
+          <span class="sr-priority-tag">MEMBERS PRIORITY</span>
+          <img src="https://placehold.co/560x620/1a1a1a/6b6b64?text=RAW-01" alt="RAW-01 Torque V1" class="sr-photo-image" />
+          <span class="sr-spec-tag">SPEC: TORQUE-V1 [ACID/NIGHT]</span>
+        </div>
+
+        <figcaption class="sr-photo-footer">
+          <span>WEIGHT: 480G</span>
+          <span>COMPOSITION: KINETIC TPU</span>
+          <span class="sr-status-locked">STATUS: LOCKED</span>
+        </figcaption>
+      </figure>
+
+      <div class="sr-priority-confirmed">
+        <div class="sr-priority-confirmed-row">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-shield-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+          </svg>
+          <span class="sr-priority-title">PRIORITY QUEUE CONFIRMED</span>
+          <span class="sr-latency">LATENCY: 14MS</span>
+        </div>
+        <p class="sr-priority-desc">
+          Authenticated credentials unlock reserved physical drops, pre-release
+          telemetry manifests, and zero-tax vault retention.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ===== Right column: sign in form (60%) ===== -->
+    <div class="sr-signin-right">
+
+      <div class="sr-form-header">
+        <div class="sr-form-title-row">
+          <h2 class="sr-form-title">SIGN IN</h2>
+          <span class="sr-portal-tag">PORTAL // 01</span>
+        </div>
+        <span class="sr-restricted-tag">RESTRICTED ENTRY</span>
+      </div>
+
+      <button type="button" class="sr-google-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.2h6.5c-.1 1.1-.9 2.7-2.6 3.8l4 3.1c2.4-2.2 3.6-5.4 3.6-8.9z" />
+          <path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.8l-4-3.1c-1.1.7-2.4 1.2-3.9 1.2-3 0-5.6-2-6.5-4.8l-4.1 3.2C3.3 21.3 7.3 24 12 24z" />
+          <path fill="#FBBC05" d="M5.5 14.5c-.2-.7-.4-1.4-.4-2.2s.1-1.5.4-2.2l-4.1-3.2C.5 8.4 0 10.1 0 12s.5 3.6 1.4 5.1l4.1-3.2z" />
+          <path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.7l3.5-3.5C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.9l4.1 3.2c.9-2.8 3.5-4.8 6.5-4.8z" />
+        </svg>
+        CONTINUE WITH GOOGLE
+      </button>
+
+      <div class="sr-form-divider">
+        <span>— OR ACCESS VIA PASSPORT CREDENTIALS —</span>
+      </div>
+
+      <form class="sr-signin-form" [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+
+        <p class="sr-validation-error sr-form-message" *ngIf="serverError">{{ serverError }}</p>
+        <p class="sr-form-success sr-form-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+        <div class="sr-form-field">
+          <div class="sr-field-label-row">
+            <label class="sr-field-label">
+              EMAIL ADDRESS<span class="sr-field-label-accent">[ID]</span>
+            </label>
+            <span class="sr-field-hint-tag">AUTH_IDENTITY</span>
+          </div>
+          <input type="email" placeholder="member@soleraw.archive" class="sr-field-input" formControlName="email" [class.sr-field-input--invalid]="isInvalid('email')" />
+          @if (isInvalid('email')) {
+            <span class="sr-validation-error">Enter a valid email address.</span>
+          }
+        </div>
+
+        <div class="sr-form-field">
+          <div class="sr-field-label-row">
+            <label class="sr-field-label">
+              PASSPORT KEY<span class="sr-field-label-accent">[SECRET]</span>
+            </label>
+            <span class="sr-field-hint-tag">MIN 8 CHARS</span>
+          </div>
+          <div class="sr-password-wrap">
+            <input type="password" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+            <button type="button" class="sr-eye-btn" aria-label="Show password">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          @if (isInvalid('password')) {
+            <span class="sr-validation-error">Password must be at least 8 characters.</span>
+          }
+        </div>
+
+        <div class="sr-remember-row">
+          <label class="sr-checkbox-row">
+            <input type="checkbox" class="sr-checkbox-input" />
+            <span class="sr-checkbox-text">REMEMBER ME [30-DAY PERSISTENCE]</span>
+          </label>
+          <a href="#" class="sr-forgot-link">FORGOT PASSWORD?</a>
+        </div>
+
+        <button type="submit" class="sr-authorize-btn" [disabled]="isLoading">
+          {{ isLoading ? 'VERIFYING...' : 'AUTHORIZE ACCESS' }}
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-authorize-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />
+          </svg>
+        </button>
+
+      </form>
+
+      <div class="sr-no-creds-row">
+        <span class="sr-no-creds-text">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-briefcase-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="7" width="18" height="12" rx="1" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+          </svg>
+          NO PASSPORT CREDENTIALS FOUND?
+        </span>
+        <a routerLink="/register" class="sr-create-account-btn">
+          CREATE ACCOUNT
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-create-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="sr-footer-row">
+        <span class="sr-encryption-line">
+          <span class="sr-tag-dot"></span>
+          SECURE CLIENT-SIDE ENCRYPTION PROTOCOL ACTIVE
+        </span>
+        <span class="sr-node-id">[NODE // 0X4E7A]</span>
+      </div>
+
+    </div>
+
+  </div>
+</section>

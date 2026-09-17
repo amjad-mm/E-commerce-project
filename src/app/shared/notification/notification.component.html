@@ -1,0 +1,6 @@
+@if (notificationService.current(); as notification) {
+  <div class="notification" [class.notification--error]="notification.type === 'error'" [class.notification--info]="notification.type === 'info'" role="status" aria-live="polite">
+    <span>{{ notification.message }}</span>
+    <button type="button" aria-label="Dismiss notification" (click)="notificationService.dismiss()">×</button>
+  </div>
+}

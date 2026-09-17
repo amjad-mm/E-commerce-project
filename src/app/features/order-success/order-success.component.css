@@ -1,0 +1,61 @@
+:host {
+  display: block;
+}
+
+.order-success {
+  min-height: 70vh;
+  padding: 80px 24px;
+  background: #faf7f2;
+  color: #111;
+  text-align: center;
+  font-family: Arial, 'Helvetica Neue', sans-serif;
+}
+
+.order-success__eyebrow,
+.order-success__id {
+  color: #737373;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.order-success h1 {
+  margin: 18px 0;
+  font-size: clamp(40px, 8vw, 80px);
+  line-height: .95;
+}
+
+.order-success__message {
+  font-size: 18px;
+}
+
+.order-success__total {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.order-success__id {
+  display: inline-block;
+  padding: 10px 14px;
+  background: #d9f13d;
+  color: #111;
+}
+
+.order-success__delivery {
+  max-width: 480px;
+  margin: 20px auto 32px;
+  line-height: 1.6;
+}
+
+.order-success__button {
+  display: inline-block;
+  padding: 14px 20px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}

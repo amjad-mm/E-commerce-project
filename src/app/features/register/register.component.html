@@ -1,0 +1,211 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Create Account Page (Plain CSS)     -->
+<!-- Usage: signup.component.html                  -->
+<!-- Pair with signup.component.css                -->
+<!-- ============================================= -->
+
+<section class="sr-signup">
+  <span class="sr-corner-mark sr-corner-mark--tl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--tr">+</span>
+  <span class="sr-corner-mark sr-corner-mark--bl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--br">+</span>
+
+  <div class="sr-signup-grid">
+
+    <!-- ===== Left column: brand / info ===== -->
+    <div class="sr-signup-left">
+
+      <div class="sr-left-topbar">
+        <span class="sr-protocol-tag">[INITIATION_PROTOCOL]</span>
+        <span class="sr-registry-tag">ARCHIVE_REGISTRY_2026</span>
+      </div>
+
+      <p class="sr-status-line">// STATUS: UNREGISTERED CADRE</p>
+
+      <h1 class="sr-join-heading">
+        JOIN THE<br />
+        <span class="sr-join-highlight">MOVEMENT.</span>
+      </h1>
+
+      <blockquote class="sr-quote">
+        "Access unreleased experimental runs before general deployment."
+      </blockquote>
+
+      <div class="sr-perk-banner">
+        <span class="sr-perk-star">★</span>
+        <p class="sr-perk-text">
+          MEMBERS RECEIVE <a href="#" class="sr-perk-link">GUARANTEED EARLY ACCESS</a>
+          TO ALL FW26 LIMITED ARCHIVAL VAULT BALLOTS.
+        </p>
+      </div>
+
+      <!-- Image placeholder — swap with real photo later -->
+      <figure class="sr-photo-card">
+        <div class="sr-photo-topbar">
+          <span class="sr-photo-spec">[SPEC: 026 // ON-FOOT CAM]</span>
+          <span class="sr-photo-ballot">BALLOT PASS : REQ</span>
+        </div>
+
+        <div class="sr-photo-placeholder">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-placeholder-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="5" width="18" height="14" rx="1" />
+            <circle cx="9" cy="11" r="2" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 16l-5-4-4 3-3-2-6 5" />
+          </svg>
+          <span class="sr-placeholder-text">IMAGE PLACEHOLDER</span>
+          <span class="sr-placeholder-subtext">REPLACE WITH CAMPAIGN PHOTO</span>
+          <span class="sr-photo-location-tag">SUB-SECTOR // BERLIN N.09</span>
+        </div>
+
+        <figcaption class="sr-photo-footer">
+          <span>SERIES: FW26_MOD_04</span>
+          <span class="sr-verified-text">VERIFIED AUTHENTIC</span>
+        </figcaption>
+      </figure>
+
+      <div class="sr-perks-list-wrap">
+        <p class="sr-perks-title">MEMBER SPEC_PERKS</p>
+        <ul class="sr-perks-list">
+          <li>
+            <span class="sr-perk-index">[01]</span>
+            Guaranteed ballot queue allocation on all seasonal drops.
+          </li>
+          <li>
+            <span class="sr-perk-index">[02]</span>
+            Invitations to underground Tokyo, Berlin &amp; Seoul atelier popups.
+          </li>
+          <li>
+            <span class="sr-perk-index">[03]</span>
+            Archival monograph print catalogs dispatched directly.
+          </li>
+        </ul>
+      </div>
+
+      <div class="sr-geo-row">
+        <span>LAT: 35.6762° N // LON: 139.6503° E</span>
+        <span class="sr-node-tag">NODE #204</span>
+      </div>
+
+    </div>
+
+    <!-- ===== Right column: form ===== -->
+    <div class="sr-signup-right">
+
+      <div class="sr-form-header">
+        <div>
+          <p class="sr-form-eyebrow">// NEW_REGISTRATION</p>
+          <h2 class="sr-form-title">CREATE ACCOUNT</h2>
+        </div>
+        <span class="sr-tier-tag">[TIER_0 // RECRUIT]</span>
+      </div>
+
+      <button type="button" class="sr-google-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.2h6.5c-.1 1.1-.9 2.7-2.6 3.8l4 3.1c2.4-2.2 3.6-5.4 3.6-8.9z" />
+          <path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.8l-4-3.1c-1.1.7-2.4 1.2-3.9 1.2-3 0-5.6-2-6.5-4.8l-4.1 3.2C3.3 21.3 7.3 24 12 24z" />
+          <path fill="#FBBC05" d="M5.5 14.5c-.2-.7-.4-1.4-.4-2.2s.1-1.5.4-2.2l-4.1-3.2C.5 8.4 0 10.1 0 12s.5 3.6 1.4 5.1l4.1-3.2z" />
+          <path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.7l3.5-3.5C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.9l4.1 3.2c.9-2.8 3.5-4.8 6.5-4.8z" />
+        </svg>
+        CONTINUE WITH GOOGLE
+      </button>
+
+      <div class="sr-form-divider">
+        <span>— OR ENTER SPEC DATA —</span>
+      </div>
+
+      <form class="sr-signup-form" [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
+
+        <p class="sr-validation-error sr-form-message" *ngIf="serverError">{{ serverError }}</p>
+        <p class="sr-form-success sr-form-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+        <div class="sr-form-row">
+          <div class="sr-form-field">
+            <label class="sr-field-label">FIRST NAME // 01 *</label>
+            <input type="text" placeholder="MARCUS" class="sr-field-input" formControlName="firstName" [class.sr-field-input--invalid]="isInvalid('firstName')" />
+            @if (isInvalid('firstName')) {
+              <span class="sr-validation-error">First name is required.</span>
+            }
+          </div>
+          <div class="sr-form-field">
+            <label class="sr-field-label">LAST NAME // 02 *</label>
+            <input type="text" placeholder="VANCE" class="sr-field-input" formControlName="lastName" [class.sr-field-input--invalid]="isInvalid('lastName')" />
+            @if (isInvalid('lastName')) {
+              <span class="sr-validation-error">Last name is required.</span>
+            }
+          </div>
+        </div>
+
+        <div class="sr-form-field">
+          <label class="sr-field-label">EMAIL ADDRESS // 03 *</label>
+          <input type="email" placeholder="USER@VAULT-DOMAIN.COM" class="sr-field-input" formControlName="email" [class.sr-field-input--invalid]="isInvalid('email')" />
+          @if (isInvalid('email')) {
+            <span class="sr-validation-error">Enter a valid email address.</span>
+          }
+        </div>
+
+        <div class="sr-form-field">
+          <div class="sr-field-label-row">
+            <label class="sr-field-label">DATE OF BIRTH (OPTIONAL) // 04</label>
+            <span class="sr-verification-tag">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sr-info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path stroke-linecap="round" d="M12 16v-4m0-3h.01" />
+              </svg>
+              VERIFICATION REQ
+            </span>
+          </div>
+          <input type="text" placeholder="DD / MM / YYYY" class="sr-field-input" />
+          <p class="sr-field-hint">Required for 18+ Limited Edition ballot verification.</p>
+        </div>
+
+        <div class="sr-form-row">
+          <div class="sr-form-field">
+            <label class="sr-field-label">PASSWORD // 05 *</label>
+            <input type="password" placeholder="••••••••••••" class="sr-field-input" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+            @if (isInvalid('password')) {
+              <span class="sr-validation-error">Password must be at least 8 characters.</span>
+            }
+          </div>
+          <div class="sr-form-field">
+            <label class="sr-field-label">CONFIRM PASSWORD // 06 *</label>
+            <input type="password" placeholder="••••••••••••" class="sr-field-input" formControlName="confirmPassword" [class.sr-field-input--invalid]="isInvalid('confirmPassword') || isPasswordMismatch()" />
+            @if (isInvalid('confirmPassword')) {
+              <span class="sr-validation-error">Please confirm your password.</span>
+            } @else if (isPasswordMismatch()) {
+              <span class="sr-validation-error">Passwords do not match.</span>
+            }
+          </div>
+        </div>
+
+        <label class="sr-checkbox-row">
+          <input type="checkbox" class="sr-checkbox-input" formControlName="terms" />
+          <span class="sr-checkbox-text">
+            I AGREE TO THE <a href="#" class="sr-inline-link">TERMS OF SYSTEM TRADE</a> &amp;
+            <a href="#" class="sr-inline-link">PRIVACY DIRECTIVE</a>. I ACCEPT RAW ENCRYPTED DISPATCHES.
+          </span>
+        </label>
+        @if (isInvalid('terms')) {
+          <span class="sr-validation-error">You must accept the terms to continue.</span>
+        }
+
+        <button type="submit" class="sr-create-btn" [disabled]="isLoading">
+          {{ isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT' }}
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-create-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />
+          </svg>
+        </button>
+
+      </form>
+
+      <div class="sr-form-footer">
+        <span>ALREADY A MEMBER? <a routerLink="/login" class="sr-signin-link">SIGN IN →</a></span>
+        <span class="sr-node-key">
+          <span class="sr-node-dot"></span>
+          NODE_KEY: #4482-TX
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+</section>

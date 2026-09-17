@@ -1,0 +1,375 @@
+{
+  "users": [
+    {
+      "name": "AMJAD MM",
+      "email": "amjadmm127@gmail.com",
+      "password": "12345678",
+      "id": "E72B9CVfaV4"
+    },
+    {
+      "name": "AMJAD MM",
+      "email": "amjam127@gmail.com",
+      "password": "12345678",
+      "id": "-scUTbPBPyI"
+    },
+    {
+      "name": "AMJAD MM",
+      "email": "amjad127@gmail.com",
+      "password": "12345678",
+      "id": "uoPnnLIJFKM"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "RAW-01 RUNNER",
+      "brand": "SOLE//RAW",
+      "price": 8999,
+      "image": "/asset/products/product1.png",
+      "description": "Lightweight performance runner with a lattice sole chassis.",
+      "category": "Running",
+      "tag": "FLAGSHIP DROP",
+      "sku": "RAW-2026-01",
+      "weight": "480G",
+      "colorway": "BLACK / ACID GREEN",
+      "spec": "LATTICE SOLE CHASSIS",
+      "theme": "lime"
+    },
+    {
+      "id": "2",
+      "name": "RAW-02 VELOCITY",
+      "brand": "SOLE//RAW",
+      "price": 11499,
+      "image": "/asset/products/product2.png",
+      "description": "High-performance sneaker engineered with Aero-Pod traction.",
+      "category": "Performance",
+      "tag": "PERFORMANCE LAB",
+      "sku": "RAW-2026-02",
+      "weight": "390G",
+      "colorway": "ELECTRIC BLUE / ONYX",
+      "spec": "AERO-POD TRACTION",
+      "theme": "blue"
+    },
+    {
+      "id": "3",
+      "name": "RAW-03 ARCHIVE",
+      "brand": "SOLE//RAW",
+      "price": 9499,
+      "image": "/asset/products/product3.png",
+      "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+      "category": "Lifestyle",
+      "tag": "ARCHIVE SERIES",
+      "sku": "RAW-2026-03",
+      "weight": "430G",
+      "colorway": "SAND / ORANGE",
+      "spec": "VULCANIZED COMPOUND",
+      "theme": "peach"
+    },
+    {
+      "id": "4",
+      "name": "RAW-04 MONO",
+      "brand": "SOLE//RAW",
+      "price": 7999,
+      "image": "/asset/products/product4.png",
+      "description": "Minimal triple-black sneaker built with reinforced ripstop construction.",
+      "category": "Lifestyle",
+      "tag": "RESTOCK ALLOTMENT",
+      "sku": "RAW-2026-04",
+      "weight": "375G",
+      "colorway": "TRIPLE BLACK / VOLT",
+      "spec": "REINFORCED RIPSTOP",
+      "theme": "dark"
+    },
+    {
+      "id": "5",
+      "name": "RAW-05 GHOST",
+      "brand": "SOLE//RAW",
+      "price": 10299,
+      "image": "/asset/products/product5.png",
+      "description": "Limited capsule sneaker featuring a lightweight knit mono upper.",
+      "category": "Limited",
+      "tag": "LIMITED CAPSULE",
+      "sku": "RAW-2026-05",
+      "weight": "410G",
+      "colorway": "GHOST WHITE / LILAC",
+      "spec": "KNIT MONO UPPER",
+      "theme": "purple"
+    },
+    {
+      "id": "3",
+      "name": "RAW-03 ARCHIVE",
+      "brand": "SOLE//RAW",
+      "price": 9499,
+      "image": "/asset/products/product3.png",
+      "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+      "category": "Lifestyle",
+      "tag": "ARCHIVE SERIES",
+      "sku": "RAW-2026-03",
+      "weight": "430G",
+      "colorway": "SAND / ORANGE",
+      "spec": "VULCANIZED COMPOUND",
+      "theme": "peach"
+    },
+    {
+      "id": "5",
+      "name": "RAW-05 GHOST",
+      "brand": "SOLE//RAW",
+      "price": 10299,
+      "image": "/asset/products/product5.png",
+      "description": "Limited capsule sneaker featuring a lightweight knit mono upper.",
+      "category": "Limited",
+      "tag": "LIMITED CAPSULE",
+      "sku": "RAW-2026-05",
+      "weight": "410G",
+      "colorway": "GHOST WHITE / LILAC",
+      "spec": "KNIT MONO UPPER",
+      "theme": "purple"
+    },
+    {
+      "id": "1",
+      "name": "RAW-01 RUNNER",
+      "brand": "SOLE//RAW",
+      "price": 8999,
+      "image": "/asset/products/product1.png",
+      "description": "Lightweight performance runner with a lattice sole chassis.",
+      "category": "Running",
+      "tag": "FLAGSHIP DROP",
+      "sku": "RAW-2026-01",
+      "weight": "480G",
+      "colorway": "BLACK / ACID GREEN",
+      "spec": "LATTICE SOLE CHASSIS",
+      "theme": "lime"
+    }
+  ],
+  "orders": [
+    {
+      "id": "Q756INQbAIc",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400767596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "3",
+            "name": "RAW-03 ARCHIVE",
+            "brand": "SOLE//RAW",
+            "price": 9499,
+            "image": "/asset/products/product3.png",
+            "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+            "category": "Lifestyle",
+            "tag": "ARCHIVE SERIES",
+            "sku": "RAW-2026-03",
+            "weight": "430G",
+            "colorway": "SAND / ORANGE",
+            "spec": "VULCANIZED COMPOUND",
+            "theme": "peach"
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": "2",
+            "name": "RAW-02 VELOCITY",
+            "brand": "SOLE//RAW",
+            "price": 11499,
+            "image": "/asset/products/product2.png",
+            "description": "High-performance sneaker engineered with Aero-Pod traction.",
+            "category": "Performance",
+            "tag": "PERFORMANCE LAB",
+            "sku": "RAW-2026-02",
+            "weight": "390G",
+            "colorway": "ELECTRIC BLUE / ONYX",
+            "spec": "AERO-POD TRACTION",
+            "theme": "blue"
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 32497,
+      "paymentMethod": "online-payment",
+      "status": "placed",
+      "createdAt": "2026-09-15T08:09:29.968Z"
+    },
+    {
+      "id": "wNejV0EpLRA",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400767596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "3",
+            "name": "RAW-03 ARCHIVE",
+            "brand": "SOLE//RAW",
+            "price": 9499,
+            "image": "/asset/products/product3.png",
+            "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+            "category": "Lifestyle",
+            "tag": "ARCHIVE SERIES",
+            "sku": "RAW-2026-03",
+            "weight": "430G",
+            "colorway": "SAND / ORANGE",
+            "spec": "VULCANIZED COMPOUND",
+            "theme": "peach"
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 9499,
+      "paymentMethod": "cash-on-delivery",
+      "status": "placed",
+      "createdAt": "2026-09-15T09:17:28.910Z"
+    },
+    {
+      "id": "clcyRyj13xY",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400767596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "3",
+            "name": "RAW-03 ARCHIVE",
+            "brand": "SOLE//RAW",
+            "price": 9499,
+            "image": "/asset/products/product3.png",
+            "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+            "category": "Lifestyle",
+            "tag": "ARCHIVE SERIES",
+            "sku": "RAW-2026-03",
+            "weight": "430G",
+            "colorway": "SAND / ORANGE",
+            "spec": "VULCANIZED COMPOUND",
+            "theme": "peach"
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 9499,
+      "paymentMethod": "cash-on-delivery",
+      "status": "placed",
+      "createdAt": "2026-09-15T09:41:24.693Z"
+    },
+    {
+      "id": "GunAQAdbiC4",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400797596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "3",
+            "name": "RAW-03 ARCHIVE",
+            "brand": "SOLE//RAW",
+            "price": 9499,
+            "image": "/asset/products/product3.png",
+            "description": "Classic archive-inspired sneaker with a durable vulcanized compound.",
+            "category": "Lifestyle",
+            "tag": "ARCHIVE SERIES",
+            "sku": "RAW-2026-03",
+            "weight": "430G",
+            "colorway": "SAND / ORANGE",
+            "spec": "VULCANIZED COMPOUND",
+            "theme": "peach"
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": "4",
+            "name": "RAW-04 MONO",
+            "brand": "SOLE//RAW",
+            "price": 7999,
+            "image": "/asset/products/product4.png",
+            "description": "Minimal triple-black sneaker built with reinforced ripstop construction.",
+            "category": "Lifestyle",
+            "tag": "RESTOCK ALLOTMENT",
+            "sku": "RAW-2026-04",
+            "weight": "375G",
+            "colorway": "TRIPLE BLACK / VOLT",
+            "spec": "REINFORCED RIPSTOP",
+            "theme": "dark"
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 17498,
+      "paymentMethod": "cash-on-delivery",
+      "status": "placed",
+      "createdAt": "2026-09-15T10:26:52.191Z"
+    },
+    {
+      "id": "gdvrdIfmeAw",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400767596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "1",
+            "name": "RAW-01 RUNNER",
+            "brand": "SOLE//RAW",
+            "price": 8999,
+            "image": "/asset/products/product1.png",
+            "description": "Lightweight performance runner with a lattice sole chassis.",
+            "category": "Running",
+            "tag": "FLAGSHIP DROP",
+            "sku": "RAW-2026-01",
+            "weight": "480G",
+            "colorway": "BLACK / ACID GREEN",
+            "spec": "LATTICE SOLE CHASSIS",
+            "theme": "lime"
+          },
+          "quantity": 10
+        }
+      ],
+      "total": 89990,
+      "paymentMethod": "cash-on-delivery",
+      "status": "placed",
+      "createdAt": "2026-09-16T09:32:33.060Z"
+    },
+    {
+      "id": "AcMloRUUMek",
+      "userId": "E72B9CVfaV4",
+      "userEmail": "amjadmm127@gmail.com",
+      "customerName": "AMJAD MM",
+      "phone": "9400797596",
+      "deliveryAddress": "calicut",
+      "items": [
+        {
+          "product": {
+            "id": "2",
+            "name": "RAW-02 VELOCITY",
+            "brand": "SOLE//RAW",
+            "price": 11499,
+            "image": "/asset/products/product2.png",
+            "description": "High-performance sneaker engineered with Aero-Pod traction.",
+            "category": "Performance",
+            "tag": "PERFORMANCE LAB",
+            "sku": "RAW-2026-02",
+            "weight": "390G",
+            "colorway": "ELECTRIC BLUE / ONYX",
+            "spec": "AERO-POD TRACTION",
+            "theme": "blue"
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 11499,
+      "paymentMethod": "cash-on-delivery",
+      "status": "placed",
+      "createdAt": "2026-09-17T04:36:32.199Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

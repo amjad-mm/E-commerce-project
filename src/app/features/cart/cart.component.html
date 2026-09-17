@@ -1,0 +1,234 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Bag / Cart Page (Plain CSS)         -->
+<!-- Usage: bag.component.html                     -->
+<!-- Pair with bag.component.css                   -->
+<!-- ============================================= -->
+
+<section class="sr-bag">
+  <div class="sr-bag-inner">
+
+    <!-- ===== Page header ===== -->
+    <div class="sr-bag-header">
+      <div>
+        <div class="sr-bag-eyebrow-row">
+          <span class="sr-eyebrow-tag">[ARCHIVE ALLOCATION]</span>
+          <span class="sr-eyebrow-muted">// HIGH DEMAND DROP</span>
+        </div>
+        <h1 class="sr-bag-title">
+          YOUR BAG <span class="sr-bag-count">[{{ (items$ | async)?.length ?? 0 }} ITEMS]</span>
+        </h1>
+      </div>
+
+      <div class="sr-dispatch-timer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-timer-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="13" r="8" />
+          <path stroke-linecap="round" d="M12 9v4l2.5 2.5M9 3h6" />
+        </svg>
+        <div>
+          <p class="sr-timer-label">DISPATCH RESERVED FOR</p>
+          <p class="sr-timer-value">EXPIRED</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Main grid ===== -->
+    <div class="sr-bag-grid">
+
+      <!-- ===== Left column: items ===== -->
+      <div class="sr-bag-left">
+
+        <!-- Free shipping progress -->
+        <div class="sr-shipping-card">
+          <div class="sr-shipping-row">
+            <span class="sr-shipping-msg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sr-check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
+              </svg>
+              QUALIFIED FOR COMPLIMENTARY EXPRESS COURIER
+            </span>
+              <span class="sr-threshold-tag">THRESHOLD MET [100%]</span>
+          </div>
+
+          <div class="sr-progress-track">
+            <div class="sr-progress-fill"></div>
+          </div>
+
+          <div class="sr-shipping-footer">
+            <span>DISPATCH AT: ₹10,000</span>
+            <span>CURRENT: {{ getSubtotal((items$ | async) ?? []) | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+
+        @if (items$ | async; as items) {
+          @for (item of items; track item.product.id; let index = $index) {
+            <article class="sr-item-card">
+              <div class="sr-item-topbar">
+                <span class="sr-item-index">INDEX [{{ (index + 1).toString().padStart(2, '0') }}] // SKU: {{ item.product.sku }}</span>
+                <span class="sr-item-timestamp">TIMESTAMP: FW26.D01</span>
+              </div>
+
+              <div class="sr-item-body">
+                <div class="sr-item-image-wrap">
+                  <span class="sr-item-badge sr-item-badge--dark">LIVE VAULT</span>
+                  <img [src]="item.product.image" [alt]="item.product.name" class="sr-item-image" />
+                </div>
+
+                <div class="sr-item-details">
+                  <div class="sr-item-details-top">
+                    <div>
+                      <h3 class="sr-item-name">{{ item.product.name }}</h3>
+                      <p class="sr-item-subtitle">{{ item.product.description }}</p>
+                    </div>
+                    <span class="sr-item-price">{{ item.product.price * item.quantity | currency:'INR':'symbol':'1.0-0' }}</span>
+                  </div>
+
+                  <div class="sr-item-tags">
+                    <span class="sr-tag-outline">COLOR: {{ item.product.colorway }}</span>
+                    <span class="sr-tag-outline">QTY: {{ item.quantity }}</span>
+                    <span class="sr-tag-stock sr-tag-stock--lime">IN STOCK</span>
+                  </div>
+
+                  <div class="sr-item-actions">
+                    <div class="sr-qty-stepper">
+                      <button class="sr-qty-btn" aria-label="Decrease quantity" (click)="updateQuantity(item.product.id, item.quantity - 1)">-</button>
+                      <span class="sr-qty-value">{{ item.quantity }}</span>
+                      <button class="sr-qty-btn" aria-label="Increase quantity" (click)="updateQuantity(item.product.id, item.quantity + 1)">+</button>
+                    </div>
+
+                    <div class="sr-item-links">
+                      <a href="#" class="sr-link-spec">SPEC SHEET</a>
+                      <button type="button" class="sr-link-remove" (click)="removeFromCart(item.product.id)">REMOVE [X]</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          } @empty {
+            <div class="sr-access-card">
+              <p class="sr-access-title">YOUR BAG IS EMPTY</p>
+              <p class="sr-access-hint">ADD A PRODUCT FROM THE NEW DROPS SECTION TO BEGIN.</p>
+            </div>
+          }
+        }
+
+        <!-- Access code -->
+        <div class="sr-access-card">
+          <p class="sr-access-title">AUTHORIZATION // ACCESS CODE / VIP PASS</p>
+          <div class="sr-access-row">
+            <input type="text" placeholder="[ ENTER ACCESS CODE ]" class="sr-access-input" />
+            <button class="sr-access-btn">APPLY</button>
+          </div>
+          <p class="sr-access-hint">ENTER COMMUNITY PASSWORDS OR ARCHIVE ALLOCATION PASSKEYS.</p>
+        </div>
+
+      </div>
+
+      <!-- ===== Right column: order summary ===== -->
+      <aside class="sr-summary">
+
+        <div class="sr-summary-header">
+          <h2 class="sr-summary-title">ORDER SUMMARY</h2>
+          <span class="sr-verified-tag">VERIFIED</span>
+        </div>
+
+        <div class="sr-summary-row">
+          <span>SUBTOTAL ({{ getItemCount((items$ | async) ?? []) }} UNITS)</span>
+          <span class="sr-summary-value">{{ getSubtotal((items$ | async) ?? []) | currency:'INR':'symbol':'1.0-0' }}</span>
+        </div>
+
+        <div class="sr-summary-row">
+          <span class="sr-summary-label-with-icon">
+            EXPRESS COURIER
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path stroke-linecap="round" d="M12 16v-4m0-3h.01" />
+            </svg>
+          </span>
+          <span class="sr-summary-value">
+            <span class="sr-strike">₹800</span>
+            <span class="sr-free-tag">FREE</span>
+          </span>
+        </div>
+
+        <div class="sr-summary-row sr-summary-row--multiline">
+          <span>ESTIMATED DUTIES &amp; TAXES</span>
+          <span class="sr-included-tag">INCLUDED [GST 18%]</span>
+        </div>
+
+        <div class="sr-summary-total-block">
+          <p class="sr-final-valuation">FINAL VALUATION</p>
+          <div class="sr-total-row">
+            <span class="sr-total-label">TOTAL</span>
+            <span class="sr-total-value">{{ getSubtotal((items$ | async) ?? []) | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <p class="sr-total-note">ALL IMPORT SURCHARGES ABSORBED</p>
+        </div>
+
+        <button class="sr-checkout-btn" routerLink="/checkout">
+          CHECKOUT
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-checkout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />
+          </svg>
+        </button>
+
+        <div class="sr-divider-row">
+          <span class="sr-divider-line"></span>
+          <span class="sr-divider-text">OR RAPID AUTHORIZE</span>
+          <span class="sr-divider-line"></span>
+        </div>
+
+        <div class="sr-express-row">
+          <button class="sr-express-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-express-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="7" y="2" width="10" height="20" rx="2" />
+              <path stroke-linecap="round" d="M11 18h2" />
+            </svg>
+            APPLE PAY
+          </button>
+          <button class="sr-express-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-express-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" />
+            </svg>
+            INSTANT UPI
+          </button>
+        </div>
+
+        <ul class="sr-trust-list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-trust-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" />
+            </svg>
+            AUTHENTICITY GUARANTEED // RFID VERIFIED
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-trust-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4.6 9a8 8 0 0113.9-3M19.4 15a8 8 0 01-13.9 3" />
+            </svg>
+            14-DAY VAULT RETURN PRIVILEGE
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-trust-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="11" width="14" height="9" rx="1" />
+              <path stroke-linecap="round" d="M8 11V8a4 4 0 018 0v3" />
+            </svg>
+            ENCRYPTED DISPATCH // 256-BIT SYSTEM
+          </li>
+        </ul>
+
+        <div class="sr-barcode-row">
+          <div class="sr-barcode"></div>
+          <span class="sr-barcode-label">SR-TX#9920</span>
+        </div>
+
+        <div class="sr-concierge-row">
+          <span>NEED ASSISTANCE WITH SIZING?</span>
+          <a href="#" class="sr-concierge-link">CONCIERGE</a>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+</section>

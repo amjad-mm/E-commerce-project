@@ -1,0 +1,116 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Footer Component (Plain CSS)        -->
+<!-- Usage: footer.component.html                  -->
+<!-- Pair with footer.component.css                -->
+<!-- ============================================= -->
+
+<footer class="sr-footer">
+
+  <!-- ===== Newsletter / "First Dibs" banner ===== -->
+  <div class="sr-banner">
+    <div class="sr-banner-inner">
+
+      <div class="sr-banner-text">
+        <p class="sr-eyebrow">JOIN THE MOVEMENT</p>
+        <h2 class="sr-heading-xl">
+          First dibs.<br />
+          No <span class="sr-orange">noise.</span>
+        </h2>
+      </div>
+
+      <form class="sr-signup-form" (ngSubmit)="onSignUp()">
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Your email address"
+          class="sr-email-input"
+        />
+        <button type="submit" class="sr-signup-btn">
+          SIGN UP
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ===== Dark footer content ===== -->
+  <div class="sr-dark">
+    <div class="sr-dark-inner">
+
+      <!-- Columns -->
+      <div class="sr-columns">
+
+        <!-- Brand -->
+        <div class="sr-col sr-col-brand">
+          <div class="sr-logo">
+            <span>SOLE</span>
+            <span class="sr-logo-slash">//</span>
+            <span>RAW</span>
+          </div>
+          <p class="sr-brand-desc">
+            Independent footwear for independent movement.
+            Built in small runs. Made to keep up.
+          </p>
+        </div>
+
+        <!-- Shop -->
+        <div class="sr-col">
+          <h3 class="sr-col-title">SHOP</h3>
+          <ul class="sr-link-list">
+            <li><a href="#">NEW</a></li>
+            <li><a href="#">MEN</a></li>
+            <li><a href="#">WOMEN</a></li>
+            <li><a href="#">SNEAKERS</a></li>
+            <li><a href="#">COLLECTIONS</a></li>
+          </ul>
+        </div>
+
+        <!-- About -->
+        <div class="sr-col">
+          <h3 class="sr-col-title">ABOUT</h3>
+          <ul class="sr-link-list">
+            <li><a href="#">STORY</a></li>
+            <li><a href="#">JOURNAL</a></li>
+            <li><a href="#">CONTACT</a></li>
+            <li><a href="#">SIZE GUIDE</a></li>
+            <li><a href="#">DELIVERY</a></li>
+          </ul>
+        </div>
+
+        <!-- Social -->
+        <div class="sr-col">
+          <h3 class="sr-col-title">SOCIAL</h3>
+          <ul class="sr-link-list">
+            <li><a href="#">INSTAGRAM</a></li>
+            <li><a href="#">TIKTOK</a></li>
+            <li><a href="#">X</a></li>
+            <li><a href="#">PINTEREST</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Divider -->
+      <div class="sr-divider"></div>
+
+      <!-- Big tagline + legal -->
+      <div class="sr-bottom">
+        <h2 class="sr-heading-huge">
+          <span class="sr-cream">Move</span><br />
+          <span class="sr-lime">Different<span class="sr-orange">.</span></span>
+        </h2>
+
+        <div class="sr-legal">
+          <p>© 2026 SOLE//RAW</p>
+          <p>ALL RIGHTS RESERVED / MADE TO MOVE</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</footer>

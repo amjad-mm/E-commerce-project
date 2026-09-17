@@ -1,0 +1,89 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Header Component (Plain CSS)        -->
+<!-- Usage: header.component.html                  -->
+<!-- Pair with header.component.css                -->
+<!-- ============================================= -->
+
+<header class="sr-header">
+
+  <!-- ===== Scrolling ticker bar ===== -->
+  <div class="sr-ticker">
+    <div class="sr-ticker-track">
+      <span class="sr-ticker-item">
+        RAW ENGINEERING [EST. 2026]
+        <span class="sr-ticker-plus">+</span>
+        GLOBAL DISPATCH // FW-2026 DROP 01 LIVE // COMPLIMENTARY EXPRESS SHIPPING OVER ₹10,000
+        <span class="sr-ticker-plus">+</span>
+      </span>
+      <span class="sr-ticker-item" aria-hidden="true">
+        RAW ENGINEERING [EST. 2026]
+        <span class="sr-ticker-plus">+</span>
+        GLOBAL DISPATCH // FW-2026 DROP 01 LIVE // COMPLIMENTARY EXPRESS SHIPPING OVER ₹10,000
+        <span class="sr-ticker-plus">+</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ===== Nav bar ===== -->
+  <div class="sr-navbar">
+    <div class="sr-navbar-inner">
+
+      <!-- Logo -->
+      <div class="sr-brand">
+        <span class="sr-brand-tag">SOLE // RAW</span>
+        <span class="sr-brand-name">SOLE<span class="sr-brand-slash">//</span>RAW</span>
+        <span class="sr-brand-badge">[ARCHIVE_SYS]</span>
+      </div>
+
+      <!-- Nav links -->
+      <nav class="sr-nav-links">
+        <a href="#">NEW</a>
+        <a href="#">MEN</a>
+        <a href="#">WOMEN</a>
+        <a href="#">SNEAKERS</a>
+        <a href="#">COLLECTIONS</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="sr-nav-actions">
+        <button class="sr-search-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7" />
+            <path stroke-linecap="round" d="M21 21l-4.35-4.35" />
+          </svg>
+          <span>SEARCH</span>
+          <span class="sr-kbd">[⌘K]</span>
+        </button>
+
+        @if (currentUser$ | async; as currentUser) {
+          <button class="sr-account-btn" type="button" (click)="logout()">
+            SIGN OUT {{ currentUser.name }}
+          </button>
+        } @else {
+          <button class="sr-account-btn" type="button" routerLink="/login">ACCOUNT</button>
+        }
+
+        <button class="sr-bag-btn" routerLink="/cart">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1 13H5L6 7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 7a3 3 0 016 0" />
+          </svg>
+          BAG ({{ (cartCount$ | async) ?? 0 }})
+        </button>
+
+        <button class="sr-wishlist-nav-btn" type="button" routerLink="/wishlist">
+          ♥ ({{ (wishlistCount$ | async) ?? 0 }})
+        </button>
+
+        <button class="sr-avatar-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-avatar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</header>
