@@ -1,0 +1,14 @@
+<main class="order-success">
+  <p class="order-success__eyebrow">[ARCHIVE DISPATCH CONFIRMED]</p>
+  <h1>ORDER CONFIRMED</h1>
+  <p class="order-success__message">Your order has been placed successfully.</p>
+
+  @if (order$ | async; as order) {
+    <p class="order-success__id">ORDER #{{ order.id }}</p>
+    <p class="order-success__total">TOTAL: {{ order.total | currency:'INR':'symbol':'1.0-0' }}</p>
+    <p class="order-success__delivery">Delivery to {{ order.customerName }} at {{ order.deliveryAddress }}.</p>
+  } @else {
+    <p class="order-success__id">ORDER CONFIRMATION</p>
+  }
+  <a routerLink="/" class="order-success__button">CONTINUE SHOPPING</a>
+</main>

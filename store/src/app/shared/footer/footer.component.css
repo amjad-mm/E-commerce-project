@@ -1,0 +1,311 @@
+/* ============================================= */
+/* SOLE//RAW Footer Component — Plain CSS         */
+/* ============================================= */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.sr-footer {
+  width: 100%;
+  max-width: 100vw;
+  font-family: 'Arial', 'Helvetica Neue', sans-serif;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.sr-footer {
+  width: 100%;
+  max-width: 100vw;
+  font-family: 'Arial', 'Helvetica Neue', sans-serif;
+  overflow: hidden;
+}
+
+/* ===== Newsletter banner ===== */
+
+.sr-banner {
+  background-color: #d9f13d; /* lime */
+  padding: clamp(28px, 6vw, 56px) clamp(16px, 5vw, 56px);
+}
+
+.sr-banner-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sr-banner-text {
+  flex: 1;
+}
+
+.sr-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #000;
+  margin: 0 0 12px 0;
+}
+
+.sr-heading-xl {
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: #000;
+  font-size: clamp(34px, 9vw, 72px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sr-orange {
+  color: #ef6a3c;
+}
+
+.sr-signup-form {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+.sr-email-input {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 auto;
+  background-color: #f4f1ea;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 14px clamp(12px, 3vw, 24px);
+  outline: none;
+  border: 1px solid #000;
+}
+
+.sr-email-input::placeholder {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.sr-signup-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 14px clamp(12px, 3vw, 24px);
+  white-space: nowrap;
+  flex: 0 0 auto;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sr-signup-btn:hover {
+  background-color: #262626;
+}
+
+.sr-arrow-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Dark footer content ===== */
+
+.sr-dark {
+  background-color: #000;
+  color: #fff;
+  padding: clamp(40px, 6vw, 64px) clamp(16px, 5vw, 56px) 0;
+}
+
+.sr-dark-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.sr-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(28px, 5vw, 40px) clamp(16px, 4vw, 32px);
+  padding-bottom: clamp(40px, 6vw, 56px);
+}
+
+.sr-col-brand {
+  grid-column: span 2;
+}
+
+.sr-logo {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.sr-logo-slash {
+  color: #ef6a3c;
+  margin: 0 2px;
+  font-style: italic;
+}
+
+.sr-brand-desc {
+  color: #a3a3a3;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0;
+}
+
+.sr-col-title {
+  color: #d9f13d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  margin: 0 0 20px 0;
+}
+
+.sr-link-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sr-link-list a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.sr-link-list a:hover {
+  color: #d9f13d;
+}
+
+.sr-divider {
+  border-top: 1px solid #262626;
+}
+
+.sr-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px 0;
+  gap: 24px;
+}
+
+.sr-heading-huge {
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.85;
+  font-size: clamp(42px, 15vw, 96px);
+  letter-spacing: -0.02em;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.sr-cream {
+  color: #f4f1ea;
+}
+
+.sr-lime {
+  color: #d9f13d;
+}
+
+.sr-legal {
+  text-align: left;
+  color: #737373;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.sr-legal p {
+  margin: 0 0 4px 0;
+}
+
+.sr-legal p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Responsive: tablet and up ===== */
+
+@media (min-width: 768px) {
+  .sr-columns {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sr-col-brand {
+    grid-column: span 1;
+  }
+
+  .sr-bottom {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .sr-legal {
+    text-align: right;
+  }
+
+  .sr-heading-huge {
+    font-size: clamp(64px, 10vw, 96px);
+  }
+}
+
+/* ===== Responsive: desktop and up ===== */
+
+@media (min-width: 1024px) {
+  .sr-banner-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .sr-signup-form {
+    width: auto;
+  }
+
+  .sr-email-input {
+    width: 320px;
+    flex: 0 1 320px;
+  }
+}
+
+@media (max-width: 380px) {
+  .sr-signup-btn {
+    gap: 4px;
+    font-size: 12px;
+    padding-inline: 10px;
+  }
+
+  .sr-arrow-icon {
+    width: 14px;
+    height: 14px;
+  }
+}

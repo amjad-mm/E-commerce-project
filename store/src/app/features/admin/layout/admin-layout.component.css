@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.sr-admin-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #faf7f2;
+  color: #111111;
+  font-family: Arial, 'Helvetica Neue', sans-serif;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sr-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 95;
+  backdrop-filter: blur(2px);
+}
+
+.sr-admin-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.sr-admin-content {
+  flex: 1;
+  padding: 32px 32px 64px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .sr-admin-content {
+    padding: 24px 16px 48px;
+  }
+}
+

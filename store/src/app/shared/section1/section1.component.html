@@ -1,0 +1,159 @@
+<!-- SOLE//RAW Hero — Animated Sneaker Showcase -->
+<section class="sr-hero">
+  <div class="sr-hero-inner">
+
+    <!-- ===== Left column ===== -->
+    <div class="sr-hero-left">
+
+      <div class="sr-hero-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-pulse-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-7 4 14 2-7h6" />
+        </svg>
+        <span class="sr-badge-strong">DROP 04 // PROTOCOL ACTIVE</span>
+        <span class="sr-badge-sep">|</span>
+        <span class="sr-badge-muted">WORLDWIDE DISPATCH</span>
+      </div>
+
+      <h1 class="sr-hero-heading">
+        BUILT<br />
+        TO <span class="sr-lime-text">MOVE.</span>
+      </h1>
+
+      <p class="sr-hero-subline">RAW ARCHIVAL RIGS // KINETIC PROPULSION CHASSIS</p>
+
+      <p class="sr-hero-desc">
+        Engineered with high-velocity biomechanics. Forged with a dual-density
+        carbon composite shank, water-repellent Cordura<sup>®</sup> ballistic
+        textile, and precision Vibram<sup>®</sup> traction nodes.
+      </p>
+
+      <div class="sr-hero-actions">
+        <a [routerLink]="['/product', currentProduct.id]" class="sr-btn sr-btn--lime">
+          EXPLORE DROP [{{ currentProduct.name }}]
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />
+          </svg>
+        </a>
+        <a routerLink="/" fragment="drops" class="sr-btn sr-btn--outline">
+          BROWSE SILHOUETTES
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="sr-hero-stats">
+        <div class="sr-stat">
+          <span class="sr-stat-label">PROPULSION</span>
+          <span class="sr-stat-value">88% REBOUND</span>
+        </div>
+        <div class="sr-stat">
+          <span class="sr-stat-label">WEIGHT</span>
+          <span class="sr-stat-value">{{ currentProduct.weight || '340G / EU 42' }}</span>
+        </div>
+        <div class="sr-stat">
+          <span class="sr-stat-label">TRACTION</span>
+          <span class="sr-stat-value sr-stat-value--lime">{{ currentProduct.spec || 'VIBRAM® LUG' }}</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== Right column — animated sneaker showcase ===== -->
+    <div class="sr-hero-right">
+      <div class="sr-panel" (mouseenter)="pause()" (mouseleave)="resume()">
+
+        <!-- Panel Topbar -->
+        <div class="sr-panel-topbar">
+          <span class="sr-ref">
+            <span class="sr-ref-dot"></span>
+            SILHOUETTE_TELEMETRY // {{ currentProduct.sku }}
+          </span>
+          <div class="sr-panel-topbar-right">
+            <span class="sr-cam-tag">{{ (currentIndex + 1).toString().padStart(2, '0') }} / {{ products.length.toString().padStart(2, '0') }}</span>
+            <span class="sr-stock-tag">{{ currentProduct.category | uppercase }}</span>
+          </div>
+        </div>
+
+        <!-- Sneaker Showcase Stage -->
+        <div class="sr-panel-image-wrap">
+          <span class="sr-corner sr-corner--tl">+</span>
+          <span class="sr-corner sr-corner--tr">+</span>
+          <span class="sr-corner sr-corner--bl">+</span>
+          <span class="sr-corner sr-corner--br">+</span>
+
+          <!-- Stage Background Watermark -->
+          <div class="sr-stage-watermark">{{ currentProduct.name }}</div>
+
+          <!-- Animated Sneaker Container -->
+          <div
+            class="sr-sneaker-container"
+            [class.sr-sneaker--exiting]="transitionState === 'exiting'"
+            [class.sr-sneaker--entering]="transitionState === 'entering'"
+            [class.sr-sneaker--active]="transitionState === 'active'"
+          >
+            <img
+              [src]="currentProduct.image"
+              [alt]="currentProduct.name"
+              class="sr-sneaker-image"
+            />
+            <div class="sr-sneaker-shadow"></div>
+          </div>
+
+          <!-- Manual Controls -->
+          <button type="button" class="sr-nav-arrow sr-nav-arrow--prev" (click)="prevSlide()" aria-label="Previous Silhouette">
+            ‹
+          </button>
+          <button type="button" class="sr-nav-arrow sr-nav-arrow--next" (click)="nextSlide()" aria-label="Next Silhouette">
+            ›
+          </button>
+        </div>
+
+        <!-- Cycle Indicator Navigation -->
+        <div class="sr-cycle-track">
+          @for (prod of products; track prod.id; let idx = $index) {
+            <button
+              type="button"
+              class="sr-cycle-pill"
+              [class.sr-cycle-pill--active]="idx === currentIndex"
+              (click)="goToSlide(idx)"
+              [attr.aria-label]="'Select ' + prod.name"
+            >
+              <span class="sr-cycle-bar"></span>
+              <span class="sr-cycle-num">0{{ idx + 1 }}</span>
+            </button>
+          }
+        </div>
+
+        <!-- Connected Product Information -->
+        <div class="sr-panel-info">
+          <div
+            class="sr-panel-info-row"
+            [class.sr-panel-info-row--exiting]="transitionState === 'exiting'"
+            [class.sr-panel-info-row--entering]="transitionState === 'entering'"
+            [class.sr-panel-info-row--active]="transitionState === 'active'"
+          >
+            <div class="sr-info-left">
+              <p class="sr-featured-label">{{ currentProduct.brand }} // {{ currentProduct.tag }}</p>
+              <h3 class="sr-featured-name">{{ currentProduct.name }}</h3>
+              <p class="sr-featured-colorway">{{ currentProduct.colorway }}</p>
+            </div>
+            <div class="sr-msrp">
+              <span class="sr-msrp-label">VALUATION</span>
+              <span class="sr-msrp-value">{{ currentProduct.price | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <a [routerLink]="['/product', currentProduct.id]" class="sr-telemetry-btn">
+            <span>EXPLORE SILHOUETTE [{{ currentProduct.name }}]</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-telemetry-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>

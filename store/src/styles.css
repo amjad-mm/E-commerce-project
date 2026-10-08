@@ -1,0 +1,29 @@
+/* Global viewport and box-sizing baseline */
+html,
+body {
+	width: 100%;
+	min-width: 0;
+	min-height: 100%;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+img,
+svg {
+	max-width: 100%;
+}
+
+button,
+input {
+	font: inherit;
+}
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */

@@ -1,0 +1,23 @@
+<article class="sr-card">
+
+  <div class="sr-card-image-wrap">
+    <img [src]="product.image" [alt]="product.name" class="sr-card-image">
+    <button
+      type="button"
+      class="sr-wishlist-button"
+      [class.sr-wishlist-button--active]="isWishlisted(product.id)"
+      (click)="toggleWishlist()"
+      [attr.aria-label]="isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'">
+      ♥
+    </button>
+  </div>
+
+  <h3 class="sr-card-name">{{ product.name }}</h3>
+
+  <span class="sr-colorway">{{ product.colorway }}</span>
+
+  <span class="sr-price">₹{{ product.price }}</span>
+
+  <button class="sr-quick-add" (click)="addtocart()">QUICK ADD</button>
+
+</article>

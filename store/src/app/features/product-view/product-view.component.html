@@ -1,0 +1,55 @@
+<main class="product-view">
+  <a routerLink="/" class="product-view__back">← BACK TO NEW DROPS</a>
+
+  @if (product$ | async; as product) {
+    <section class="product-view__content">
+      <div class="product-view__gallery">
+        <div class="product-view__image-wrap">
+          <img [src]="selectedImage || getImages(product)[0]" [alt]="product.name" class="product-view__image" />
+          <span class="product-view__zoom-hint">HOVER TO INSPECT +</span>
+        </div>
+        @if (getImages(product).length > 1) {
+          <div class="product-view__thumbnails" aria-label="Product images">
+            @for (image of getImages(product); track image) {
+              <button type="button" [class.product-view__thumbnail--active]="(selectedImage || getImages(product)[0]) === image" (click)="selectImage(image)">
+                <img [src]="image" [alt]="product.name + ' view'" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="product-view__details">
+        <p class="product-view__eyebrow">{{ product.tag }} // {{ product.sku }}</p>
+        <h1>{{ product.name }}</h1>
+        <p class="product-view__brand">{{ product.brand }}</p>
+        <p class="product-view__price">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</p>
+        <p class="product-view__description">{{ product.description }}</p>
+
+        <dl class="product-view__specs">
+          <div><dt>COLORWAY</dt><dd>{{ product.colorway }}</dd></div>
+          <div><dt>WEIGHT</dt><dd>{{ product.weight }}</dd></div>
+          <div><dt>SPECIFICATION</dt><dd>{{ product.spec }}</dd></div>
+          <div><dt>CATEGORY</dt><dd>{{ product.category }}</dd></div>
+        </dl>
+
+        <div class="product-view__purchase">
+          <div class="product-view__quantity" aria-label="Quantity selector">
+            <button type="button" (click)="updateQuantity(quantity - 1)" [disabled]="quantity <= 1" aria-label="Decrease quantity">−</button>
+            <input type="number" min="1" [max]="maxQuantity" [value]="quantity" (change)="updateQuantity(+$any($event.target).value)" aria-label="Quantity" />
+            <button type="button" (click)="updateQuantity(quantity + 1)" [disabled]="quantity >= maxQuantity" aria-label="Increase quantity">+</button>
+          </div>
+          <button type="button" class="product-view__add" (click)="addToCart(product)" [disabled]="isInCart(product.id)">
+            {{ isInCart(product.id) ? 'ALREADY IN BAG' : ('ADD ' + quantity + ' TO CART') }}
+          </button>
+        </div>
+      </div>
+    </section>
+  } @else {
+    <section class="product-view__empty">
+      <h1>PRODUCT NOT FOUND</h1>
+      <p>That product is unavailable or could not be loaded.</p>
+      <a routerLink="/">RETURN TO NEW DROPS</a>
+    </section>
+  }
+</main>

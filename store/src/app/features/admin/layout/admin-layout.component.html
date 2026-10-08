@@ -1,0 +1,24 @@
+<div class="sr-admin-shell">
+  <!-- Mobile Backdrop Overlay -->
+  @if (isSidebarOpen) {
+    <div class="sr-sidebar-backdrop" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Persistent Sidebar -->
+  <app-admin-sidebar
+    [isOpen]="isSidebarOpen"
+    (closeSidebar)="closeSidebar()"
+  ></app-admin-sidebar>
+
+  <!-- Right Side: Header + Page Content -->
+  <div class="sr-admin-main">
+    <app-admin-header
+      (toggleSidebar)="toggleSidebar()"
+    ></app-admin-header>
+
+    <main class="sr-admin-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+

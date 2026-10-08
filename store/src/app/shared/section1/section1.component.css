@@ -1,0 +1,606 @@
+/* ============================================= */
+/* SOLE//RAW Hero — Premium Animated Showcase     */
+/* Dark theme: black / cream / lime accent        */
+/* ============================================= */
+
+.sr-hero * {
+  box-sizing: border-box;
+}
+
+.sr-hero {
+  width: 100%;
+  background-color: #000000;
+  color: #fffefe;
+  font-family: 'Arial', 'Helvetica Neue', sans-serif;
+  padding: 40px 24px 60px;
+}
+
+.sr-hero-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* ===== Left Column ===== */
+
+.sr-hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sr-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #333;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 16px;
+  width: fit-content;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.sr-pulse-icon {
+  width: 16px;
+  height: 16px;
+  color: #d9f13d;
+}
+
+.sr-badge-strong {
+  font-weight: 700;
+  color: #ecebeb;
+}
+
+.sr-badge-sep {
+  color: #555;
+}
+
+.sr-badge-muted {
+  color: #a3a3a3;
+  font-weight: 600;
+}
+
+.sr-hero-heading {
+  font-size: clamp(48px, 6.5vw, 84px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #f4f4f4;
+  margin: 0;
+}
+
+.sr-lime-text {
+  color: #d9f13d;
+}
+
+.sr-hero-subline {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: #888;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.sr-hero-desc {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #b0b0b0;
+  max-width: 440px;
+  margin: 0;
+}
+
+/* ===== CTA Buttons ===== */
+
+.sr-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sr-btn--lime {
+  background: #d9f13d;
+  color: #000;
+  border-color: #d9f13d;
+}
+
+.sr-btn--lime:hover {
+  background: #c8e030;
+  border-color: #c8e030;
+}
+
+.sr-btn--outline {
+  background: transparent;
+  color: #fff;
+  border-color: #444;
+}
+
+.sr-btn--outline:hover {
+  border-color: #d9f13d;
+  color: #d9f13d;
+}
+
+.sr-btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Stats Row ===== */
+
+.sr-hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  border-top: 1px solid #222;
+  padding-top: 20px;
+}
+
+.sr-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sr-stat-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.sr-stat-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e0e0e0;
+  letter-spacing: 0.04em;
+}
+
+.sr-stat-value--lime {
+  color: #d9f13d;
+}
+
+/* ===== Right Column — Product Panel ===== */
+
+.sr-hero-right {
+  width: 100%;
+}
+
+.sr-panel {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  box-shadow: 10px 10px 0 #d9f13d;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ===== Panel Topbar ===== */
+
+.sr-panel-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #222;
+  background: #0a0a0a;
+}
+
+.sr-ref {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #555;
+  letter-spacing: 0.06em;
+}
+
+.sr-ref-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d9f13d;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.sr-panel-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sr-cam-tag {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 0.05em;
+}
+
+.sr-stock-tag {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #d9f13d;
+  border: 1px solid #d9f13d;
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+}
+
+/* ===== Sneaker Stage ===== */
+
+.sr-panel-image-wrap {
+  position: relative;
+  height: 380px;
+  background: #0d0d0d;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Corner markers */
+.sr-corner {
+  position: absolute;
+  font-size: 18px;
+  color: #333;
+  line-height: 1;
+  z-index: 2;
+}
+.sr-corner--tl { top: 10px; left: 12px; }
+.sr-corner--tr { top: 10px; right: 12px; }
+.sr-corner--bl { bottom: 10px; left: 12px; }
+.sr-corner--br { bottom: 10px; right: 12px; }
+
+/* Stage watermark */
+.sr-stage-watermark {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+  text-transform: uppercase;
+}
+
+/* ===== Sneaker Animation Container ===== */
+
+.sr-sneaker-container {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(0deg);
+}
+
+/* Enter state: slide in from below */
+.sr-sneaker--entering {
+  opacity: 0;
+  transform: translateY(24px) scale(0.96) rotate(-1deg);
+}
+
+/* Active state: floating animation */
+.sr-sneaker--active {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(0deg);
+  animation: sneakerFloat 3.8s ease-in-out infinite;
+}
+
+/* Exit state: slide out upward */
+.sr-sneaker--exiting {
+  opacity: 0;
+  transform: translateY(-20px) scale(1.03) rotate(1deg);
+}
+
+@keyframes sneakerFloat {
+  0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+  25%       { transform: translateY(-6px) scale(1.008) rotate(0.4deg); }
+  50%       { transform: translateY(-10px) scale(1.012) rotate(0.8deg); }
+  75%       { transform: translateY(-5px) scale(1.006) rotate(0.2deg); }
+}
+
+.sr-sneaker-image {
+  max-width: 280px;
+  max-height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+  position: relative;
+  z-index: 2;
+}
+
+.sr-sneaker-shadow {
+  width: 180px;
+  height: 18px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
+  border-radius: 50%;
+  margin-top: -10px;
+  animation: shadowBreathe 3.8s ease-in-out infinite;
+}
+
+@keyframes shadowBreathe {
+  0%, 100% { transform: scaleX(1); opacity: 0.55; }
+  50%       { transform: scaleX(0.82); opacity: 0.3; }
+}
+
+/* ===== Nav Arrows ===== */
+
+.sr-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #333;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.sr-nav-arrow--prev { left: 12px; }
+.sr-nav-arrow--next { right: 12px; }
+
+.sr-nav-arrow:hover {
+  background: #d9f13d;
+  color: #000;
+  border-color: #d9f13d;
+}
+
+/* ===== Cycle Track Pills ===== */
+
+.sr-cycle-track {
+  display: flex;
+  gap: 0;
+  padding: 0 16px;
+  border-top: 1px solid #1a1a1a;
+  background: #0a0a0a;
+}
+
+.sr-cycle-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0 8px;
+  background: transparent;
+  border: none;
+  border-top: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sr-cycle-pill--active {
+  border-top-color: #d9f13d;
+}
+
+.sr-cycle-pill--active .sr-cycle-num {
+  color: #d9f13d;
+}
+
+.sr-cycle-bar {
+  display: none;
+}
+
+.sr-cycle-num {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #444;
+  letter-spacing: 0.08em;
+  transition: color 0.2s ease;
+}
+
+.sr-cycle-pill:hover .sr-cycle-num {
+  color: #888;
+}
+
+/* ===== Product Info ===== */
+
+.sr-panel-info {
+  padding: 16px;
+  border-top: 1px solid #1a1a1a;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sr-panel-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sr-panel-info-row--entering {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.sr-panel-info-row--active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sr-panel-info-row--exiting {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.sr-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sr-featured-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.sr-featured-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #f4f4f4;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.sr-featured-colorway {
+  font-size: 11px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.sr-msrp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.sr-msrp-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sr-msrp-value {
+  font-size: 20px;
+  font-weight: 900;
+  color: #d9f13d;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Telemetry CTA Button ===== */
+
+.sr-telemetry-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #ccc;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sr-telemetry-btn:hover {
+  background: #d9f13d;
+  border-color: #d9f13d;
+  color: #000;
+}
+
+.sr-telemetry-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.sr-telemetry-btn:hover .sr-telemetry-icon {
+  transform: translateX(4px);
+}
+
+/* ===== Responsive Breakpoints ===== */
+
+@media (min-width: 1080px) {
+  .sr-hero-inner {
+    grid-template-columns: 1.15fr 0.95fr;
+    gap: 64px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sr-hero {
+    padding: 30px 16px 48px;
+  }
+  .sr-panel-image-wrap {
+    height: 300px;
+  }
+  .sr-sneaker-image {
+    max-height: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sr-hero-heading {
+    font-size: 46px;
+  }
+
+  .sr-hero-stats {
+    gap: 24px;
+  }
+
+  .sr-panel-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sr-msrp {
+    align-items: flex-start;
+  }
+}

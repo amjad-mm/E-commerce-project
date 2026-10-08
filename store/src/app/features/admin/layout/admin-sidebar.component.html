@@ -1,0 +1,115 @@
+<aside class="sr-admin-sidebar" [class.sr-admin-sidebar--open]="isOpen">
+  <!-- Sidebar Header / Branding -->
+  <div class="sr-sidebar-brand">
+    <div class="sr-brand-row">
+      <span class="sr-brand-name">SOLE<span class="sr-brand-slash">//</span>RAW</span>
+      <span class="sr-brand-badge">ADMIN</span>
+    </div>
+    <div class="sr-brand-sub">
+      <span class="sr-status-dot"></span>
+      <span>SYS_PROTOCOL // ROOT_ACCESS</span>
+    </div>
+    <button type="button" class="sr-mobile-close" (click)="closeSidebar.emit()" aria-label="Close Sidebar">
+      ✕
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sr-sidebar-nav">
+    <div class="sr-nav-section-label">// CONTROL INTERFACES</div>
+
+    <a
+      routerLink="/admin"
+      routerLinkActive="sr-nav-item--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">01</span>
+      <span class="sr-nav-label">DASHBOARD</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+
+    <a
+      routerLink="/admin/products"
+      routerLinkActive="sr-nav-item--active"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">02</span>
+      <span class="sr-nav-label">PRODUCTS</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+
+    <a
+      routerLink="/admin/orders"
+      routerLinkActive="sr-nav-item--active"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">03</span>
+      <span class="sr-nav-label">ORDERS</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+
+    <a
+      routerLink="/admin/users"
+      routerLinkActive="sr-nav-item--active"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">04</span>
+      <span class="sr-nav-label">USERS</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+
+    <a
+      routerLink="/admin/categories"
+      routerLinkActive="sr-nav-item--active"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">05</span>
+      <span class="sr-nav-label">CATEGORIES</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+
+    <a
+      routerLink="/admin/settings"
+      routerLinkActive="sr-nav-item--active"
+      class="sr-nav-item"
+      (click)="onNavClick()"
+    >
+      <span class="sr-nav-num">06</span>
+      <span class="sr-nav-label">SETTINGS</span>
+      <span class="sr-nav-indicator">›</span>
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer / Utility -->
+  <div class="sr-sidebar-footer">
+    @if (currentUser$ | async; as user) {
+      <div class="sr-admin-profile">
+        <div class="sr-profile-avatar">{{ user.name ? user.name[0] : 'A' }}</div>
+        <div class="sr-profile-info">
+          <strong class="sr-profile-name">{{ user.name || 'SYSTEM ADMIN' }}</strong>
+          <span class="sr-profile-role">ROLE: {{ user.role | uppercase }}</span>
+        </div>
+      </div>
+    }
+
+    <div class="sr-sidebar-actions">
+      <a routerLink="/" class="sr-action-btn sr-action-btn--store" (click)="onNavClick()">
+        <span>← RETURN TO STORE</span>
+      </a>
+
+      <button type="button" class="sr-action-btn sr-action-btn--logout" (click)="onLogout()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span>LOGOUT SESSION</span>
+      </button>
+    </div>
+  </div>
+</aside>
+

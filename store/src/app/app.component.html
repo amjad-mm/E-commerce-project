@@ -1,0 +1,15 @@
+@if (isAuthRoute() || isAdminRoute()) {
+	<router-outlet></router-outlet>
+} @else {
+	<app-navbar> </app-navbar>
+	@if (isHomeRoute()) {
+		<app-section1></app-section1>
+		<app-catagories> </app-catagories>
+		<app-products></app-products>
+	} @else {
+		<router-outlet></router-outlet>
+	}
+	<app-footer> </app-footer>
+}
+
+<app-notification></app-notification>

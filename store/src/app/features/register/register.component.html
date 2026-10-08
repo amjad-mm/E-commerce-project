@@ -1,0 +1,169 @@
+<!-- ============================================= -->
+<!-- SOLE//RAW Create Account Page (Plain CSS)     -->
+<!-- Usage: signup.component.html                  -->
+<!-- Pair with signup.component.css                -->
+<!-- ============================================= -->
+
+<section class="sr-signup">
+  <span class="sr-corner-mark sr-corner-mark--tl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--tr">+</span>
+  <span class="sr-corner-mark sr-corner-mark--bl">+</span>
+  <span class="sr-corner-mark sr-corner-mark--br">+</span>
+
+  <div class="sr-signup-grid">
+
+
+
+    <!-- ===== Right column: form ===== -->
+    <div class="sr-signup-right">
+
+      <div class="sr-form-header">
+        <div>
+          <p class="sr-form-eyebrow">// NEW_REGISTRATION</p>
+          <h2 class="sr-form-title">CREATE ACCOUNT</h2>
+        </div>
+        <span class="sr-tier-tag">[TIER_0 // RECRUIT]</span>
+      </div>
+
+      <button type="button" class="sr-google-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sr-google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.2h6.5c-.1 1.1-.9 2.7-2.6 3.8l4 3.1c2.4-2.2 3.6-5.4 3.6-8.9z" />
+          <path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.8l-4-3.1c-1.1.7-2.4 1.2-3.9 1.2-3 0-5.6-2-6.5-4.8l-4.1 3.2C3.3 21.3 7.3 24 12 24z" />
+          <path fill="#FBBC05" d="M5.5 14.5c-.2-.7-.4-1.4-.4-2.2s.1-1.5.4-2.2l-4.1-3.2C.5 8.4 0 10.1 0 12s.5 3.6 1.4 5.1l4.1-3.2z" />
+          <path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.7l3.5-3.5C17.9 1.2 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.9l4.1 3.2c.9-2.8 3.5-4.8 6.5-4.8z" />
+        </svg>
+        CONTINUE WITH GOOGLE
+      </button>
+
+      <div class="sr-form-divider">
+        <span>— OR ENTER SPEC DATA —</span>
+      </div>
+
+      <form class="sr-signup-form" [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
+
+        <p class="sr-validation-error sr-form-message" *ngIf="serverError">{{ serverError }}</p>
+        <p class="sr-form-success sr-form-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+        <div class="sr-form-row">
+          <div class="sr-form-field">
+            <label class="sr-field-label">FIRST NAME // 01 *</label>
+            <input type="text" placeholder="MARCUS" class="sr-field-input" formControlName="firstName" [class.sr-field-input--invalid]="isInvalid('firstName')" />
+            @if (isInvalid('firstName')) {
+              <span class="sr-validation-error">{{ nameError('firstName') }}</span>
+            }
+          </div>
+          <div class="sr-form-field">
+            <label class="sr-field-label">LAST NAME // 02 *</label>
+            <input type="text" placeholder="VANCE" class="sr-field-input" formControlName="lastName" [class.sr-field-input--invalid]="isInvalid('lastName')" />
+            @if (isInvalid('lastName')) {
+              <span class="sr-validation-error">{{ nameError('lastName') }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="sr-form-field">
+          <label class="sr-field-label">EMAIL ADDRESS // 03 *</label>
+          <input type="email" placeholder="USER@VAULT-DOMAIN.COM" class="sr-field-input" formControlName="email" [class.sr-field-input--invalid]="isInvalid('email')" />
+          @if (isInvalid('email')) {
+            <span class="sr-validation-error">Enter a valid email address.</span>
+          }
+        </div>
+
+        <div class="sr-form-field">
+          <div class="sr-field-label-row">
+            <label class="sr-field-label">DATE OF BIRTH (OPTIONAL) // 04</label>
+            <span class="sr-verification-tag">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sr-info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path stroke-linecap="round" d="M12 16v-4m0-3h.01" />
+              </svg>
+              VERIFICATION REQ
+            </span>
+          </div>
+          <input type="text" placeholder="DD / MM / YYYY" class="sr-field-input" />
+          <p class="sr-field-hint">Required for 18+ Limited Edition ballot verification.</p>
+        </div>
+
+        <div class="sr-form-row">
+          <div class="sr-form-field">
+            <label class="sr-field-label">PASSWORD // 05 *</label>
+            <div class="sr-password-wrap">
+              <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="password" [class.sr-field-input--invalid]="isInvalid('password')" />
+              <button type="button" class="sr-eye-btn" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                @if (showPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.046 10.046 0 013.122-.563c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m-9.69-9.69a3 3 0 114.243 4.243m-4.243-4.243L3 3l18 18" />
+                  </svg>
+                  HIDE
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  SHOW
+                }
+              </button>
+            </div>
+            @if (isInvalid('password')) {
+              <span class="sr-validation-error">{{ passwordError() }}</span>
+            }
+          </div>
+          <div class="sr-form-field">
+            <label class="sr-field-label">CONFIRM PASSWORD // 06 *</label>
+            <div class="sr-password-wrap">
+              <input [type]="showConfirmPassword ? 'text' : 'password'" placeholder="••••••••••••" class="sr-field-input sr-field-input--password" formControlName="confirmPassword" [class.sr-field-input--invalid]="isInvalid('confirmPassword') || isPasswordMismatch()" />
+              <button type="button" class="sr-eye-btn" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+                @if (showConfirmPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.046 10.046 0 013.122-.563c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m-9.69-9.69a3 3 0 114.243 4.243m-4.243-4.243L3 3l18 18" />
+                  </svg>
+                  HIDE
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" class="sr-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  SHOW
+                }
+              </button>
+            </div>
+            @if (isInvalid('confirmPassword')) {
+              <span class="sr-validation-error">Please confirm your password.</span>
+            } @else if (isPasswordMismatch()) {
+              <span class="sr-validation-error">Passwords do not match.</span>
+            }
+          </div>
+        </div>
+
+        <label class="sr-checkbox-row">
+          <input type="checkbox" class="sr-checkbox-input" formControlName="terms" />
+          <span class="sr-checkbox-text">
+            I AGREE TO THE <a href="#" class="sr-inline-link">TERMS OF SYSTEM TRADE</a> &amp;
+            <a href="#" class="sr-inline-link">PRIVACY DIRECTIVE</a>. I ACCEPT RAW ENCRYPTED DISPATCHES.
+          </span>
+        </label>
+        @if (isInvalid('terms')) {
+          <span class="sr-validation-error">You must accept the terms to continue.</span>
+        }
+
+        <button type="submit" class="sr-create-btn" [disabled]="registerForm.invalid || isLoading">
+          {{ isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT' }}
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-create-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" />
+          </svg>
+        </button>
+
+      </form>
+
+      <div class="sr-form-footer">
+        <span>ALREADY A MEMBER? <a routerLink="/login" class="sr-signin-link">SIGN IN →</a></span>
+        <span class="sr-node-key">
+          <span class="sr-node-dot"></span>
+          NODE_KEY: #4482-TX
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+</section>

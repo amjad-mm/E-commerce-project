@@ -1,0 +1,262 @@
+<div class="sr-dashboard">
+
+  <!-- Executive Header Row -->
+  <header class="sr-dash-header">
+    <div>
+      <div class="sr-dash-eyebrow">
+        <span class="sr-tag-black">[SYSTEM MATRIX]</span>
+        <span>ROOT_TELEMETRY // LIVE ARCHIVE OVERVIEW</span>
+      </div>
+      <h1 class="sr-dash-title">EXECUTIVE <em>CONTROL</em></h1>
+      <p class="sr-dash-sub">Centralized dispatch management, inventory allocation, and order settlement overview.</p>
+    </div>
+
+    <div class="sr-header-stats-pill">
+      <div class="sr-pill-item">
+        <span class="sr-pill-dot"></span>
+        <span>NODE // LOCALHOST:3000</span>
+      </div>
+      <div class="sr-pill-divider">|</div>
+      <div class="sr-pill-item">
+        <span class="sr-pill-dim">MODE:</span>
+        <b class="sr-pill-bright">ROOT_ADMIN</b>
+      </div>
+    </div>
+  </header>
+
+  @if (isLoading) {
+    <div class="sr-loading-card">
+      <div class="sr-loading-dot"></div>
+      <p>// RETRIEVING ARCHIVAL METRICS AND ORDER TELEMETRY...</p>
+    </div>
+  } @else {
+
+    <!-- KPI Metric Cards Grid (Oversized Brutalist Numbers) -->
+    <section class="sr-kpi-grid">
+
+      <!-- KPI 1: Total Revenue -->
+      <article class="sr-kpi-card sr-kpi-card--primary">
+        <div class="sr-kpi-top">
+          <span class="sr-kpi-code">[KPI_01]</span>
+          <span class="sr-kpi-label">SETTLED CAPITAL</span>
+        </div>
+        <div class="sr-kpi-number">{{ totalRevenue | currency:'INR':'symbol':'1.0-0' }}</div>
+        <div class="sr-kpi-footer">
+          <span class="sr-kpi-meta">GROSS TRANSACTION VALUE</span>
+          <span class="sr-kpi-trend">ALL CHANNELS</span>
+        </div>
+      </article>
+
+      <!-- KPI 2: Total Orders -->
+      <article class="sr-kpi-card">
+        <div class="sr-kpi-top">
+          <span class="sr-kpi-code">[KPI_02]</span>
+          <span class="sr-kpi-label">TOTAL DISPATCHES</span>
+        </div>
+        <div class="sr-kpi-number">{{ totalOrders.toString().padStart(2, '0') }}</div>
+        <div class="sr-kpi-footer">
+          <span class="sr-kpi-meta">RECORDED ORDERS IN DB</span>
+          <span class="sr-kpi-accent">{{ recentOrders.length }} RECENT</span>
+        </div>
+      </article>
+
+      <!-- KPI 3: Total Customers -->
+      <article class="sr-kpi-card">
+        <div class="sr-kpi-top">
+          <span class="sr-kpi-code">[KPI_03]</span>
+          <span class="sr-kpi-label">VERIFIED CADRE</span>
+        </div>
+        <div class="sr-kpi-number">{{ totalCustomers.toString().padStart(2, '0') }}</div>
+        <div class="sr-kpi-footer">
+          <span class="sr-kpi-meta">REGISTERED CUSTOMERS</span>
+          <span class="sr-kpi-accent">AUTHENTICATED</span>
+        </div>
+      </article>
+
+      <!-- KPI 4: Total Products -->
+      <article class="sr-kpi-card">
+        <div class="sr-kpi-top">
+          <span class="sr-kpi-code">[KPI_04]</span>
+          <span class="sr-kpi-label">ACTIVE SILHOUETTES</span>
+        </div>
+        <div class="sr-kpi-number">{{ totalProducts.toString().padStart(2, '0') }}</div>
+        <div class="sr-kpi-footer">
+          <span class="sr-kpi-meta">CATALOG DROPS LIVE</span>
+          <span class="sr-kpi-accent">5 ARCHIVES</span>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Mid Section: Visualizer & Order Status Overview -->
+    <section class="sr-mid-grid">
+
+      <!-- Volume Visualizer Panel -->
+      <div class="sr-panel sr-panel--chart">
+        <div class="sr-panel-header">
+          <div>
+            <span class="sr-panel-index">[DIAG_01]</span>
+            <h2 class="sr-panel-title">VOLUME DISTRIBUTION MATRIX</h2>
+          </div>
+          <span class="sr-panel-tag">7-DAY TELEMETRY</span>
+        </div>
+
+        <div class="sr-panel-body">
+          <div class="sr-chart-track">
+            @for (bar of volumeMetrics; track bar.day) {
+              <div class="sr-chart-col">
+                <div class="sr-bar-wrap">
+                  <div class="sr-bar-fill" [style.height.%]="bar.heightPercent">
+                    <span class="sr-bar-tooltip">{{ bar.volume | currency:'INR':'symbol':'1.0-0' }}</span>
+                  </div>
+                </div>
+                <span class="sr-bar-label">{{ bar.day }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="sr-chart-footer">
+            <div class="sr-chart-legend">
+              <span class="sr-legend-box"></span>
+              <span>ALLOCATED VOLUME (PROPORTIONAL DISTRIBUTION)</span>
+            </div>
+            <span class="sr-chart-unit">UNIT: INR // ₹</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Status Telemetry -->
+      <div class="sr-panel sr-panel--status">
+        <div class="sr-panel-header">
+          <div>
+            <span class="sr-panel-index">[DIAG_02]</span>
+            <h2 class="sr-panel-title">DISPATCH FULFILLMENT RATIOS</h2>
+          </div>
+          <span class="sr-panel-tag">REALTIME STATUS</span>
+        </div>
+
+        <div class="sr-panel-body sr-status-list">
+          @for (item of statusSummary; track item.status) {
+            <div class="sr-status-row">
+              <div class="sr-status-label-group">
+                <span class="sr-status-pill sr-status-pill--{{ item.status }}">{{ item.status | uppercase }}</span>
+                <span class="sr-status-full-label">{{ item.label }}</span>
+                <strong class="sr-status-count">{{ item.count }} DISPATCHES</strong>
+              </div>
+              <div class="sr-status-progress-track">
+                <div class="sr-status-progress-bar sr-status-progress-bar--{{ item.status }}" [style.width.%]="item.percentage"></div>
+              </div>
+              <span class="sr-status-percentage">{{ item.percentage }}%</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Lower Section: Recent Orders & Inventory Manifest -->
+    <section class="sr-lower-grid">
+
+      <!-- Recent Orders Manifest -->
+      <div class="sr-panel sr-panel--orders">
+        <div class="sr-panel-header">
+          <div>
+            <span class="sr-panel-index">[MANIFEST_01]</span>
+            <h2 class="sr-panel-title">RECENT ORDER DISPATCHES</h2>
+          </div>
+          <span class="sr-panel-meta">TOP 5 TRANSACTIONS</span>
+        </div>
+
+        <div class="sr-panel-body sr-p-0">
+          @if (recentOrders.length === 0) {
+            <div class="sr-empty-panel">
+              <span class="sr-empty-code">[VAULT_EMPTY]</span>
+              <p>NO ORDERS CURRENTLY RECORDED IN DATABASE.</p>
+            </div>
+          } @else {
+            <div class="sr-table-container">
+              <table class="sr-table">
+                <thead>
+                  <tr>
+                    <th>ORDER IDENTIFIER</th>
+                    <th>RECIPIENT</th>
+                    <th>TIMESTAMP</th>
+                    <th>ALLOCATION TOTAL</th>
+                    <th>STATUS</th>
+                    <th class="sr-text-right">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (order of recentOrders; track order.id) {
+                    <tr>
+                      <td class="sr-td-code">
+                        <span class="sr-mono-id">{{ order.id }}</span>
+                      </td>
+                      <td>
+                        <strong>{{ order.customerName || 'CADRE_MEMBER' }}</strong>
+                        <small class="sr-sub-text">{{ order.phone }}</small>
+                      </td>
+                      <td class="sr-td-date">
+                        {{ order.createdAt | date:'dd MMM yyyy' }}<br />
+                        <small class="sr-sub-text">{{ order.createdAt | date:'hh:mm a' }}</small>
+                      </td>
+                      <td class="sr-td-price">
+                        <strong>{{ order.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+                        <small class="sr-sub-text">{{ order.paymentMethod | uppercase }}</small>
+                      </td>
+                      <td>
+                        <span class="sr-status-pill sr-status-pill--{{ order.status }}">
+                          {{ order.status | uppercase }}
+                        </span>
+                      </td>
+                      <td class="sr-text-right">
+                        <a [routerLink]="['/orders', order.id]" class="sr-table-btn">
+                          INSPECT [↗]
+                        </a>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Inventory Manifest (Recent Products) -->
+      <div class="sr-panel sr-panel--inventory">
+        <div class="sr-panel-header">
+          <div>
+            <span class="sr-panel-index">[INVENTORY_01]</span>
+            <h2 class="sr-panel-title">CATALOG SILHOUETTES</h2>
+          </div>
+          <span class="sr-panel-meta">{{ products.length }} DROPS TOTAL</span>
+        </div>
+
+        <div class="sr-panel-body sr-p-0">
+          <div class="sr-product-list">
+            @for (prod of recentProducts; track prod.id; let idx = $index) {
+              <div class="sr-prod-row">
+                <span class="sr-prod-idx">0{{ idx + 1 }}</span>
+                <img [src]="prod.image" [alt]="prod.name" class="sr-prod-thumb" />
+                <div class="sr-prod-info">
+                  <span class="sr-prod-tag">{{ prod.category | uppercase }} // {{ prod.sku }}</span>
+                  <strong class="sr-prod-name">{{ prod.name }}</strong>
+                  <span class="sr-prod-colorway">{{ prod.colorway }}</span>
+                </div>
+                <div class="sr-prod-pricing">
+                  <strong class="sr-prod-val">{{ prod.price | currency:'INR':'symbol':'1.0-0' }}</strong>
+                  <a [routerLink]="['/product', prod.id]" class="sr-prod-view-link">VIEW [↗]</a>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  }
+
+</div>
+

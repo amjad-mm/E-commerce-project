@@ -1,0 +1,40 @@
+<header class="sr-admin-header">
+  <div class="sr-header-left">
+    <!-- Mobile Hamburger Toggle -->
+    <button type="button" class="sr-mobile-menu-btn" (click)="toggleSidebar.emit()" aria-label="Toggle Navigation">
+      <span class="sr-menu-icon">☰</span>
+      <span class="sr-menu-text">MENU</span>
+    </button>
+
+    <div class="sr-header-breadcrumbs">
+      <div class="sr-header-tag">
+        <span class="sr-live-dot"></span>
+        <span>PROTOCOL // ACTIVE</span>
+      </div>
+      <h1 class="sr-header-title">{{ getPageTitle() }}</h1>
+    </div>
+  </div>
+
+  <div class="sr-header-right">
+    <!-- Telemetry Clock -->
+    <div class="sr-telemetry-date">
+      <span class="sr-date-label">SYSTEM_EPOCH:</span>
+      <span class="sr-date-val">{{ today | date:'dd MMM yyyy' | uppercase }}</span>
+    </div>
+
+    <!-- Admin User Badge -->
+    @if (currentUser$ | async; as user) {
+      <div class="sr-header-user">
+        <span class="sr-role-pill">{{ user.role | uppercase }}</span>
+        <span class="sr-user-name">{{ user.name || 'ROOT ADMIN' }}</span>
+      </div>
+    }
+
+    <!-- Quick store link -->
+    <a routerLink="/" class="sr-store-link" title="Open customer storefront">
+      <span>STOREFRONT</span>
+      <span class="sr-link-arrow">↗</span>
+    </a>
+  </div>
+</header>
+
