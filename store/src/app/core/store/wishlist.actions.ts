@@ -13,7 +13,7 @@ export const toggleWishlist = createAction(
 
 export const removeFromWishlist = createAction(
   '[Wishlist] Remove From Wishlist',
-  props<{ productId: number }>()
+  props<{ productId: string | number }>()
 );
 
 export const clearWishlist = createAction('[Wishlist] Clear Wishlist');

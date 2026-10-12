@@ -44,11 +44,17 @@ import { WishlistState } from '../../core/store/wishlist.reducer';
                 <div class="sr-card__image">
                   <span class="sr-card__tag">{{ product.tag }}</span>
                   <button class="sr-card__remove" type="button" (click)="remove(product)" aria-label="Remove from wishlist">REMOVE [×]</button>
-                  <img [src]="product.image" [alt]="product.name" />
+                  <a [routerLink]="['/product', product.id]">
+                    <img [src]="product.image" [alt]="product.name" (error)="onImgError($event)" />
+                  </a>
                 </div>
                 <div class="sr-card__body">
                   <p class="sr-card__brand">{{ product.brand }} // {{ product.colorway }}</p>
-                  <h2>{{ product.name }}</h2>
+                  <h2>
+                    <a [routerLink]="['/product', product.id]" style="color: inherit; text-decoration: none;">
+                      {{ product.name }}
+                    </a>
+                  </h2>
                   <div class="sr-card__bottom"><strong>{{ product.price | currency:'INR':'symbol':'1.0-0' }}</strong><button type="button" (click)="addToCart(product)">ADD TO BAG <span>→</span></button></div>
                 </div>
               </article>
@@ -98,5 +104,12 @@ export class WishlistComponent {
     this.cartService.addToCart(product);
     this.wishlistService.remove(product.id);
     this.notificationService.show(`${product.name} added to cart`);
+  }
+
+  onImgError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = '/asset/products/product1.png';
+    }
   }
 }

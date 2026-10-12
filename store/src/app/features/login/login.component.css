@@ -35,6 +35,107 @@
   font-weight: 700;
 }
 
+/* Banned / Blocked Account Alert Card */
+.sr-banned-alert-card {
+  background-color: #fff3f2;
+  border: 2px solid #c2392a;
+  box-shadow: 6px 6px 0 #c2392a;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.sr-banned-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sr-banned-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #c2392a;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+}
+
+.sr-banned-pulse {
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  animation: pulseBanned 1s infinite alternate;
+}
+
+@keyframes pulseBanned {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+.sr-banned-symbol {
+  font-size: 20px;
+}
+
+.sr-banned-title {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: #c2392a;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sr-banned-message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #111111;
+}
+
+.sr-banned-message strong {
+  color: #c2392a;
+}
+
+.sr-banned-sub {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #666666;
+}
+
+.sr-banned-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.sr-banned-dismiss {
+  background: #ffffff;
+  border: 1px solid #c2392a;
+  color: #c2392a;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #c2392a;
+  transition: all 0.15s ease;
+}
+
+.sr-banned-dismiss:hover {
+  background: #c2392a;
+  color: #ffffff;
+}
+
 .sr-signin {
   position: relative;
   width: 100%;

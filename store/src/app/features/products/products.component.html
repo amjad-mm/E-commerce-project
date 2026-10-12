@@ -1,35 +1,64 @@
-<section class="sr-drops">
+<section class="sr-drops" id="drops">
   <div class="sr-drops-inner">
 
     <!-- Section header -->
     <div class="sr-drops-header">
       <div class="sr-drops-title-row">
         <h2 class="sr-drops-title">NEW DROPS</h2>
-        <span class="sr-tag-available">[AVAILABLE NOW]</span>
+        <span class="sr-tag-available">[AVAILABLE NOW: {{ products.length }} SNEAKERS]</span>
+
+        @if ((currentUser$ | async)?.role === 'admin') {
+          <a routerLink="/admin/products/add" class="sr-admin-add-btn">
+            <span>+ ADD SNEAKER [ADMIN]</span>
+          </a>
+        }
       </div>
 
       <div class="sr-sort-row">
         <span class="sr-sort-label">SORT:</span>
 
-        <button class="sr-sort-btn sr-sort-btn--active">
+        <button
+          type="button"
+          class="sr-sort-btn"
+          [class.sr-sort-btn--active]="activeSort === 'latest'"
+          (click)="setSort('latest')"
+        >
           LATEST DEPLOYMENT
         </button>
 
-        <button class="sr-sort-btn">
-          SPEC WEIGHT
+        <button
+          type="button"
+          class="sr-sort-btn"
+          [class.sr-sort-btn--active]="activeSort === 'price-asc'"
+          (click)="setSort('price-asc')"
+        >
+          PRICE: LOW TO HIGH
+        </button>
+
+        <button
+          type="button"
+          class="sr-sort-btn"
+          [class.sr-sort-btn--active]="activeSort === 'price-desc'"
+          (click)="setSort('price-desc')"
+        >
+          PRICE: HIGH TO LOW
         </button>
       </div>
     </div>
 
     <!-- Product grid -->
     <div class="sr-grid">
-  @for (product of products; track product.id) {
-    <app-product-details
-      [product]="product"
-      (click)="openProduct(product.id, $event)">
-    </app-product-details>
-  }
-</div>
+      @for (product of displayedProducts; track product.id) {
+        <app-product-details
+          [product]="product"
+          (click)="openProduct(product.id, $event)">
+        </app-product-details>
+      } @empty {
+        <div class="sr-empty-catalog">
+          <p>NO PRODUCTS CURRENTLY AVAILABLE IN THIS CATALOGUE.</p>
+        </div>
+      }
+    </div>
 
   </div>
 </section>

@@ -63,27 +63,27 @@
       <span class="sr-nav-indicator">›</span>
     </a>
 
-    <a
-      routerLink="/admin/categories"
-      routerLinkActive="sr-nav-item--active"
-      class="sr-nav-item"
-      (click)="onNavClick()"
-    >
-      <span class="sr-nav-num">05</span>
-      <span class="sr-nav-label">CATEGORIES</span>
-      <span class="sr-nav-indicator">›</span>
-    </a>
-
-    <a
-      routerLink="/admin/settings"
-      routerLinkActive="sr-nav-item--active"
-      class="sr-nav-item"
-      (click)="onNavClick()"
-    >
-      <span class="sr-nav-num">06</span>
-      <span class="sr-nav-label">SETTINGS</span>
-      <span class="sr-nav-indicator">›</span>
-    </a>
+    <!-- Control Node Telemetry Widget -->
+    <div class="sr-sidebar-telemetry">
+      <div class="sr-telemetry-head">
+        <span class="sr-telemetry-tag">// CONTROL NODE</span>
+        <span class="sr-telemetry-badge">● ONLINE</span>
+      </div>
+      <div class="sr-telemetry-rows">
+        <div class="sr-telemetry-row">
+          <span class="sr-tel-label">DATABASE</span>
+          <span class="sr-tel-val">JSON_SERVER:3000</span>
+        </div>
+        <div class="sr-telemetry-row">
+          <span class="sr-tel-label">SETTLEMENT</span>
+          <span class="sr-tel-val">INR (₹) STANDALONE</span>
+        </div>
+        <div class="sr-telemetry-row">
+          <span class="sr-tel-label">CLEARANCE</span>
+          <span class="sr-tel-val sr-tel-val--lime">ROOT_ADMIN</span>
+        </div>
+      </div>
+    </div>
   </nav>
 
   <!-- Sidebar Footer / Utility -->
@@ -112,4 +112,3 @@
     </div>
   </div>
 </aside>
-

@@ -1,0 +1,448 @@
+<div class="sr-orders-view">
+  <!-- PAGE HEADER -->
+  <header class="sr-orders-header">
+    <div class="sr-header-left">
+      <div class="sr-header-eyebrow">
+        <span class="sr-tag-black">DISPATCH // TELEMETRY</span>
+        <span>FULFILLMENT_PIPELINE_V1</span>
+      </div>
+      <h1 class="sr-page-title">ORDERS</h1>
+      <p class="sr-page-sub">Track and manage customer orders, dispatch manifests, and fulfillment status.</p>
+    </div>
+
+    <div class="sr-header-right">
+      <div class="sr-count-pill">
+        <span class="sr-count-label">TOTAL DISPATCHES</span>
+        <span class="sr-count-value">{{ orders.length }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATUS SUMMARY ROW -->
+  <section class="sr-status-summary-bar">
+    <div class="sr-summary-chip">
+      <span class="sr-chip-dot sr-chip-dot--placed"></span>
+      <span class="sr-chip-label">PLACED:</span>
+      <strong class="sr-chip-count">{{ placedCount }}</strong>
+    </div>
+
+    <div class="sr-summary-chip">
+      <span class="sr-chip-dot sr-chip-dot--processing"></span>
+      <span class="sr-chip-label">PROCESSING:</span>
+      <strong class="sr-chip-count">{{ processingCount }}</strong>
+    </div>
+
+    <div class="sr-summary-chip">
+      <span class="sr-chip-dot sr-chip-dot--shipped"></span>
+      <span class="sr-chip-label">SHIPPED:</span>
+      <strong class="sr-chip-count">{{ shippedCount }}</strong>
+    </div>
+
+    <div class="sr-summary-chip">
+      <span class="sr-chip-dot sr-chip-dot--delivered"></span>
+      <span class="sr-chip-label">DELIVERED:</span>
+      <strong class="sr-chip-count">{{ deliveredCount }}</strong>
+    </div>
+
+    <div class="sr-summary-chip">
+      <span class="sr-chip-dot sr-chip-dot--cancelled"></span>
+      <span class="sr-chip-label">CANCELLED:</span>
+      <strong class="sr-chip-count">{{ cancelledCount }}</strong>
+    </div>
+  </section>
+
+  <!-- SEARCH & FILTERS -->
+  <section class="sr-filter-panel">
+    <div class="sr-filter-header">
+      <span class="sr-filter-tag">// QUERY & STATUS FILTERS</span>
+      <span class="sr-filter-sub">[REALTIME DISPATCH PIPELINE // {{ filteredOrders.length }} OF {{ orders.length }} ORDERS MATCH]</span>
+    </div>
+
+    <div class="sr-filter-controls">
+      <!-- Search by Order ID -->
+      <div class="sr-filter-group sr-filter-group--search">
+        <label for="orderIdSearch" class="sr-filter-label">ORDER ID</label>
+        <div class="sr-search-input-wrap">
+          <span class="sr-search-icon">#</span>
+          <input
+            id="orderIdSearch"
+            type="text"
+            class="sr-input sr-input--search"
+            [(ngModel)]="searchOrderId"
+            placeholder="Search by order ID (e.g. Q756...)"
+          />
+        </div>
+      </div>
+
+      <!-- Search by Customer -->
+      <div class="sr-filter-group sr-filter-group--search">
+        <label for="customerSearch" class="sr-filter-label">CUSTOMER NAME</label>
+        <div class="sr-search-input-wrap">
+          <span class="sr-search-icon">⌕</span>
+          <input
+            id="customerSearch"
+            type="text"
+            class="sr-input sr-input--search"
+            [(ngModel)]="searchCustomer"
+            placeholder="Search customer name..."
+          />
+        </div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="sr-filter-group">
+        <label for="orderStatusFilter" class="sr-filter-label">FULFILLMENT STATUS</label>
+        <select id="orderStatusFilter" class="sr-select" [(ngModel)]="selectedStatusFilter">
+          @for (status of statusOptions; track status) {
+            <option [value]="status">{{ status | uppercase }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Date Range Filter -->
+      <div class="sr-filter-group">
+        <label for="dateRangeFilter" class="sr-filter-label">DATE RANGE</label>
+        <select id="dateRangeFilter" class="sr-select" [(ngModel)]="selectedDateRange">
+          @for (range of dateRanges; track range) {
+            <option [value]="range">{{ range }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="sr-filter-group">
+        <label for="sortFilter" class="sr-filter-label">SORT CHRONOLOGY</label>
+        <select id="sortFilter" class="sr-select" [(ngModel)]="selectedSort">
+          @for (sort of sortOptions; track sort) {
+            <option [value]="sort">{{ sort }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Clear Button -->
+      <div class="sr-filter-group sr-filter-group--btn">
+        <label class="sr-filter-label sr-filter-label--hidden">RESET</label>
+        <button
+          type="button"
+          class="sr-btn sr-btn--outline"
+          (click)="clearFilters()"
+          title="Reset applied filters"
+        >
+          <span>CLEAR [✕]</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDERS TABLE SECTION -->
+  <section class="sr-table-panel">
+    <div class="sr-table-header">
+      <div class="sr-table-title-group">
+        <span class="sr-table-index">// 01</span>
+        <h2 class="sr-table-title">DISPATCH MANIFEST DIRECTORY</h2>
+      </div>
+      <span class="sr-table-status">SHOWING {{ filteredOrders.length }} OF {{ orders.length }} ENTRIES</span>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="sr-table-loading">
+        <div class="sr-loading-spinner"></div>
+        <span>FETCHING DISPATCH MANIFEST RECORDS FROM DATABASE...</span>
+      </div>
+    } @else if (hasError) {
+      <!-- Error State -->
+      <div class="sr-error-state">
+        <span class="sr-error-code">ERR_DATABASE_UNREACHABLE // 503</span>
+        <p class="sr-error-desc">{{ errorMessage }}</p>
+        <button type="button" class="sr-btn sr-btn--lime" (click)="loadOrders()">
+          <span>RETRY CONNECTION ↻</span>
+        </button>
+      </div>
+    } @else if (orders.length === 0) {
+      <!-- Empty State -->
+      <div class="sr-empty-state">
+        <span class="sr-empty-code">ERR_ZERO_ORDERS // MANIFEST EMPTY</span>
+        <p class="sr-empty-desc">No customer orders have been recorded in the system yet.</p>
+      </div>
+    } @else if (filteredOrders.length === 0) {
+      <!-- Empty Filter State -->
+      <div class="sr-empty-state">
+        <span class="sr-empty-code">ERR_ZERO_MATCHES // 0 DISPATCHES FOUND</span>
+        <p class="sr-empty-desc">No orders match your current query or status filters.</p>
+        <button type="button" class="sr-btn sr-btn--lime" (click)="clearFilters()">
+          <span>RESET FILTERS</span>
+        </button>
+      </div>
+    } @else {
+      <!-- Orders Responsive Table -->
+      <div class="sr-table-wrap">
+        <table class="sr-orders-table">
+          <thead>
+            <tr>
+              <th class="sr-th-id">ORDER ID</th>
+              <th class="sr-th-customer">CUSTOMER DETAILS</th>
+              <th class="sr-th-date">DATE / TIME</th>
+              <th class="sr-th-items">ITEMS</th>
+              <th class="sr-th-total">TOTAL</th>
+              <th class="sr-th-payment">PAYMENT</th>
+              <th class="sr-th-status">STATUS</th>
+              <th class="sr-th-actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of filteredOrders; track order.id) {
+              <tr class="sr-order-tr">
+                <!-- Order ID -->
+                <td class="sr-td-id">
+                  <a [routerLink]="['/admin/orders', order.id]" class="sr-mono-id" title="View order details">
+                    #{{ order.id }}
+                  </a>
+                </td>
+
+                <!-- Customer Details -->
+                <td class="sr-td-customer">
+                  <div class="sr-customer-box">
+                    <span class="sr-cust-name">{{ order.customerName || 'ANONYMOUS' }}</span>
+                    <span class="sr-cust-sub">{{ order.phone }} // {{ order.userEmail }}</span>
+                    @if (order.deliveryAddress) {
+                      <span class="sr-cust-addr" title="{{ order.deliveryAddress }}">{{ order.deliveryAddress }}</span>
+                    }
+                  </div>
+                </td>
+
+                <!-- Date / Time -->
+                <td class="sr-td-date">
+                  <div class="sr-date-box">
+                    <span class="sr-date-main">{{ order.createdAt | date:'dd MMM yyyy' }}</span>
+                    <span class="sr-date-time">{{ order.createdAt | date:'shortTime' }}</span>
+                  </div>
+                </td>
+
+                <!-- Number of Items -->
+                <td class="sr-td-items">
+                  <div class="sr-items-pill">
+                    <strong>{{ order.items ? order.items.length : 0 }}</strong>
+                    <span>LINES ({{ getTotalItemQuantity(order) }} PCS)</span>
+                  </div>
+                </td>
+
+                <!-- Total Amount -->
+                <td class="sr-td-total">
+                  <span class="sr-total-price">
+                    {{ order.total | currency:'INR':'symbol':'1.0-0' }}
+                  </span>
+                </td>
+
+                <!-- Payment Method -->
+                <td class="sr-td-payment">
+                  <span class="sr-payment-badge">
+                    {{ order.paymentMethod === 'online-payment' ? 'ONLINE' : 'COD' }}
+                  </span>
+                </td>
+
+                <!-- Current Status -->
+                <td class="sr-td-status">
+                  <span class="sr-status-pill sr-status-pill--{{ order.status }}">
+                    {{ order.status | uppercase }}
+                  </span>
+                </td>
+
+                <!-- Actions -->
+                <td class="sr-td-actions">
+                  <div class="sr-action-group">
+                    <!-- View Details -->
+                    <a
+                      [routerLink]="['/admin/orders', order.id]"
+                      class="sr-table-action sr-table-action--view"
+                      title="Inspect full manifest details"
+                    >
+                      <span>VIEW ↗</span>
+                    </a>
+
+                    <!-- Update Status -->
+                    <button
+                      type="button"
+                      class="sr-table-action sr-table-action--edit"
+                      (click)="openStatusModal(order)"
+                      title="Modify fulfillment status"
+                    >
+                      <span>STATUS ⚙</span>
+                    </button>
+
+                    <!-- Cancel Order -->
+                    @if (order.status !== 'cancelled') {
+                      <button
+                        type="button"
+                        class="sr-table-action sr-table-action--delete"
+                        (click)="openCancelModal(order)"
+                        title="Cancel this order"
+                      >
+                        <span>CANCEL ✕</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  <!-- STATUS UPDATE MODAL (UI ONLY) -->
+  @if (isStatusModalOpen && selectedOrderForUpdate) {
+    <div class="sr-modal-backdrop" (click)="closeStatusModal()" (keydown.escape)="closeStatusModal()">
+      <div class="sr-modal-card" (click)="$event.stopPropagation()">
+        <!-- Modal Top Bar -->
+        <div class="sr-modal-header">
+          <div class="sr-modal-eyebrow">
+            <span class="sr-modal-alert-tag">SYS_UPDATE // STATUS OVERRIDE</span>
+          </div>
+          <button
+            type="button"
+            class="sr-modal-close"
+            (click)="closeStatusModal()"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="sr-modal-body">
+          <h3 class="sr-modal-title">UPDATE ORDER STATUS</h3>
+          <p class="sr-modal-subtitle">
+            Modify current fulfillment status for order <strong>#{{ selectedOrderForUpdate.id }}</strong>.
+          </p>
+
+          <!-- Order Summary Card -->
+          <div class="sr-modal-order-summary">
+            <div class="sr-summary-item">
+              <span class="sr-item-label">CUSTOMER:</span>
+              <strong class="sr-item-val">{{ selectedOrderForUpdate.customerName }}</strong>
+            </div>
+            <div class="sr-summary-item">
+              <span class="sr-item-label">TOTAL ALLOTMENT:</span>
+              <strong class="sr-item-val">{{ selectedOrderForUpdate.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+            </div>
+            <div class="sr-summary-item">
+              <span class="sr-item-label">CURRENT STATUS:</span>
+              <span class="sr-status-pill sr-status-pill--{{ selectedOrderForUpdate.status }}">
+                {{ selectedOrderForUpdate.status | uppercase }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Status Selector -->
+          <div class="sr-modal-field">
+            <label for="newStatusSelect" class="sr-modal-label">NEW STATUS CLASSIFICATION</label>
+            <select
+              id="newStatusSelect"
+              class="sr-select sr-select--modal"
+              [(ngModel)]="selectedNewStatus"
+            >
+              <option value="placed">PLACED</option>
+              <option value="processing">PROCESSING</option>
+              <option value="shipped">SHIPPED</option>
+              <option value="delivered">DELIVERED</option>
+              <option value="cancelled">CANCELLED</option>
+            </select>
+          </div>
+
+          <!-- Operational Notice -->
+          <div class="sr-modal-dev-note">
+            <span class="sr-note-icon">⚙</span>
+            <span>DISPATCH PROTOCOL: Updating status will persist to backend records and update fulfillment pipeline metrics immediately.</span>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="sr-modal-footer">
+          <button
+            type="button"
+            class="sr-btn sr-btn--outline"
+            (click)="closeStatusModal()"
+          >
+            <span>CANCEL / ABORT</span>
+          </button>
+
+          <button
+            type="button"
+            class="sr-btn sr-btn--lime"
+            (click)="confirmStatusUpdate()"
+          >
+            <span>CONFIRM STATUS CHANGE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- CANCEL ORDER CONFIRMATION MODAL (UI ONLY) -->
+  @if (isCancelModalOpen && selectedOrderForCancel) {
+    <div class="sr-modal-backdrop" (click)="closeCancelModal()" (keydown.escape)="closeCancelModal()">
+      <div class="sr-modal-card" (click)="$event.stopPropagation()">
+        <!-- Modal Top Bar -->
+        <div class="sr-modal-header">
+          <div class="sr-modal-eyebrow">
+            <span class="sr-modal-danger-tag">SYS_ALERT // ORDER CANCELLATION</span>
+          </div>
+          <button
+            type="button"
+            class="sr-modal-close"
+            (click)="closeCancelModal()"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="sr-modal-body">
+          <h3 class="sr-modal-title">CONFIRM ORDER CANCELLATION</h3>
+          <p class="sr-modal-subtitle">
+            Are you sure you want to cancel order <strong>#{{ selectedOrderForCancel.id }}</strong> for customer <strong>{{ selectedOrderForCancel.customerName }}</strong>?
+          </p>
+
+          <div class="sr-modal-order-summary">
+            <div class="sr-summary-item">
+              <span class="sr-item-label">TOTAL REFUND AMOUNT:</span>
+              <strong class="sr-item-val">{{ selectedOrderForCancel.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+            </div>
+            <div class="sr-summary-item">
+              <span class="sr-item-label">ITEMS AFFECTED:</span>
+              <span class="sr-item-val">{{ selectedOrderForCancel.items.length }} product lines</span>
+            </div>
+          </div>
+
+          <div class="sr-modal-dev-note">
+            <span class="sr-note-icon">⚠</span>
+            <span>CANCELLATION PROTOCOL: This will mark the order as CANCELLED in the database and reverse delivery allocation.</span>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="sr-modal-footer">
+          <button
+            type="button"
+            class="sr-btn sr-btn--outline"
+            (click)="closeCancelModal()"
+          >
+            <span>DISMISS / KEEP ORDER</span>
+          </button>
+
+          <button
+            type="button"
+            class="sr-btn sr-btn--danger"
+            (click)="confirmCancelOrder()"
+          >
+            <span>CONFIRM CANCELLATION</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

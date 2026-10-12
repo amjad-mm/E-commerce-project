@@ -1,84 +1,206 @@
-<!-- ============================================= -->
-<!-- SOLE//RAW Header Component (Plain CSS)        -->
-<!-- Usage: header.component.html                  -->
-<!-- Pair with header.component.css                -->
-<!-- ============================================= -->
-
 <header class="sr-header">
 
-  <!-- ===== Scrolling ticker bar ===== -->
+  <!-- ===== Scrolling Ticker Bar ===== -->
   <div class="sr-ticker">
     <div class="sr-ticker-track">
       <span class="sr-ticker-item">
-        RAW ENGINEERING [EST. 2026]
+        <span class="sr-ticker-dot"></span> RAW ENGINEERING // EST. 2026
         <span class="sr-ticker-plus">+</span>
-        GLOBAL DISPATCH // FW-2026 DROP 01 LIVE // COMPLIMENTARY EXPRESS SHIPPING OVER ₹10,000
+        FW-2026 DROP 04 LIVE // ARCHIVE DISPATCH NOW OPEN
         <span class="sr-ticker-plus">+</span>
+        COMPLIMENTARY EXPRESS COURIER ON ALL ALLOCATIONS OVER ₹10,000
+        <span class="sr-ticker-plus">+</span>
+        RFID AUTHENTICATED // 14-DAY VAULT RETURN PRIVILEGE
       </span>
       <span class="sr-ticker-item" aria-hidden="true">
-        RAW ENGINEERING [EST. 2026]
+        <span class="sr-ticker-dot"></span> RAW ENGINEERING // EST. 2026
         <span class="sr-ticker-plus">+</span>
-        GLOBAL DISPATCH // FW-2026 DROP 01 LIVE // COMPLIMENTARY EXPRESS SHIPPING OVER ₹10,000
+        FW-2026 DROP 04 LIVE // ARCHIVE DISPATCH NOW OPEN
         <span class="sr-ticker-plus">+</span>
+        COMPLIMENTARY EXPRESS COURIER ON ALL ALLOCATIONS OVER ₹10,000
+        <span class="sr-ticker-plus">+</span>
+        RFID AUTHENTICATED // 14-DAY VAULT RETURN PRIVILEGE
       </span>
     </div>
   </div>
 
-  <!-- ===== Nav bar ===== -->
-  <div class="sr-navbar">
+  <!-- ===== Main Navbar ===== -->
+  <nav class="sr-navbar" aria-label="Main Store Navigation">
     <div class="sr-navbar-inner">
 
-      <!-- Logo -->
-      <div class="sr-brand">
-        <span class="sr-brand-tag">SOLE // RAW</span>
-        <span class="sr-brand-name">SOLE<span class="sr-brand-slash">//</span>RAW</span>
-        <span class="sr-brand-badge">[ARCHIVE_SYS]</span>
+      <!-- Brand Logo -->
+      <a routerLink="/" class="sr-brand" (click)="closeMobileMenu()" title="SOLE//RAW Storefront">
+        <div class="sr-brand-logo-wrap">
+          <span class="sr-brand-name">SOLE<span class="sr-brand-slash">//</span>RAW</span>
+          <span class="sr-brand-badge">[ARCHIVE_SYS]</span>
+        </div>
+        <div class="sr-brand-meta">
+          <span class="sr-brand-node-dot"></span>
+          <span>NODE // SYS_OK</span>
+        </div>
+      </a>
+
+      <!-- Center Desktop Nav Links -->
+      <div class="sr-nav-links">
+        <a routerLink="/" routerLinkActive="sr-nav-link--active" [routerLinkActiveOptions]="{ exact: true }" class="sr-nav-link">
+          NEW DROPS
+        </a>
+        <a routerLink="/" fragment="drops" class="sr-nav-link">
+          RUNNING
+        </a>
+        <a routerLink="/" fragment="drops" class="sr-nav-link">
+          LIFESTYLE
+        </a>
+        <a routerLink="/" fragment="drops" class="sr-nav-link">
+          TECHNICAL
+        </a>
+        <a routerLink="/" fragment="drops" class="sr-nav-link">
+          COLLECTIONS
+        </a>
       </div>
 
-      <!-- Nav links -->
-      <nav class="sr-nav-links">
-        <a routerLink="/" routerLinkActive="sr-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">NEW</a>
-        <a routerLink="/" fragment="drops">MEN</a>
-        <a routerLink="/" fragment="drops">WOMEN</a>
-        <a routerLink="/" fragment="drops">SNEAKERS</a>
-        <a routerLink="/" fragment="drops">COLLECTIONS</a>
-      </nav>
-
-      <!-- Actions -->
+      <!-- Right Actions Cluster -->
       <div class="sr-nav-actions">
-        @if (currentUser$ | async; as currentUser) {
-          <button class="sr-account-btn" type="button" (click)="logout()">
-            SIGN OUT {{ currentUser.name }}
-          </button>
-        } @else {
-          <button class="sr-account-btn" type="button" routerLink="/login">ACCOUNT</button>
+
+        <!-- Region Indicator Badge -->
+        <span class="sr-region-badge" title="Region: India / INR (₹)">
+          IND // ₹
+        </span>
+
+        <!-- Admin Portal Badge (If admin) -->
+        @if ((currentUser$ | async)?.role === 'admin') {
+          <a routerLink="/admin" class="sr-admin-btn" title="Open Root Admin Matrix">
+            <span class="sr-admin-dot"></span>
+            [ADMIN]
+          </a>
         }
 
-        <button class="sr-bag-btn" routerLink="/cart" routerLinkActive="sr-bag-btn--active">
-          <svg xmlns="http://www.w3.org/2000/svg" class="sr-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <!-- Dossier / Account Button -->
+        @if (currentUser$ | async; as currentUser) {
+          <a routerLink="/account" class="sr-dossier-btn" routerLinkActive="sr-dossier-btn--active" title="Member Dossier">
+            <span class="sr-user-avatar">{{ (currentUser.name || currentUser.email)[0] | uppercase }}</span>
+            <span class="sr-dossier-label">{{ currentUser.name ? currentUser.name.split(' ')[0] : 'DOSSIER' }}</span>
+          </a>
+        } @else {
+          <a routerLink="/login" class="sr-signin-btn" title="Sign In with Passport Credentials">
+            PASSPORT // SIGN IN
+          </a>
+        }
+
+        <!-- Orders Button -->
+        <a routerLink="/orders" class="sr-action-btn sr-orders-btn" routerLinkActive="sr-action-btn--active" title="My Orders Manifest">
+          <span class="sr-action-btn-text">ORDERS</span>
+        </a>
+
+        <!-- Wishlist Button -->
+        <a routerLink="/wishlist" class="sr-action-btn sr-wishlist-btn" routerLinkActive="sr-action-btn--active" title="Private Wishlist">
+          <span class="sr-wish-heart">♥</span>
+          <span class="sr-badge-count">[{{ (wishlistCount$ | async) ?? 0 }}]</span>
+        </a>
+
+        <!-- Cart Bag Button -->
+        <a routerLink="/cart" class="sr-bag-btn" routerLinkActive="sr-bag-btn--active" title="View Reserved Bag">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sr-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1 13H5L6 7z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 7a3 3 0 016 0" />
           </svg>
-          BAG ({{ (cartCount$ | async) ?? 0 }})
+          <span class="sr-bag-label">BAG</span>
+          <span class="sr-bag-count-pill">{{ (cartCount$ | async) ?? 0 }}</span>
+        </a>
+
+        <!-- Mobile Hamburger Menu Button -->
+        <button
+          type="button"
+          class="sr-mobile-toggle"
+          (click)="toggleMobileMenu()"
+          [attr.aria-expanded]="isMobileMenuOpen"
+          aria-label="Toggle navigation menu"
+        >
+          @if (isMobileMenuOpen) {
+            <span>✕</span>
+          } @else {
+            <span class="sr-hamburger-bars">
+              <i></i>
+              <i></i>
+              <i></i>
+            </span>
+          }
         </button>
 
-        <button class="sr-orders-nav-btn" type="button" routerLink="/orders" routerLinkActive="sr-orders-nav-btn--active">
-          ORDERS
-        </button>
-
-        <button class="sr-wishlist-nav-btn" type="button" routerLink="/wishlist" routerLinkActive="sr-wishlist-nav-btn--active">
-          ♥ ({{ (wishlistCount$ | async) ?? 0 }})
-        </button>
-
-        <button class="sr-avatar-btn" routerLink="/account" routerLinkActive="sr-avatar-btn--active" aria-label="User Account">
-          <svg xmlns="http://www.w3.org/2000/svg" class="sr-avatar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="8" r="4" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-          </svg>
-        </button>
       </div>
 
     </div>
-  </div>
+  </nav>
+
+  <!-- ===== Mobile Navigation Drawer ===== -->
+  @if (isMobileMenuOpen) {
+    <div class="sr-mobile-backdrop" (click)="closeMobileMenu()"></div>
+    <div class="sr-mobile-drawer">
+      <div class="sr-drawer-header">
+        <div>
+          <span class="sr-drawer-tag">[SYS_INTERFACE]</span>
+          <strong class="sr-drawer-title">SOLE//RAW MOBILE</strong>
+        </div>
+        <button type="button" class="sr-drawer-close" (click)="closeMobileMenu()">✕</button>
+      </div>
+
+      <div class="sr-drawer-nav">
+        <a routerLink="/" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">01</span>
+          <span>NEW DROPS</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+        <a routerLink="/" fragment="drops" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">02</span>
+          <span>ALL SNEAKERS CATALOGUE</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+        <a routerLink="/cart" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">03</span>
+          <span>RESERVED BAG ({{ (cartCount$ | async) ?? 0 }})</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+        <a routerLink="/wishlist" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">04</span>
+          <span>SAVED WISHLIST ({{ (wishlistCount$ | async) ?? 0 }})</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+        <a routerLink="/orders" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">05</span>
+          <span>ORDER MANIFESTS</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+        <a routerLink="/account" (click)="closeMobileMenu()" class="sr-drawer-link">
+          <span class="sr-link-idx">06</span>
+          <span>MEMBER DOSSIER / PROFILE</span>
+          <span class="sr-link-arrow">›</span>
+        </a>
+
+        @if ((currentUser$ | async)?.role === 'admin') {
+          <a routerLink="/admin" (click)="closeMobileMenu()" class="sr-drawer-link sr-drawer-link--admin">
+            <span class="sr-link-idx">⚡</span>
+            <span>ADMINISTRATOR CONTROL MATRIX</span>
+            <span class="sr-link-arrow">›</span>
+          </a>
+        }
+      </div>
+
+      <div class="sr-drawer-footer">
+        @if (currentUser$ | async; as user) {
+          <div class="sr-drawer-user-card">
+            <div class="sr-drawer-user-info">
+              <strong>{{ user.name || user.email }}</strong>
+              <small>{{ user.email }}</small>
+            </div>
+            <button type="button" class="sr-drawer-logout-btn" (click)="logout()">LOG OUT</button>
+          </div>
+        } @else {
+          <a routerLink="/login" (click)="closeMobileMenu()" class="sr-drawer-login-btn">
+            SIGN IN TO CADRE PASSPORT →
+          </a>
+        }
+      </div>
+    </div>
+  }
 
 </header>

@@ -1,0 +1,696 @@
+<div class="sr-users-view">
+  <!-- PAGE HEADER -->
+  <header class="sr-users-header">
+    <div class="sr-header-left">
+      <div class="sr-header-eyebrow">
+        <span class="sr-tag-black">IDENTITY // ACCESS</span>
+        <span>SYS_USERS_V1.0</span>
+      </div>
+      <h1 class="sr-page-title">USER DIRECTORY</h1>
+      <p class="sr-page-sub">Manage customer accounts and administrator access.</p>
+    </div>
+
+    <div class="sr-header-right">
+      <div class="sr-count-pill">
+        <span class="sr-count-label">ADMINS</span>
+        <span class="sr-count-value sr-count-value--lime">{{ adminCount }}</span>
+      </div>
+
+      <div class="sr-count-pill">
+        <span class="sr-count-label">BLOCKED</span>
+        <span class="sr-count-value sr-count-value--blocked">{{ blockedCount }}</span>
+      </div>
+
+      <div class="sr-count-pill">
+        <span class="sr-count-label">MATCHING / TOTAL</span>
+        <span class="sr-count-value">
+          {{ filteredUsers.length }}
+          <small class="sr-count-sub">/ {{ users.length }}</small>
+        </span>
+      </div>
+
+      <button type="button" class="sr-btn sr-btn--lime" (click)="openAddModal()">
+        <span class="sr-btn-plus">+</span>
+        <span>ADD USER</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- SEARCH & FILTERS -->
+  <section class="sr-filter-panel">
+    <div class="sr-filter-header">
+      <span class="sr-filter-tag">// QUERY & ACCESS CONTROL FILTERS</span>
+      <span class="sr-filter-sub">
+        [SHOWING {{ filteredUsers.length }} OF {{ users.length }} REGISTERED ACCOUNTS]
+      </span>
+    </div>
+
+    <div class="sr-filter-controls">
+      <!-- Search Input -->
+      <div class="sr-filter-group sr-filter-group--search">
+        <label for="userSearch" class="sr-filter-label">SEARCH DIRECTORY</label>
+        <div class="sr-search-input-wrap">
+          <span class="sr-search-icon">⌕</span>
+          <input
+            id="userSearch"
+            type="text"
+            class="sr-input sr-input--search"
+            placeholder="Search by name, email, or user ID..."
+            [(ngModel)]="searchText"
+          />
+        </div>
+      </div>
+
+      <!-- Role Filter -->
+      <div class="sr-filter-group">
+        <label for="roleFilter" class="sr-filter-label">SYSTEM ROLE</label>
+        <select id="roleFilter" class="sr-select" [(ngModel)]="selectedRole">
+          @for (role of roleOptions; track role) {
+            <option [value]="role">{{ role }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="sr-filter-group">
+        <label for="statusFilter" class="sr-filter-label">ACCOUNT STATUS</label>
+        <select id="statusFilter" class="sr-select" [(ngModel)]="selectedStatus">
+          @for (status of statusOptions; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Sort Order -->
+      <div class="sr-filter-group">
+        <label for="sortFilter" class="sr-filter-label">SORT ORDER</label>
+        <select id="sortFilter" class="sr-select" [(ngModel)]="selectedSort">
+          @for (sort of sortOptions; track sort) {
+            <option [value]="sort">{{ sort }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Reset Filter Button -->
+      <div class="sr-filter-group sr-filter-group--btn">
+        <label class="sr-filter-label sr-filter-label--hidden">RESET</label>
+        <button
+          type="button"
+          class="sr-btn sr-btn--outline"
+          title="Reset all applied filters"
+          (click)="clearFilters()"
+        >
+          <span>CLEAR [✕]</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- USERS DIRECTORY TABLE -->
+  <section class="sr-table-panel">
+    <div class="sr-table-header">
+      <div class="sr-table-title-group">
+        <span class="sr-table-index">// 01</span>
+        <h2 class="sr-table-title">AUTHENTICATED USERS DIRECTORY</h2>
+      </div>
+      <span class="sr-table-status">LIVE DATABASE MANIFEST</span>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="sr-state-box">
+        <div class="sr-spinner"></div>
+        <p class="sr-state-title">FETCHING USERS DIRECTORY...</p>
+        <p class="sr-state-sub">Polling authentication records from local database</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @else if (hasError) {
+      <div class="sr-state-box sr-state-box--error">
+        <div class="sr-state-icon">⚠</div>
+        <p class="sr-state-title">DATABASE CONNECTION FAILURE</p>
+        <p class="sr-state-sub">{{ errorMessage }}</p>
+        <button type="button" class="sr-btn sr-btn--lime" (click)="loadUsers()">
+          RETRY DIRECTORY SYNC
+        </button>
+      </div>
+    }
+
+    <!-- Empty State: Zero Users in DB -->
+    @else if (users.length === 0) {
+      <div class="sr-state-box">
+        <div class="sr-state-icon">∅</div>
+        <p class="sr-state-title">USER DIRECTORY EMPTY</p>
+        <p class="sr-state-sub">No user accounts found in database.</p>
+        <button type="button" class="sr-btn sr-btn--lime" (click)="openAddModal()">
+          CREATE FIRST USER
+        </button>
+      </div>
+    }
+
+    <!-- Filter Zero State -->
+    @else if (filteredUsers.length === 0) {
+      <div class="sr-state-box">
+        <div class="sr-state-icon">⌕</div>
+        <p class="sr-state-title">NO MATCHING ACCOUNTS FOUND</p>
+        <p class="sr-state-sub">
+          No records matched your search query "{{ searchText }}" with role "{{ selectedRole }}".
+        </p>
+        <button type="button" class="sr-btn sr-btn--outline" (click)="clearFilters()">
+          RESET DIRECTORY FILTERS
+        </button>
+      </div>
+    }
+
+    <!-- Table Manifest -->
+    @else {
+      <div class="sr-table-container">
+        <table class="sr-table">
+          <thead>
+            <tr>
+              <th class="sr-th sr-th--user">USER / IDENTITY</th>
+              <th class="sr-th sr-th--email">EMAIL ADDRESS</th>
+              <th class="sr-th sr-th--phone">PHONE</th>
+              <th class="sr-th sr-th--role">SYSTEM ROLE</th>
+              <th class="sr-th sr-th--status">STATUS</th>
+              <th class="sr-th sr-th--actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of filteredUsers; track user.id || user.email) {
+              <tr
+                class="sr-tr"
+                [class.sr-tr--active-session]="isCurrentActiveUser(user)"
+                [class.sr-tr--blocked]="user.isBlocked"
+              >
+                <!-- User / Identity -->
+                <td class="sr-td">
+                  <div class="sr-user-cell">
+                    <div class="sr-user-avatar">
+                      {{ getUserInitials(user.name) }}
+                    </div>
+                    <div class="sr-user-info">
+                      <div class="sr-user-name-row">
+                        <strong class="sr-user-name">{{ user.name }}</strong>
+                        @if (isCurrentActiveUser(user)) {
+                          <span class="sr-you-badge" title="Your current active administrator session">[ACTIVE SESSION]</span>
+                        }
+                      </div>
+                      <span class="sr-user-id">ID: #{{ user.id || 'N/A' }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Email -->
+                <td class="sr-td">
+                  <span class="sr-mono sr-email-text">{{ user.email }}</span>
+                </td>
+
+                <!-- Phone -->
+                <td class="sr-td">
+                  <span class="sr-mono sr-phone-text">
+                    {{ user.phone || '—' }}
+                  </span>
+                </td>
+
+                <!-- System Role Badge -->
+                <td class="sr-td">
+                  @if (user.role === 'admin') {
+                    <span class="sr-badge sr-badge--admin">
+                      <span class="sr-dot sr-dot--lime"></span>
+                      <span>ADMIN</span>
+                    </span>
+                  } @else {
+                    <span class="sr-badge sr-badge--customer">
+                      <span>CUSTOMER</span>
+                    </span>
+                  }
+                </td>
+
+                <!-- Account Status -->
+                <td class="sr-td">
+                  @if (user.isBlocked) {
+                    <span class="sr-status-pill sr-status-pill--blocked">
+                      <span class="sr-dot sr-dot--red"></span>
+                      <span>BLOCKED</span>
+                    </span>
+                  } @else {
+                    <span class="sr-status-pill">
+                      <span class="sr-dot sr-dot--green"></span>
+                      <span>ACTIVE</span>
+                    </span>
+                  }
+                </td>
+
+                <!-- Actions -->
+                <td class="sr-td sr-td--actions">
+                  <div class="sr-action-group">
+                    <!-- View Details Action -->
+                    <button
+                      type="button"
+                      class="sr-action-btn"
+                      title="View user manifest & order summary"
+                      (click)="openDetailsModal(user)"
+                    >
+                      VIEW
+                    </button>
+
+                    <!-- Block / Unblock Action (Safeguarded) -->
+                    @if (isCurrentActiveUser(user)) {
+                      <button
+                        type="button"
+                        class="sr-action-btn sr-action-btn--disabled"
+                        title="You cannot suspend your own active administrator account"
+                        disabled
+                      >
+                        SHIELDED
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        class="sr-action-btn"
+                        [ngClass]="user.isBlocked ? 'sr-action-btn--unblock' : 'sr-action-btn--block'"
+                        [title]="user.isBlocked ? 'Restore user account access' : 'Suspend user account access'"
+                        (click)="openBlockModal(user)"
+                      >
+                        {{ user.isBlocked ? 'UNBLOCK' : 'BLOCK' }}
+                      </button>
+                    }
+
+                    <!-- Delete Action (Safeguarded) -->
+                    @if (isCurrentActiveUser(user)) {
+                      <button
+                        type="button"
+                        class="sr-action-btn sr-action-btn--disabled"
+                        title="Cannot delete your own active administrator account"
+                        disabled
+                      >
+                        ✕
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        class="sr-action-btn sr-action-btn--delete"
+                        title="Delete user account"
+                        (click)="openDeleteModal(user)"
+                      >
+                        ✕
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer / Telemetry Summary -->
+      <footer class="sr-table-footer">
+        <span class="sr-footer-meta">
+          TOTAL PROFILED ACCOUNTS: <strong>{{ users.length }}</strong>
+          (ADMINS: <strong>{{ adminCount }}</strong> | CUSTOMERS: <strong>{{ customerCount }}</strong> | BLOCKED: <strong>{{ blockedCount }}</strong>)
+        </span>
+        <span class="sr-footer-sub">AUTHENTICATION PROTOCOL: LOCAL REST DB</span>
+      </footer>
+    }
+  </section>
+</div>
+
+<!-- =========================================================================
+     MODAL 1: VIEW USER DETAILS MANIFEST
+     ========================================================================= -->
+@if (isDetailsModalOpen && selectedUser) {
+  <div class="sr-modal-overlay" (click)="closeDetailsModal()">
+    <div class="sr-modal" (click)="$event.stopPropagation()">
+      <div class="sr-modal-header">
+        <div class="sr-modal-title-group">
+          <span class="sr-modal-index">// PROFILE MANIFEST</span>
+          <h3 class="sr-modal-title">{{ selectedUser.name }}</h3>
+        </div>
+        <button type="button" class="sr-modal-close" (click)="closeDetailsModal()">✕</button>
+      </div>
+
+      <div class="sr-modal-body">
+        <!-- Top Profile Banner -->
+        <div class="sr-profile-header-card">
+          <div class="sr-profile-big-avatar">
+            {{ getUserInitials(selectedUser.name) }}
+          </div>
+          <div class="sr-profile-header-meta">
+            <h4 class="sr-profile-full-name">{{ selectedUser.name }}</h4>
+            <div class="sr-profile-pills">
+              @if (selectedUser.role === 'admin') {
+                <span class="sr-badge sr-badge--admin">
+                  <span class="sr-dot sr-dot--lime"></span>
+                  ADMINISTRATOR
+                </span>
+              } @else {
+                <span class="sr-badge sr-badge--customer">CUSTOMER ACCOUNT</span>
+              }
+
+              @if (selectedUser.isBlocked) {
+                <span class="sr-badge sr-badge--blocked">
+                  <span class="sr-dot sr-dot--red"></span>
+                  SUSPENDED / BLOCKED
+                </span>
+              } @else {
+                <span class="sr-badge sr-badge--active">
+                  <span class="sr-dot sr-dot--green"></span>
+                  ACTIVE
+                </span>
+              }
+
+              @if (isCurrentActiveUser(selectedUser)) {
+                <span class="sr-you-badge">[YOUR ACTIVE SESSION]</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Specifications Grid -->
+        <div class="sr-spec-grid">
+          <div class="sr-spec-item">
+            <span class="sr-spec-label">EMAIL ADDRESS</span>
+            <strong class="sr-spec-val sr-mono">{{ selectedUser.email }}</strong>
+          </div>
+
+          <div class="sr-spec-item">
+            <span class="sr-spec-label">PHONE NUMBER</span>
+            <strong class="sr-spec-val sr-mono">{{ selectedUser.phone || 'NOT REGISTERED' }}</strong>
+          </div>
+
+          <div class="sr-spec-item">
+            <span class="sr-spec-label">SYSTEM IDENTIFIER</span>
+            <strong class="sr-spec-val sr-mono">#{{ selectedUser.id || 'N/A' }}</strong>
+          </div>
+
+          <div class="sr-spec-item">
+            <span class="sr-spec-label">CREDENTIALS SECURITY</span>
+            <strong class="sr-spec-val sr-spec-val--safe">PROTECTED & ENCRYPTED</strong>
+          </div>
+        </div>
+
+        <!-- Associated Orders Section -->
+        <div class="sr-user-orders-box">
+          <div class="sr-orders-header">
+            <span class="sr-orders-title">// TRANSACTION ACTIVITY</span>
+            @if (isLoadingUserOrders) {
+              <span class="sr-orders-loading">POLLING ORDERS...</span>
+            } @else {
+              <span class="sr-orders-count">{{ userOrders.length }} ORDER(S) PLACED</span>
+            }
+          </div>
+
+          @if (isLoadingUserOrders) {
+            <div class="sr-orders-spinner">
+              <span class="sr-spinner"></span>
+            </div>
+          } @else if (userOrders.length === 0) {
+            <div class="sr-orders-empty">
+              <span>NO HISTORICAL ORDERS RECORDED FOR THIS CUSTOMER</span>
+            </div>
+          } @else {
+            <div class="sr-orders-stats-row">
+              <div class="sr-order-stat">
+                <span class="sr-stat-lbl">TOTAL TRANSACTIONS:</span>
+                <strong class="sr-stat-num">{{ userOrders.length }}</strong>
+              </div>
+              <div class="sr-order-stat">
+                <span class="sr-stat-lbl">LIFETIME REVENUE:</span>
+                <strong class="sr-stat-num sr-stat-num--lime">
+                  {{ getUserLifetimeSpend() | currency:'INR':'symbol':'1.0-0' }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="sr-orders-list">
+              @for (order of userOrders.slice(0, 3); track order.id) {
+                <div class="sr-order-row">
+                  <div class="sr-order-info">
+                    <span class="sr-mono sr-order-id">#{{ order.id }}</span>
+                    <span class="sr-order-date">{{ order.createdAt ? (order.createdAt | date:'mediumDate') : 'Recent' }}</span>
+                  </div>
+                  <div class="sr-order-pricing">
+                    <span class="sr-order-items-count">{{ order.items.length }} items</span>
+                    <strong class="sr-order-total">{{ order.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="sr-modal-footer">
+        <button type="button" class="sr-btn sr-btn--lime sr-btn--full" (click)="closeDetailsModal()">
+          CLOSE MANIFEST
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- =========================================================================
+     MODAL 2: ADD USER ACCOUNT
+     ========================================================================= -->
+@if (isAddModalOpen) {
+  <div class="sr-modal-overlay" (click)="closeAddModal()">
+    <div class="sr-modal sr-modal--form" (click)="$event.stopPropagation()">
+      <div class="sr-modal-header">
+        <div class="sr-modal-title-group">
+          <span class="sr-modal-index">// NEW REGISTRATION</span>
+          <h3 class="sr-modal-title">CREATE USER ACCOUNT</h3>
+        </div>
+        <button type="button" class="sr-modal-close" (click)="closeAddModal()">✕</button>
+      </div>
+
+      <form (ngSubmit)="submitAddUser()" novalidate>
+        <div class="sr-modal-body">
+          <div class="sr-form-grid">
+            <!-- Full Name -->
+            <div class="sr-field-group">
+              <label for="newName" class="sr-field-label">
+                <span>FULL NAME</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="newName"
+                type="text"
+                name="name"
+                class="sr-input"
+                [class.sr-input--invalid]="addUserSubmitted && !newUser.name.trim()"
+                [(ngModel)]="newUser.name"
+                placeholder="e.g. MARCUS AURELIUS"
+                required
+              />
+              @if (addUserSubmitted && !newUser.name.trim()) {
+                <span class="sr-field-error">Name is required</span>
+              }
+            </div>
+
+            <!-- Email Address -->
+            <div class="sr-field-group">
+              <label for="newEmail" class="sr-field-label">
+                <span>EMAIL ADDRESS</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="newEmail"
+                type="email"
+                name="email"
+                class="sr-input sr-input--mono"
+                [class.sr-input--invalid]="addUserSubmitted && (!newUser.email.trim() || !isValidEmail(newUser.email))"
+                [(ngModel)]="newUser.email"
+                placeholder="e.g. user@soleraw.com"
+                required
+              />
+              @if (addUserSubmitted && !newUser.email.trim()) {
+                <span class="sr-field-error">Email is required</span>
+              } @else if (addUserSubmitted && !isValidEmail(newUser.email)) {
+                <span class="sr-field-error">Enter a valid email address</span>
+              }
+            </div>
+
+            <!-- Phone Number -->
+            <div class="sr-field-group">
+              <label for="newPhone" class="sr-field-label">
+                <span>PHONE (OPTIONAL)</span>
+              </label>
+              <input
+                id="newPhone"
+                type="tel"
+                name="phone"
+                class="sr-input sr-input--mono"
+                [(ngModel)]="newUser.phone"
+                placeholder="e.g. 9876543210"
+              />
+            </div>
+
+            <!-- Account Role (Fixed to Customer) -->
+            <div class="sr-field-group">
+              <label class="sr-field-label">
+                <span>ACCOUNT ROLE</span>
+              </label>
+              <div class="sr-input sr-input--mono" style="display: flex; align-items: center; background: #f5f1eb; color: #444; font-weight: 800; cursor: default;">
+                CUSTOMER ACCOUNT
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="sr-field-group sr-field-group--full">
+              <label for="newPassword" class="sr-field-label">
+                <span>INITIAL PASSWORD</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="newPassword"
+                type="password"
+                name="password"
+                class="sr-input sr-input--mono"
+                [class.sr-input--invalid]="addUserSubmitted && (!newUser.password || newUser.password.length < 6)"
+                [(ngModel)]="newUser.password"
+                placeholder="Min 6 characters"
+                required
+              />
+              @if (addUserSubmitted && (!newUser.password || newUser.password.length < 6)) {
+                <span class="sr-field-error">Password must be at least 6 characters</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="sr-modal-footer sr-modal-footer--actions">
+          <button type="button" class="sr-btn sr-btn--outline" (click)="closeAddModal()">
+            CANCEL
+          </button>
+          <button type="submit" class="sr-btn sr-btn--lime" [disabled]="isSubmittingNewUser">
+            <span>{{ isSubmittingNewUser ? 'CREATING...' : 'CREATE ACCOUNT' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- =========================================================================
+     MODAL 4: DELETE CONFIRMATION
+     ========================================================================= -->
+@if (isDeleteModalOpen && userToDelete) {
+  <div class="sr-modal-overlay" (click)="closeDeleteModal()">
+    <div class="sr-modal sr-modal--danger" (click)="$event.stopPropagation()">
+      <div class="sr-modal-header sr-modal-header--danger">
+        <div class="sr-modal-title-group">
+          <span class="sr-modal-index">// TERMINATION PROTOCOL</span>
+          <h3 class="sr-modal-title">TERMINATE USER RECORD</h3>
+        </div>
+        <button type="button" class="sr-modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+
+      <div class="sr-modal-body">
+        <p class="sr-prompt-text">
+          Are you sure you want to permanently delete user account <strong>{{ userToDelete.name }}</strong>?
+        </p>
+
+        <div class="sr-danger-warning-card">
+          <div class="sr-danger-icon">⚠</div>
+          <div class="sr-danger-meta">
+            <strong>CRITICAL ACTION:</strong>
+            <p>This will erase the user's login access and records from <code>db.json</code>. This operation cannot be reversed.</p>
+          </div>
+        </div>
+
+        <div class="sr-spec-item">
+          <span class="sr-spec-label">TARGET EMAIL</span>
+          <span class="sr-spec-val sr-mono">{{ userToDelete.email }}</span>
+        </div>
+      </div>
+
+      <div class="sr-modal-footer sr-modal-footer--actions">
+        <button type="button" class="sr-btn sr-btn--outline" (click)="closeDeleteModal()">
+          ABORT
+        </button>
+        <button type="button" class="sr-btn sr-btn--danger" (click)="confirmDelete()">
+          PERMANENTLY DELETE
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- =========================================================================
+     MODAL 5: BLOCK / UNBLOCK CONFIRMATION
+     ========================================================================= -->
+@if (isBlockModalOpen && userToBlockAction) {
+  <div class="sr-modal-overlay" (click)="closeBlockModal()">
+    <div
+      class="sr-modal sr-modal--prompt"
+      [class.sr-modal--danger]="!userToBlockAction.isBlocked"
+      (click)="$event.stopPropagation()"
+    >
+      <div
+        class="sr-modal-header"
+        [class.sr-modal-header--danger]="!userToBlockAction.isBlocked"
+      >
+        <div class="sr-modal-title-group">
+          <span class="sr-modal-index">// ACCESS PROTOCOL</span>
+          <h3 class="sr-modal-title">
+            {{ userToBlockAction.isBlocked ? 'RESTORE ACCOUNT ACCESS' : 'SUSPEND / BLOCK ACCOUNT' }}
+          </h3>
+        </div>
+        <button type="button" class="sr-modal-close" (click)="closeBlockModal()">✕</button>
+      </div>
+
+      <div class="sr-modal-body">
+        <p class="sr-prompt-text">
+          @if (userToBlockAction.isBlocked) {
+            Are you sure you want to restore access and unblock user account
+            <strong>{{ userToBlockAction.name }}</strong>?
+          } @else {
+            Are you sure you want to suspend and block user account
+            <strong>{{ userToBlockAction.name }}</strong>?
+          }
+        </p>
+
+        @if (!userToBlockAction.isBlocked) {
+          <div class="sr-danger-warning-card">
+            <div class="sr-danger-icon">⛔</div>
+            <div class="sr-danger-meta">
+              <strong>LOGIN ACCESS REVOCATION:</strong>
+              <p>This user will immediately be barred from signing into SOLE//RAW. Any subsequent login attempts will be rejected.</p>
+            </div>
+          </div>
+        } @else {
+          <div class="sr-restore-banner">
+            <span class="sr-restore-icon">✓</span>
+            <div class="sr-restore-meta">
+              <strong>LOGIN ACCESS RESTORATION:</strong>
+              <p>This user will be permitted to authenticate and access their customer profile and orders again.</p>
+            </div>
+          </div>
+        }
+
+        <div class="sr-spec-item">
+          <span class="sr-spec-label">TARGET USER</span>
+          <span class="sr-spec-val sr-mono">{{ userToBlockAction.name }} &lt;{{ userToBlockAction.email }}&gt;</span>
+        </div>
+      </div>
+
+      <div class="sr-modal-footer sr-modal-footer--actions">
+        <button type="button" class="sr-btn sr-btn--outline" (click)="closeBlockModal()">
+          ABORT
+        </button>
+        <button
+          type="button"
+          class="sr-btn"
+          [ngClass]="userToBlockAction.isBlocked ? 'sr-btn--lime' : 'sr-btn--danger'"
+          (click)="confirmBlockToggle()"
+        >
+          {{ userToBlockAction.isBlocked ? 'RESTORE ACCESS' : 'SUSPEND & BLOCK' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

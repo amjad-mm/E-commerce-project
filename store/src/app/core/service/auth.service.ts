@@ -51,4 +51,12 @@ export class AuthService {
   getAllUsers(): Observable<user[]> {
     return this.http.get<user[]>(this.apiUrl);
   }
+
+  createUser(userData: user): Observable<user> {
+    return this.http.post<user>(this.apiUrl, userData);
+  }
+
+  deleteUser(id: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

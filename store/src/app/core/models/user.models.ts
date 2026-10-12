@@ -4,5 +4,8 @@ export interface user {
     email: string;
     password?: string;
     phone?: string;
-    role?:'customer' | 'admin'
+    role?:'customer' | 'admin';
+    isBlocked?: boolean;
 }
+
+export type User = user;

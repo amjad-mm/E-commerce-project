@@ -43,12 +43,12 @@ export class WishlistService {
     this.store.dispatch(WishlistActions.toggleWishlist({ product }));
   }
 
-  remove(productId: number): void {
+  remove(productId: string | number): void {
     this.store.dispatch(WishlistActions.removeFromWishlist({ productId }));
   }
 
-  isSaved(products: Products[], productId: number): boolean {
-    return products.some((product) => product.id === productId);
+  isSaved(products: Products[], productId: string | number): boolean {
+    return products.some((product) => String(product.id) === String(productId));
   }
 
   private getStorageKey(email: string): string {

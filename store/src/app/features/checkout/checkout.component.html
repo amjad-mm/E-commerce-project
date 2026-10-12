@@ -1,0 +1,408 @@
+<main class="sr-checkout">
+  <div class="sr-checkout__inner">
+
+    <!-- Top Navigation / Progress Indicator -->
+    <div class="sr-checkout__nav">
+      <a class="sr-checkout__back" routerLink="/cart">← RETURN TO BAG</a>
+
+      <div class="sr-checkout__steps" aria-label="Checkout Progress">
+        <div class="sr-step sr-step--done">
+          <span class="sr-step__num">01</span>
+          <span class="sr-step__label">BAG [ALLOCATED]</span>
+          <span class="sr-step__check">✓</span>
+        </div>
+        <div class="sr-step__divider">―</div>
+        <div class="sr-step sr-step--active">
+          <span class="sr-step__num">02</span>
+          <span class="sr-step__label">COORDINATES &amp; PAYMENT</span>
+          <span class="sr-step__dot">⌑</span>
+        </div>
+        <div class="sr-step__divider">―</div>
+        <div class="sr-step sr-step--pending">
+          <span class="sr-step__num">03</span>
+          <span class="sr-step__label">CONFIRMATION</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <header class="sr-checkout__header">
+      <div>
+        <div class="sr-checkout__eyebrow">
+          <span class="sr-tag-black">[SECURE DISPATCH]</span>
+          <span>STEP 02 OF 03 // ARCHIVE RELEASE PROTOCOL</span>
+        </div>
+        <h1 class="sr-checkout__title">AUTHORIZE<br /><em>ORDER</em></h1>
+        <p class="sr-checkout__subtitle">Confirm recipient coordinates, select payment protocol, and release allocation.</p>
+      </div>
+
+      <div class="sr-checkout__secure-badge">
+        <span class="sr-lock-icon">⌑</span>
+        <div>
+          <b>ENCRYPTED CHECKOUT</b>
+          <small>256-BIT SSL SECURE TUNNEL</small>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid: Form + Order Manifest -->
+    <div class="sr-checkout__grid">
+
+      <!-- ===== LEFT COLUMN: FORM ===== -->
+      <form class="sr-form" [formGroup]="checkoutForm" (ngSubmit)="submit()" novalidate>
+
+        <!-- SECTION 01: Recipient Profile -->
+        <section class="sr-panel">
+          <div class="sr-panel__top">
+            <span>01 // RECIPIENT PROFILE</span>
+            <b class="sr-status-req">REQUIRED</b>
+          </div>
+
+          <div class="sr-panel__body sr-fields">
+            <label class="sr-field">
+              <span class="sr-field__label">FULL NAME *</span>
+              <input
+                formControlName="customerName"
+                autocomplete="name"
+                placeholder="ENTER FULL NAME"
+                class="sr-input"
+                [class.sr-input--invalid]="checkoutForm.controls.customerName.invalid && checkoutForm.controls.customerName.touched"
+              />
+              @if (checkoutForm.controls.customerName.invalid && checkoutForm.controls.customerName.touched) {
+                <small class="sr-field__error">Full name is required (min 2 characters).</small>
+              }
+            </label>
+
+            <label class="sr-field">
+              <span class="sr-field__label">CONTACT PHONE *</span>
+              <input
+                formControlName="phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="+91 98765 43210"
+                class="sr-input"
+                [class.sr-input--invalid]="checkoutForm.controls.phone.invalid && checkoutForm.controls.phone.touched"
+              />
+              @if (checkoutForm.controls.phone.invalid && checkoutForm.controls.phone.touched) {
+                <small class="sr-field__error">Enter a valid 10-digit phone number.</small>
+              }
+            </label>
+          </div>
+        </section>
+
+        <!-- SECTION 02: Delivery Coordinates -->
+        <section class="sr-panel">
+          <div class="sr-panel__top">
+            <span>02 // DELIVERY COORDINATES</span>
+            <span class="sr-top-tag">
+              {{ selectedSavedAddress && !isEnteringManualAddress ? 'SAVED PROFILE' : 'MANUAL ENTRY' }}
+            </span>
+          </div>
+
+          <div class="sr-panel__body">
+
+            <!-- Case A: Saved Address Selected -->
+            @if (selectedSavedAddress && !isEnteringManualAddress && !isChangingAddress) {
+              <div class="sr-saved-selected-box">
+                <div class="sr-saved-selected__header">
+                  <span class="sr-type-badge">
+                    {{ selectedSavedAddress.type === 'home' ? '⌂ HOME' : '🏢 OFFICE' }}
+                  </span>
+                  @if (selectedSavedAddress.isDefault) {
+                    <span class="sr-default-tag">★ DEFAULT ADDRESS</span>
+                  }
+                </div>
+
+                <div class="sr-saved-selected__body">
+                  <strong class="sr-saved-name">{{ selectedSavedAddress.fullName }}</strong>
+                  <p class="sr-saved-street">
+                    {{ selectedSavedAddress.addressLine1 }}
+                    @if (selectedSavedAddress.addressLine2) { , {{ selectedSavedAddress.addressLine2 }} }
+                    @if (selectedSavedAddress.landmark) { <br /><em>Landmark: {{ selectedSavedAddress.landmark }}</em> }
+                  </p>
+                  <p class="sr-saved-locality">
+                    {{ selectedSavedAddress.city }}, {{ selectedSavedAddress.state }} - <b>{{ selectedSavedAddress.pincode }}</b>
+                  </p>
+                  <p class="sr-saved-phone">Phone: {{ selectedSavedAddress.phone }}</p>
+                </div>
+
+                <div class="sr-saved-selected__actions">
+                  @if (savedAddresses.length > 1) {
+                    <button type="button" class="sr-btn sr-btn--sm sr-btn--dark" (click)="openChangeAddress()">
+                      CHANGE ADDRESS ({{ savedAddresses.length }})
+                    </button>
+                  }
+                  <button type="button" class="sr-btn sr-btn--sm sr-btn--secondary" (click)="switchToManualAddress()">
+                    + ENTER NEW ADDRESS
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Case B: Address Picker List -->
+            @if (isChangingAddress) {
+              <div class="sr-picker-box">
+                <div class="sr-picker-header">
+                  <p class="sr-picker-title">SELECT A SAVED DELIVERY ADDRESS:</p>
+                  <button type="button" class="sr-close-picker" (click)="isChangingAddress = false">✕ CANCEL</button>
+                </div>
+
+                <div class="sr-picker-grid">
+                  @for (addr of savedAddresses; track addr.id) {
+                    <div class="sr-picker-card" [class.sr-picker-card--active]="selectedSavedAddress?.id === addr.id">
+                      <div class="sr-picker-card__top">
+                        <span class="sr-type-badge">{{ addr.type === 'home' ? '⌂ HOME' : '🏢 OFFICE' }}</span>
+                        @if (addr.isDefault) { <span class="sr-default-tag">★ DEFAULT</span> }
+                      </div>
+                      <strong>{{ addr.fullName }}</strong>
+                      <p class="sr-picker-text">{{ addr.addressLine1 }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
+                      <small>Phone: {{ addr.phone }}</small>
+                      <button type="button" class="sr-btn sr-btn--lime sr-mt-2" (click)="chooseSavedAddress(addr)">
+                        USE THIS ADDRESS
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <div class="sr-picker-footer">
+                  <button type="button" class="sr-btn sr-btn--secondary" (click)="switchToManualAddress()">
+                    + ENTER DIFFERENT ADDRESS
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Case C: Manual Address Entry Form -->
+            @if (isEnteringManualAddress || (!selectedSavedAddress && !isLoadingAddresses)) {
+              <div class="sr-fields">
+                @if (savedAddresses.length > 0) {
+                  <div class="sr-back-saved-row">
+                    <button type="button" class="sr-link-btn" (click)="cancelManualAddress()">
+                      ← CHOOSE FROM SAVED ADDRESSES ({{ savedAddresses.length }})
+                    </button>
+                  </div>
+                }
+
+                <label class="sr-field sr-address-field">
+                  <span class="sr-field__label">DELIVERY ADDRESS (FLAT, BUILDING, STREET) *</span>
+                  <textarea
+                    formControlName="address"
+                    rows="3"
+                    autocomplete="street-address"
+                    placeholder="HOUSE / FLAT / BUILDING / STREET / LOCALITY"
+                    class="sr-input"
+                    [class.sr-input--invalid]="checkoutForm.controls.address.invalid && checkoutForm.controls.address.touched"
+                  ></textarea>
+                  @if (checkoutForm.controls.address.invalid && checkoutForm.controls.address.touched) {
+                    <small class="sr-field__error">Delivery street address is required.</small>
+                  }
+                </label>
+
+                <label class="sr-field">
+                  <span class="sr-field__label">CITY *</span>
+                  <input
+                    formControlName="city"
+                    autocomplete="address-level2"
+                    placeholder="ENTER CITY"
+                    class="sr-input"
+                    [class.sr-input--invalid]="checkoutForm.controls.city.invalid && checkoutForm.controls.city.touched"
+                  />
+                  @if (checkoutForm.controls.city.invalid && checkoutForm.controls.city.touched) {
+                    <small class="sr-field__error">City is required.</small>
+                  }
+                </label>
+
+                <label class="sr-field">
+                  <span class="sr-field__label">STATE *</span>
+                  <input
+                    formControlName="state"
+                    autocomplete="address-level1"
+                    placeholder="ENTER STATE"
+                    class="sr-input"
+                    [class.sr-input--invalid]="checkoutForm.controls.state.invalid && checkoutForm.controls.state.touched"
+                  />
+                  @if (checkoutForm.controls.state.invalid && checkoutForm.controls.state.touched) {
+                    <small class="sr-field__error">State is required.</small>
+                  }
+                </label>
+
+                <label class="sr-field">
+                  <span class="sr-field__label">PINCODE *</span>
+                  <input
+                    formControlName="pincode"
+                    inputmode="numeric"
+                    autocomplete="postal-code"
+                    placeholder="6-DIGIT PINCODE"
+                    class="sr-input"
+                    [class.sr-input--invalid]="checkoutForm.controls.pincode.invalid && checkoutForm.controls.pincode.touched"
+                  />
+                  @if (checkoutForm.controls.pincode.invalid && checkoutForm.controls.pincode.touched) {
+                    <small class="sr-field__error">Valid 6-digit postal pincode required.</small>
+                  }
+                </label>
+
+                <label class="sr-save-address-label">
+                  <input type="checkbox" formControlName="saveAddressForFuture" />
+                  <span>SAVE THIS ADDRESS TO MY PROFILE FOR FUTURE DISPATCHES</span>
+                </label>
+
+                <div class="sr-delivery-note">
+                  <span>✓</span> EXPRESS COURIER // REALTIME TRACKING ISSUED UPON DISPATCH
+                </div>
+              </div>
+            }
+
+          </div>
+        </section>
+
+        <!-- SECTION 03: Payment Protocol -->
+        <section class="sr-panel">
+          <div class="sr-panel__top">
+            <span>03 // PAYMENT PROTOCOL</span>
+            <span class="sr-top-tag">SECURE SELECTION</span>
+          </div>
+
+          <div class="sr-panel__body">
+            <p class="sr-payment-desc">Select your payment method below. All options are protected by encrypted protocols.</p>
+
+            <div class="sr-payment-options">
+
+              <!-- Option 1: Instant UPI -->
+              <label class="sr-pay-card" [class.sr-pay-card--active]="checkoutForm.controls.paymentMethod.value === 'upi'">
+                <div class="sr-pay-card__top">
+                  <input type="radio" formControlName="paymentMethod" value="upi" class="sr-radio" />
+                  <span class="sr-pay-card__title">INSTANT UPI</span>
+                  <span class="sr-pay-card__badge sr-pay-card__badge--lime">⚡ FASTEST</span>
+                </div>
+                <p class="sr-pay-card__sub">Google Pay • PhonePe • Paytm • BHIM • Any UPI App</p>
+              </label>
+
+              <!-- Option 2: Credit / Debit Card -->
+              <label class="sr-pay-card" [class.sr-pay-card--active]="checkoutForm.controls.paymentMethod.value === 'card' || checkoutForm.controls.paymentMethod.value === 'online-payment'">
+                <div class="sr-pay-card__top">
+                  <input type="radio" formControlName="paymentMethod" value="card" class="sr-radio" />
+                  <span class="sr-pay-card__title">CREDIT / DEBIT CARD</span>
+                  <span class="sr-pay-card__badge">SECURE 256-BIT</span>
+                </div>
+                <p class="sr-pay-card__sub">Visa • Mastercard • RuPay • American Express</p>
+              </label>
+
+              <!-- Option 3: Cash on Delivery -->
+              <label class="sr-pay-card" [class.sr-pay-card--active]="checkoutForm.controls.paymentMethod.value === 'cash-on-delivery'">
+                <div class="sr-pay-card__top">
+                  <input type="radio" formControlName="paymentMethod" value="cash-on-delivery" class="sr-radio" />
+                  <span class="sr-pay-card__title">CASH ON DELIVERY</span>
+                  <span class="sr-pay-card__badge">ZERO ADVANCE</span>
+                </div>
+                <p class="sr-pay-card__sub">Pay in cash or UPI QR upon courier arrival at your address</p>
+              </label>
+
+            </div>
+
+            <!-- Dynamic Payment Instructions Area (Modular for future real gateways) -->
+            <div class="sr-pay-instruction-box">
+              @if (checkoutForm.controls.paymentMethod.value === 'upi') {
+                <div class="sr-pay-info">
+                  <span class="sr-pay-info__tag">[UPI PROTOCOL READY]</span>
+                  <p>Once you authorize the order, our dynamic UPI gateway will generate a single-use payment intent or QR code for instant confirmation.</p>
+                </div>
+              } @else if (checkoutForm.controls.paymentMethod.value === 'card' || checkoutForm.controls.paymentMethod.value === 'online-payment') {
+                <div class="sr-pay-info">
+                  <span class="sr-pay-info__tag">[TOKENIZED CARD PROCESSOR READY]</span>
+                  <p>PCI-DSS Level 1 encrypted card checkout will handle verification. No credit or debit credentials are ever stored on raw servers.</p>
+                </div>
+              } @else {
+                <div class="sr-pay-info">
+                  <span class="sr-pay-info__tag">[DOORSTEP DISPATCH READY]</span>
+                  <p>No upfront charge. Please ensure exact payment or UPI app is ready when the courier arrives at your delivery coordinates.</p>
+                </div>
+              }
+            </div>
+
+            <p class="sr-payment__note">NO HIDDEN SURCHARGES // ALL IMPORT AND GST CHARGES CALCULATED AT CHECKOUT</p>
+          </div>
+        </section>
+
+        @if (errorMessage) {
+          <div class="sr-form__error-card">
+            <span class="sr-error-icon">✕</span>
+            <p>{{ errorMessage }}</p>
+          </div>
+        }
+
+      </form>
+
+      <!-- ===== RIGHT COLUMN: ORDER MANIFEST SIDEBAR ===== -->
+      <aside class="sr-order">
+        <div class="sr-order__header">
+          <h2>ORDER MANIFEST</h2>
+          <span class="sr-order-badge">LIVE VAULT</span>
+        </div>
+
+        @if (items$ | async; as items) {
+          <div class="sr-order__items">
+            @for (item of items; track item.product.id) {
+              <article class="sr-order-item">
+                <img [src]="item.product.image" [alt]="item.product.name" (error)="onImgError($event)" />
+                <div class="sr-order-item__info">
+                  <h3>{{ item.product.name }}</h3>
+                  <p class="sr-order-item__sku">SKU: {{ item.product.sku }}</p>
+                  <span class="sr-order-item__qty">QTY: {{ item.quantity }}</span>
+                </div>
+                <strong class="sr-order-item__price">{{ item.product.price * item.quantity | currency:'INR':'symbol':'1.0-0' }}</strong>
+              </article>
+            } @empty {
+              <p class="sr-order__empty">YOUR BAG IS CURRENTLY EMPTY.</p>
+            }
+          </div>
+        }
+
+        <div class="sr-order__rows">
+          <p>
+            <span>SUBTOTAL</span>
+            <b>{{ subtotal | currency:'INR':'symbol':'1.0-0' }}</b>
+          </p>
+          <p>
+            <span>EXPRESS COURIER</span>
+            @if (shippingFee === 0) {
+              <b class="sr-free">COMPLIMENTARY [FREE]</b>
+            } @else {
+              <b>{{ shippingFee | currency:'INR':'symbol':'1.0-0' }}</b>
+            }
+          </p>
+          <p>
+            <span>TAXES &amp; DUTIES</span>
+            <b class="sr-included">GST 18% INCLUDED</b>
+          </p>
+        </div>
+
+        <div class="sr-order__total">
+          <span>FINAL VALUATION<br /><b>TOTAL DUE</b></span>
+          <strong>{{ total | currency:'INR':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="button"
+          class="sr-submit"
+          (click)="submit()"
+          [disabled]="checkoutForm.invalid || isSubmitting"
+        >
+          <span class="sr-submit__pulse-beacon" aria-hidden="true"></span>
+          <span>
+            @if (isSubmitting) {
+              AUTHORIZING DISPATCH...
+            } @else {
+              AUTHORIZE ORDER [{{ total | currency:'INR':'symbol':'1.0-0' }}] →
+            }
+          </span>
+        </button>
+
+        <p class="sr-order__foot">⌑ RFID AUTHENTICATED VAULT DROP &nbsp; // &nbsp; 14-DAY ARCHIVE RETURN</p>
+      </aside>
+
+    </div>
+
+  </div>
+</main>
+

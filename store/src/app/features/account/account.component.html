@@ -1,0 +1,577 @@
+<main class="sr-account">
+  <div class="sr-account__inner">
+
+    <!-- Top Breadcrumb & Status Telemetry -->
+    <div class="sr-account__topbar">
+      <a routerLink="/" class="sr-account__back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>RETURN TO ARCHIVE DROPS</span>
+      </a>
+      <div class="sr-account__telemetry">
+        <span class="sr-live-dot"></span>
+        <span class="sr-account__badge">[CADRE_PASSPORT // AUTH_ACTIVE]</span>
+      </div>
+    </div>
+
+    <!-- Member Passport Header -->
+    @if (currentUser$ | async; as user) {
+      <header class="sr-passport-header">
+        <div class="sr-passport-header__main">
+          <div class="sr-passport-avatar">
+            <span class="sr-passport-avatar__text">{{ getUserInitials(user.name, user.email) }}</span>
+            <span class="sr-passport-avatar__ring"></span>
+          </div>
+
+          <div class="sr-passport-info">
+            <div class="sr-passport-meta-row">
+              <span class="sr-passport-tier-pill">TIER_0 // VERIFIED CADRE</span>
+              <span class="sr-passport-id-pill">{{ getMemberId(user.email) }}</span>
+            </div>
+            <h1 class="sr-passport-name">{{ user.name || 'CADRE OPERATIVE' }}</h1>
+            <p class="sr-passport-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>{{ user.email }}</span>
+              @if (user.phone) {
+                <span class="sr-sep">//</span>
+                <span>{{ user.phone }}</span>
+              }
+            </p>
+          </div>
+        </div>
+
+        <div class="sr-passport-actions">
+          <button type="button" class="sr-logout-btn" (click)="onLogout()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="sr-logout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>TERMINATE SESSION</span>
+          </button>
+        </div>
+      </header>
+    }
+
+    <!-- 4 Metric Telemetry Tiles -->
+    <section class="sr-metric-grid">
+      <button type="button" class="sr-metric-card" [class.sr-metric-card--active]="activeTab === 'orders'" (click)="setTab('orders')">
+        <div class="sr-metric-card__header">
+          <span class="sr-metric-card__code">[MANIFESTS]</span>
+          <span class="sr-metric-card__icon">📦</span>
+        </div>
+        <div class="sr-metric-card__value">{{ userOrders.length }}</div>
+        <div class="sr-metric-card__label">ORDERS DISPATCHED</div>
+        <div class="sr-metric-card__action">INSPECT HISTORY →</div>
+      </button>
+
+      <button type="button" class="sr-metric-card" [class.sr-metric-card--active]="activeTab === 'addresses'" (click)="setTab('addresses')">
+        <div class="sr-metric-card__header">
+          <span class="sr-metric-card__code">[COORDINATES]</span>
+          <span class="sr-metric-card__icon">📍</span>
+        </div>
+        <div class="sr-metric-card__value">{{ addresses.length }}</div>
+        <div class="sr-metric-card__label">SAVED DESTINATIONS</div>
+        <div class="sr-metric-card__action">MANAGE ADDRESSES →</div>
+      </button>
+
+      <a routerLink="/wishlist" class="sr-metric-card">
+        <div class="sr-metric-card__header">
+          <span class="sr-metric-card__code">[VAULT]</span>
+          <span class="sr-metric-card__icon">♥</span>
+        </div>
+        <div class="sr-metric-card__value">{{ (wishlistCount$ | async) ?? 0 }}</div>
+        <div class="sr-metric-card__label">RESERVED IN WISHLIST</div>
+        <div class="sr-metric-card__action">OPEN WISHLIST →</div>
+      </a>
+
+      <a routerLink="/cart" class="sr-metric-card">
+        <div class="sr-metric-card__header">
+          <span class="sr-metric-card__code">[ALLOCATION]</span>
+          <span class="sr-metric-card__icon">🛍</span>
+        </div>
+        <div class="sr-metric-card__value">{{ (cartCount$ | async) ?? 0 }}</div>
+        <div class="sr-metric-card__label">PIECES IN BAG</div>
+        <div class="sr-metric-card__action">REVIEW BAG →</div>
+      </a>
+    </section>
+
+    <!-- Tabbed Navigation Bar -->
+    <nav class="sr-tabs-nav" aria-label="Account Sections">
+      <button
+        type="button"
+        class="sr-tab-btn"
+        [class.sr-tab-btn--active]="activeTab === 'profile'"
+        (click)="setTab('profile')">
+        <span class="sr-tab-btn__num">01</span>
+        <span class="sr-tab-btn__text">PERSONAL CREDENTIALS</span>
+      </button>
+
+      <button
+        type="button"
+        class="sr-tab-btn"
+        [class.sr-tab-btn--active]="activeTab === 'addresses'"
+        (click)="setTab('addresses')">
+        <span class="sr-tab-btn__num">02</span>
+        <span class="sr-tab-btn__text">DISPATCH COORDINATES</span>
+        <span class="sr-tab-btn__badge">{{ addresses.length }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="sr-tab-btn"
+        [class.sr-tab-btn--active]="activeTab === 'orders'"
+        (click)="setTab('orders')">
+        <span class="sr-tab-btn__num">03</span>
+        <span class="sr-tab-btn__text">ORDER MANIFESTS</span>
+        <span class="sr-tab-btn__badge">{{ userOrders.length }}</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <div class="sr-account__grid">
+
+      <div class="sr-account__content">
+
+        <!-- ============================================== -->
+        <!-- TAB 01: PERSONAL CREDENTIALS -->
+        <!-- ============================================== -->
+        @if (activeTab === 'profile') {
+          <section class="sr-panel">
+            <div class="sr-panel__top">
+              <div class="sr-panel__title-wrap">
+                <span class="sr-panel__num">[01]</span>
+                <span class="sr-panel__title">AUTHENTICATED CREDENTIALS</span>
+              </div>
+              @if (!isEditingProfile) {
+                <button type="button" class="sr-action-link sr-action-link--edit" (click)="startEditProfile()">
+                  [ EDIT CREDENTIALS ]
+                </button>
+              }
+            </div>
+
+            <div class="sr-panel__body">
+              @if (currentUser$ | async; as currentUser) {
+                @if (!isEditingProfile) {
+                  <div class="sr-info-grid">
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">IDENTIFIER // FULL NAME</span>
+                      <strong class="sr-info-value">{{ currentUser.name || 'NOT CONFIGURED' }}</strong>
+                      <span class="sr-info-sub">Primary registrant name</span>
+                    </div>
+
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">COMMUNICATION // EMAIL</span>
+                      <strong class="sr-info-value">{{ currentUser.email }}</strong>
+                      <span class="sr-info-sub">Login identity &amp; receipts</span>
+                    </div>
+
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">TELEMETRY // PHONE</span>
+                      <strong class="sr-info-value">{{ currentUser.phone || 'NO PHONE REGISTERED' }}</strong>
+                      <span class="sr-info-sub">Delivery dispatch contact</span>
+                    </div>
+
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">CADRE CLEARANCE TIER</span>
+                      <div class="sr-tier-badge-wrap">
+                        <span class="sr-status-tag">TIER_0 // VERIFIED CADRE</span>
+                        <span class="sr-verified-check">✓ ACTIVE</span>
+                      </div>
+                      <span class="sr-info-sub">Full priority drop access</span>
+                    </div>
+
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">SETTLEMENT CURRENCY</span>
+                      <strong class="sr-info-value">INR (₹) // INDIAN RUPEES</strong>
+                      <span class="sr-info-sub">Standard regional billing</span>
+                    </div>
+
+                    <div class="sr-info-item">
+                      <span class="sr-info-label">ACCOUNT PROTOCOL</span>
+                      <strong class="sr-info-value">AUTHENTICATED USER</strong>
+                      <span class="sr-info-sub">Encrypted session active</span>
+                    </div>
+                  </div>
+
+                  <!-- Security Protocol Notice -->
+                  <div class="sr-security-card">
+                    <div class="sr-security-card__icon">🛡</div>
+                    <div class="sr-security-card__text">
+                      <strong>CADRE SECURITY CLEARANCE</strong>
+                      <p>Your profile data is preserved in strict accordance with the SOLE//RAW authentication architecture. All dispatches, telemetry, and payment receipts are linked to your cadre identity.</p>
+                    </div>
+                  </div>
+                } @else {
+                  <!-- Edit Profile Form -->
+                  <form [formGroup]="profileForm" (ngSubmit)="saveProfile(currentUser)" class="sr-form">
+                    <div class="sr-form-banner">
+                      <span>EDITING PROFILE CREDENTIALS</span>
+                      <span class="sr-form-banner__ref">[REF: {{ getMemberId(currentUser.email) }}]</span>
+                    </div>
+
+                    <div class="sr-form-row">
+                      <label class="sr-field">
+                        <span class="sr-field__label">FULL NAME *</span>
+                        <input formControlName="name" placeholder="ENTER FULL NAME" class="sr-input" />
+                        @if (profileForm.controls.name.invalid && profileForm.controls.name.touched) {
+                          <small class="sr-field__error">Valid name is required (min 2 characters).</small>
+                        }
+                      </label>
+                      <label class="sr-field">
+                        <span class="sr-field__label">CONTACT PHONE</span>
+                        <input formControlName="phone" type="tel" placeholder="+91 98765 43210" class="sr-input" />
+                        @if (profileForm.controls.phone.invalid && profileForm.controls.phone.touched) {
+                          <small class="sr-field__error">Enter a valid phone number format.</small>
+                        }
+                      </label>
+                    </div>
+
+                    <div class="sr-form-row">
+                      <label class="sr-field sr-w-full">
+                        <span class="sr-field__label">EMAIL ADDRESS *</span>
+                        <input formControlName="email" type="email" placeholder="user@domain.com" class="sr-input" />
+                        @if (profileForm.controls.email.invalid && profileForm.controls.email.touched) {
+                          <small class="sr-field__error">Valid email address is required.</small>
+                        }
+                      </label>
+                    </div>
+
+                    <div class="sr-btn-row">
+                      <button type="submit" class="sr-btn sr-btn--lime" [disabled]="profileForm.invalid || isSavingProfile">
+                        {{ isSavingProfile ? 'SAVING CHANGES...' : 'SAVE MODIFICATIONS' }}
+                      </button>
+                      <button type="button" class="sr-btn sr-btn--secondary" (click)="cancelEditProfile()" [disabled]="isSavingProfile">
+                        CANCEL
+                      </button>
+                    </div>
+                  </form>
+                }
+              }
+            </div>
+          </section>
+        }
+
+        <!-- ============================================== -->
+        <!-- TAB 02: DISPATCH COORDINATES -->
+        <!-- ============================================== -->
+        @if (activeTab === 'addresses') {
+          <section class="sr-panel">
+            <div class="sr-panel__top">
+              <div class="sr-panel__title-wrap">
+                <span class="sr-panel__num">[02]</span>
+                <span class="sr-panel__title">REGISTERED DISPATCH COORDINATES</span>
+              </div>
+              @if (!showAddressForm) {
+                <button type="button" class="sr-btn sr-btn--lime sr-btn--sm" (click)="openAddAddressForm()">
+                  + REGISTER NEW ADDRESS
+                </button>
+              }
+            </div>
+
+            <div class="sr-panel__body">
+              <!-- Inline Address Form -->
+              @if (showAddressForm) {
+                <div class="sr-address-form-box">
+                  <div class="sr-form-heading">
+                    <div>
+                      <h3 class="sr-form-heading__title">
+                        {{ editingAddressId ? 'MODIFY DISPATCH ADDRESS' : 'REGISTER NEW DISPATCH ADDRESS' }}
+                      </h3>
+                      <p class="sr-form-heading__sub">Ensure precise postal details for guaranteed couriered drop delivery.</p>
+                    </div>
+                    <span class="sr-form-code">{{ editingAddressId ? '[REF: ' + editingAddressId + ']' : '[NEW_ENTRY]' }}</span>
+                  </div>
+
+                  <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="sr-form">
+                    <div class="sr-type-toggle">
+                      <span class="sr-info-label">DESTINATION TYPE:</span>
+                      <label class="sr-radio-label">
+                        <input type="radio" formControlName="type" value="home" />
+                        <span>⌂ RESIDENTIAL / HOME</span>
+                      </label>
+                      <label class="sr-radio-label">
+                        <input type="radio" formControlName="type" value="office" />
+                        <span>🏢 WORKSPACE / OFFICE</span>
+                      </label>
+                    </div>
+
+                    <div class="sr-form-row">
+                      <label class="sr-field">
+                        <span class="sr-field__label">RECIPIENT FULL NAME *</span>
+                        <input formControlName="fullName" placeholder="MARCUS VANCE" class="sr-input" />
+                        @if (addressForm.controls.fullName.invalid && addressForm.controls.fullName.touched) {
+                          <small class="sr-field__error">Full name is required.</small>
+                        }
+                      </label>
+                      <label class="sr-field">
+                        <span class="sr-field__label">CONTACT PHONE *</span>
+                        <input formControlName="phone" type="tel" placeholder="+91 98765 43210" class="sr-input" />
+                        @if (addressForm.controls.phone.invalid && addressForm.controls.phone.touched) {
+                          <small class="sr-field__error">Valid contact phone required.</small>
+                        }
+                      </label>
+                    </div>
+
+                    <label class="sr-field">
+                      <span class="sr-field__label">ADDRESS LINE 1 (FLAT, BUILDING, STREET) *</span>
+                      <input formControlName="addressLine1" placeholder="402 RAW TOWER, SECTOR 4" class="sr-input" />
+                      @if (addressForm.controls.addressLine1.invalid && addressForm.controls.addressLine1.touched) {
+                        <small class="sr-field__error">Address line 1 is required.</small>
+                      }
+                    </label>
+
+                    <label class="sr-field">
+                      <span class="sr-field__label">ADDRESS LINE 2 (AREA / LOCALITY - OPTIONAL)</span>
+                      <input formControlName="addressLine2" placeholder="NEAR ARCHIVE WAREHOUSE" class="sr-input" />
+                    </label>
+
+                    <div class="sr-form-row sr-form-row--3">
+                      <label class="sr-field">
+                        <span class="sr-field__label">CITY *</span>
+                        <input formControlName="city" placeholder="MUMBAI" class="sr-input" />
+                        @if (addressForm.controls.city.invalid && addressForm.controls.city.touched) {
+                          <small class="sr-field__error">City is required.</small>
+                        }
+                      </label>
+                      <label class="sr-field">
+                        <span class="sr-field__label">STATE *</span>
+                        <input formControlName="state" placeholder="MAHARASHTRA" class="sr-input" />
+                        @if (addressForm.controls.state.invalid && addressForm.controls.state.touched) {
+                          <small class="sr-field__error">State is required.</small>
+                        }
+                      </label>
+                      <label class="sr-field">
+                        <span class="sr-field__label">PINCODE *</span>
+                        <input formControlName="pincode" placeholder="400001" class="sr-input" />
+                        @if (addressForm.controls.pincode.invalid && addressForm.controls.pincode.touched) {
+                          <small class="sr-field__error">6-digit pincode required.</small>
+                        }
+                      </label>
+                    </div>
+
+                    <label class="sr-field">
+                      <span class="sr-field__label">LANDMARK (OPTIONAL)</span>
+                      <input formControlName="landmark" placeholder="BEHIND CENTRAL MONOLITH" class="sr-input" />
+                    </label>
+
+                    <label class="sr-save-address-label">
+                      <input type="checkbox" formControlName="isDefault" />
+                      <span>DESIGNATE AS DEFAULT DISPATCH DESTINATION</span>
+                    </label>
+
+                    <div class="sr-btn-row">
+                      <button type="submit" class="sr-btn sr-btn--lime" [disabled]="addressForm.invalid || isSavingAddress">
+                        {{ isSavingAddress ? 'RECORDING COORDINATES...' : 'SAVE DISPATCH ADDRESS' }}
+                      </button>
+                      <button type="button" class="sr-btn sr-btn--secondary" (click)="closeAddressForm()" [disabled]="isSavingAddress">
+                        CANCEL
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              }
+
+              <!-- Address Cards Grid -->
+              @if (isLoadingAddresses) {
+                <div class="sr-loading-placeholder">
+                  <span class="sr-spinner-dot"></span>
+                  <span>RETRIEVING ARCHIVAL ADDRESS COORDINATES...</span>
+                </div>
+              } @else if (addresses.length === 0 && !showAddressForm) {
+                <div class="sr-empty-address-box">
+                  <div class="sr-empty-icon">📍</div>
+                  <strong class="sr-empty-title">NO SAVED DESTINATIONS YET</strong>
+                  <p class="sr-empty-desc">Register your delivery address to enable one-click checkout on upcoming sneaker drops.</p>
+                  <button type="button" class="sr-btn sr-btn--lime sr-mt-2" (click)="openAddAddressForm()">
+                    + REGISTER FIRST ADDRESS
+                  </button>
+                </div>
+              } @else {
+                <div class="sr-addresses-grid">
+                  @for (addr of addresses; track addr.id) {
+                    <article class="sr-address-card" [class.sr-address-card--default]="addr.isDefault">
+                      <div class="sr-address-card__top">
+                        <span class="sr-type-badge">{{ addr.type === 'home' ? '⌂ RESIDENTIAL' : '🏢 WORKSPACE' }}</span>
+                        @if (addr.isDefault) {
+                          <span class="sr-default-badge">★ PRIMARY DESTINATION</span>
+                        }
+                      </div>
+
+                      <strong class="sr-address-name">{{ addr.fullName }}</strong>
+                      <p class="sr-address-text">
+                        {{ addr.addressLine1 }}
+                        @if (addr.addressLine2) { , {{ addr.addressLine2 }} }
+                      </p>
+                      <p class="sr-address-locality">
+                        {{ addr.city }}, {{ addr.state }} — <b>{{ addr.pincode }}</b>
+                      </p>
+                      @if (addr.landmark) {
+                        <p class="sr-address-landmark">Landmark: {{ addr.landmark }}</p>
+                      }
+                      <small class="sr-address-phone">Contact: {{ addr.phone }}</small>
+
+                      <div class="sr-address-actions">
+                        <button type="button" class="sr-address-btn" (click)="editAddress(addr)">EDIT</button>
+                        @if (!addr.isDefault) {
+                          <button type="button" class="sr-address-btn sr-address-btn--default-action" (click)="makeDefaultAddress(addr)">SET PRIMARY</button>
+                        }
+                        <button type="button" class="sr-address-btn sr-address-btn--danger" (click)="confirmDeleteAddress(addr)">DELETE</button>
+                      </div>
+                    </article>
+                  }
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- ============================================== -->
+        <!-- TAB 03: ORDER MANIFESTS -->
+        <!-- ============================================== -->
+        @if (activeTab === 'orders') {
+          <section class="sr-panel">
+            <div class="sr-panel__top">
+              <div class="sr-panel__title-wrap">
+                <span class="sr-panel__num">[03]</span>
+                <span class="sr-panel__title">DISPATCH TRANSACTION MANIFESTS</span>
+              </div>
+              <a routerLink="/orders" class="sr-action-link">VIEW FULL MANIFEST ARCHIVE →</a>
+            </div>
+
+            <div class="sr-panel__body">
+              @if (isLoadingOrders) {
+                <div class="sr-loading-placeholder">
+                  <span class="sr-spinner-dot"></span>
+                  <span>SYNCING DISPATCH TELEMETRY WITH LOGISTICS VAULT...</span>
+                </div>
+              } @else if (userOrders.length === 0) {
+                <div class="sr-empty-address-box">
+                  <div class="sr-empty-icon">📦</div>
+                  <strong class="sr-empty-title">NO ORDER MANIFESTS RECORDED</strong>
+                  <p class="sr-empty-desc">Your order dispatch ledger is currently clean. Explore our latest sneaker releases to build your vault.</p>
+                  <a routerLink="/" class="sr-btn sr-btn--lime sr-mt-2">EXPLORE FOOTWEAR DROPS →</a>
+                </div>
+              } @else {
+                <div class="sr-orders-table-wrap">
+                  <div class="sr-orders-list">
+                    @for (ord of userOrders; track ord.id) {
+                      <article class="sr-order-row">
+                        <div class="sr-order-row__cell sr-order-row__id">
+                          <span class="sr-order-cell-label">MANIFEST ID</span>
+                          <span class="sr-order-id-value">{{ ord.id }}</span>
+                        </div>
+
+                        <div class="sr-order-row__cell sr-order-row__date">
+                          <span class="sr-order-cell-label">TIMESTAMP</span>
+                          <span>{{ ord.createdAt | date:'dd MMM yyyy, HH:mm' }}</span>
+                        </div>
+
+                        <div class="sr-order-row__cell sr-order-row__items">
+                          <span class="sr-order-cell-label">ALLOCATION</span>
+                          <span>{{ ord.items.length }} {{ ord.items.length === 1 ? 'PIECE' : 'PIECES' }}</span>
+                        </div>
+
+                        <div class="sr-order-row__cell sr-order-row__total">
+                          <span class="sr-order-cell-label">SETTLED VALUE</span>
+                          <strong>{{ ord.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+                        </div>
+
+                        <div class="sr-order-row__cell sr-order-row__status">
+                          <span class="sr-order-cell-label">STATUS</span>
+                          <span class="sr-status-pill sr-status-pill--{{ ord.status }}">{{ ord.status | uppercase }}</span>
+                        </div>
+
+                        <div class="sr-order-row__cell sr-order-row__cta">
+                          <a [routerLink]="['/orders', ord.id]" class="sr-btn sr-btn--sm sr-btn--primary">
+                            MANIFEST [↗]
+                          </a>
+                        </div>
+                      </article>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR: Member Directives ===== -->
+      <aside class="sr-account__aside">
+
+        <!-- Card A: Quick Shortcuts -->
+        <section class="sr-aside-card">
+          <div class="sr-aside-card__header">
+            <span class="sr-aside-card__code">// FAST ACCESS</span>
+            <h4>SYSTEM CONTROLS</h4>
+          </div>
+          <div class="sr-aside-links">
+            <a routerLink="/orders" class="sr-aside-link">
+              <span>ALL COMPLETED ORDERS</span>
+              <span class="sr-arrow">→</span>
+            </a>
+            <a routerLink="/wishlist" class="sr-aside-link">
+              <span>SAVED WISHLIST VAULT</span>
+              <span class="sr-arrow">→</span>
+            </a>
+            <a routerLink="/cart" class="sr-aside-link">
+              <span>ACTIVE SHOPPING BAG</span>
+              <span class="sr-arrow">→</span>
+            </a>
+            <a routerLink="/" class="sr-aside-link">
+              <span>ARCHIVE FOOTWEAR DROPS</span>
+              <span class="sr-arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Card B: Cadre Member Directive -->
+        <section class="sr-aside-card sr-aside-card--dark">
+          <div class="sr-aside-card__header">
+            <span class="sr-aside-card__code sr-text-lime">// PROTOCOL</span>
+            <h4>CADRE PRIVILEGES</h4>
+          </div>
+          <ul class="sr-privilege-list">
+            <li>
+              <span class="sr-check">✓</span>
+              <span>Guaranteed 100% authentic sneaker verification</span>
+            </li>
+            <li>
+              <span class="sr-check">✓</span>
+              <span>Priority courier dispatch within 48 operational hours</span>
+            </li>
+            <li>
+              <span class="sr-check">✓</span>
+              <span>Zero cancellation penalty prior to transit manifest</span>
+            </li>
+            <li>
+              <span class="sr-check">✓</span>
+              <span>Direct dedicated support for cadre operatives</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Card C: Support Telemetry -->
+        <section class="sr-aside-card">
+          <div class="sr-aside-card__header">
+            <span class="sr-aside-card__code">// CONTACT</span>
+            <h4>CLIENT DISPATCH DESK</h4>
+          </div>
+          <p class="sr-support-text">Questions regarding shipment tracking, allocation verification, or delivery coordinates:</p>
+          <div class="sr-support-contact">
+            <strong>dispatch&#64;sole-raw.com</strong>
+            <span>MON–SAT // 09:00 — 20:00 IST</span>
+          </div>
+        </section>
+
+      </aside>
+
+    </div>
+
+  </div>
+</main>

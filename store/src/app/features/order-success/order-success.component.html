@@ -1,14 +1,100 @@
-<main class="order-success">
-  <p class="order-success__eyebrow">[ARCHIVE DISPATCH CONFIRMED]</p>
-  <h1>ORDER CONFIRMED</h1>
-  <p class="order-success__message">Your order has been placed successfully.</p>
+<main class="sr-success">
+  <div class="sr-success__inner">
 
-  @if (order$ | async; as order) {
-    <p class="order-success__id">ORDER #{{ order.id }}</p>
-    <p class="order-success__total">TOTAL: {{ order.total | currency:'INR':'symbol':'1.0-0' }}</p>
-    <p class="order-success__delivery">Delivery to {{ order.customerName }} at {{ order.deliveryAddress }}.</p>
-  } @else {
-    <p class="order-success__id">ORDER CONFIRMATION</p>
-  }
-  <a routerLink="/" class="order-success__button">CONTINUE SHOPPING</a>
+    <div class="sr-receipt-card">
+      <div class="sr-receipt__topbar">
+        <span class="sr-receipt__tag">[RELEASE MANIFEST // VERIFIED]</span>
+        <span class="sr-receipt__time">TIMESTAMP: ARCHIVE_2026</span>
+      </div>
+
+      <div class="sr-receipt__header">
+        <div class="sr-success-badge">
+          <span class="sr-check">✓</span>
+          <span>DISPATCH AUTHORIZED</span>
+        </div>
+        <h1 class="sr-receipt__title">ORDER <em>CONFIRMED</em></h1>
+        <p class="sr-receipt__subtitle">
+          Your allocation has been locked into the archival system. Tracking telemetry and dispatch notifications will be routed to your email.
+        </p>
+      </div>
+
+      @if (order$ | async; as order) {
+        <!-- Order ID pill -->
+        <div class="sr-receipt__id-block">
+          <span class="sr-id-label">TRANSACTION IDENTIFIER</span>
+          <span class="sr-id-number">{{ order.id }}</span>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="sr-receipt__grid">
+          <div class="sr-receipt-item">
+            <span class="sr-receipt-label">RECIPIENT CADRE</span>
+            <strong>{{ order.customerName }}</strong>
+            <small>{{ order.phone }}</small>
+          </div>
+
+          <div class="sr-receipt-item">
+            <span class="sr-receipt-label">PAYMENT PROTOCOL</span>
+            <strong>{{ order.paymentMethod | uppercase }}</strong>
+            <small class="sr-receipt-tag-sm">VERIFIED</small>
+          </div>
+
+          <div class="sr-receipt-item sr-col-span">
+            <span class="sr-receipt-label">DISPATCH COORDINATES</span>
+            <strong>{{ order.deliveryAddress }}</strong>
+          </div>
+
+          <div class="sr-receipt-item sr-col-span">
+            <span class="sr-receipt-label">ITEMS ALLOCATED ({{ order.items.length }})</span>
+            <div class="sr-receipt-items-list">
+              @for (item of order.items; track item.product.id) {
+                <div class="sr-receipt-item-row">
+                  <div class="sr-item-row-left">
+                    <img [src]="item.product.image" [alt]="item.product.name" class="sr-receipt-thumb" />
+                    <div>
+                      <strong class="sr-item-row-name">{{ item.product.name }}</strong>
+                      <span class="sr-item-row-sku">SKU: {{ item.product.sku }} // QTY: {{ item.quantity }}</span>
+                    </div>
+                  </div>
+                  <strong class="sr-item-row-price">{{ item.product.price * item.quantity | currency:'INR':'symbol':'1.0-0' }}</strong>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="sr-receipt-item sr-col-span sr-receipt-total-block">
+            <div class="sr-receipt-total-row">
+              <span>FINAL SETTLED TOTAL:</span>
+              <strong class="sr-receipt-total-val">{{ order.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+            </div>
+            <small>ALL DUTIES, GST 18%, AND COURIER FEES ABSORBED</small>
+          </div>
+        </div>
+      } @else {
+        <div class="sr-receipt__id-block">
+          <span class="sr-id-label">TRANSACTION STATUS</span>
+          <span class="sr-id-number">DISPATCH CONFIRMATION COMPLETE</span>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="sr-receipt__actions">
+        <a routerLink="/orders" class="sr-receipt-btn sr-receipt-btn--lime">
+          VIEW IN ORDER HISTORY →
+        </a>
+        <button type="button" class="sr-receipt-btn sr-receipt-btn--dark" (click)="printReceipt()">
+          PRINT DISPATCH RECEIPT
+        </button>
+        <a routerLink="/" class="sr-receipt-btn sr-receipt-btn--outline">
+          CONTINUE BROWSING DROPS
+        </a>
+      </div>
+
+      <div class="sr-receipt__footer">
+        <span>RFID ENCRYPTED ARCHIVE</span>
+        <span>SOLE//RAW LOGISTICS PROTOCOL</span>
+      </div>
+    </div>
+
+  </div>
 </main>

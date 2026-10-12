@@ -1,20 +1,23 @@
 :host {
   display: block;
+  width: 270px;
+  height: 100vh;
+  flex-shrink: 0;
 }
 
 .sr-admin-sidebar {
   width: 270px;
   min-width: 270px;
   height: 100vh;
-  position: sticky;
-  top: 0;
+  position: relative;
   background-color: #000000;
   color: #ffffff;
   border-right: 1px solid #262626;
   display: flex;
   flex-direction: column;
-  z-index: 100;
+  z-index: 90;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Brand Section */
@@ -113,7 +116,7 @@
 .sr-nav-item {
   display: flex;
   align-items: center;
-  padding: 13px 20px;
+  padding: 14px 20px;
   color: #a3a3a3;
   text-decoration: none;
   font-family: 'Courier New', monospace;
@@ -121,6 +124,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   border-left: 3px solid transparent;
+  border-bottom: 1px solid #161616;
   transition: all 0.15s ease;
 }
 
@@ -171,6 +175,70 @@
 .sr-nav-item--active:hover {
   background: #d9f13d;
   color: #000000;
+}
+
+/* Telemetry Widget in Sidebar (Eliminates Empty Space) */
+.sr-sidebar-telemetry {
+  margin: auto 16px 8px 16px;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  border: 1px solid #222222;
+  box-shadow: 2px 2px 0 #181818;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sr-telemetry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1c1c1c;
+  padding-bottom: 8px;
+}
+
+.sr-telemetry-tag {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  color: #777777;
+  letter-spacing: 0.06em;
+}
+
+.sr-telemetry-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  color: #22c55e;
+  letter-spacing: 0.05em;
+}
+
+.sr-telemetry-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sr-telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+}
+
+.sr-tel-label {
+  color: #555555;
+  font-weight: 700;
+}
+
+.sr-tel-val {
+  color: #cccccc;
+  font-weight: 800;
+}
+
+.sr-tel-val--lime {
+  color: #d9f13d;
 }
 
 /* Footer Section */
@@ -271,6 +339,12 @@
 
 /* Mobile Media Queries */
 @media (max-width: 900px) {
+  :host {
+    width: 0;
+    height: 0;
+    flex-shrink: 0;
+  }
+
   .sr-admin-sidebar {
     position: fixed;
     top: 0;

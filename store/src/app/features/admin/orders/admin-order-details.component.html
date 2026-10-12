@@ -1,0 +1,333 @@
+<div class="sr-details-view">
+  <!-- BREADCRUMB / BACK NAV -->
+  <div class="sr-back-nav">
+    <a routerLink="/admin/orders" class="sr-back-link">
+      <span>← RETURN TO ORDERS DIRECTORY</span>
+    </a>
+  </div>
+
+  @if (isLoading) {
+    <!-- Loading State -->
+    <div class="sr-details-loading">
+      <div class="sr-loading-spinner"></div>
+      <span>RETRIEVING ORDER #{{ orderId }} FROM DISPATCH DATABASE...</span>
+    </div>
+  } @else if (hasError || !order) {
+    <!-- Error / Not Found State -->
+    <div class="sr-details-error">
+      <span class="sr-error-code">ERR_RECORD_NOT_FOUND // 404</span>
+      <h2>ORDER MANIFEST UNAVAILABLE</h2>
+      <p>{{ errorMessage || 'The requested order manifest could not be found or loaded.' }}</p>
+      <a routerLink="/admin/orders" class="sr-btn sr-btn--lime">
+        <span>RETURN TO ALL ORDERS</span>
+      </a>
+    </div>
+  } @else {
+    <!-- PAGE HEADER -->
+    <header class="sr-details-header">
+      <div class="sr-header-left">
+        <div class="sr-header-eyebrow">
+          <span class="sr-tag-black">DISPATCH MANIFEST</span>
+          <span>RECORD_ID // {{ order.id }}</span>
+        </div>
+        <h1 class="sr-page-title">
+          ORDER <em>#{{ order.id }}</em>
+        </h1>
+        <p class="sr-page-sub">
+          Authorized on {{ order.createdAt | date:'fullDate' }} at {{ order.createdAt | date:'shortTime' }}
+        </p>
+      </div>
+
+      <div class="sr-header-right">
+        <!-- Status Box -->
+        <div class="sr-status-card">
+          <span class="sr-status-card-label">CURRENT STATUS:</span>
+          <span class="sr-status-pill sr-status-pill--{{ order.status }}">
+            {{ order.status | uppercase }}
+          </span>
+        </div>
+
+        <!-- Status Update Trigger Button -->
+        <button
+          type="button"
+          class="sr-btn sr-btn--lime"
+          (click)="openStatusModal()"
+          title="Open status update modal"
+        >
+          <span>UPDATE STATUS ⚙</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN TWO-COLUMN GRID -->
+    <div class="sr-details-grid">
+      <!-- LEFT COLUMN: ITEMS & FINANCIALS -->
+      <div class="sr-col-main">
+        <!-- ORDERED PRODUCTS PANEL -->
+        <section class="sr-panel">
+          <div class="sr-panel-header">
+            <div class="sr-panel-title-group">
+              <span class="sr-panel-index">// 01</span>
+              <h2 class="sr-panel-title">ALLOCATED SNEAKER UNITS ({{ getTotalItemsCount() }})</h2>
+            </div>
+            <span class="sr-panel-meta">{{ order.items ? order.items.length : 0 }} UNIQUE LINE ITEMS</span>
+          </div>
+
+          <div class="sr-panel-body sr-panel-body--flush">
+            <div class="sr-items-list">
+              @for (item of order.items; track item.product.id) {
+                <div class="sr-item-row">
+                  <!-- Thumbnail -->
+                  <div class="sr-item-thumb">
+                    <img
+                      [src]="item.product.image"
+                      [alt]="item.product.name"
+                      (error)="handleImageError($event)"
+                    />
+                  </div>
+
+                  <!-- Details -->
+                  <div class="sr-item-info">
+                    <div class="sr-item-tag-row">
+                      <span class="sr-item-brand">{{ item.product.brand || 'SOLE//RAW' }}</span>
+                      @if (item.product.tag) {
+                        <span class="sr-item-tag">{{ item.product.tag }}</span>
+                      }
+                    </div>
+                    <h3 class="sr-item-name">{{ item.product.name }}</h3>
+                    <div class="sr-item-specs">
+                      <span class="sr-spec-item">SKU: {{ item.product.sku }}</span>
+                      @if (item.product.colorway) {
+                        <span class="sr-spec-divider">//</span>
+                        <span class="sr-spec-item">{{ item.product.colorway }}</span>
+                      }
+                      @if (item.product.weight) {
+                        <span class="sr-spec-divider">//</span>
+                        <span class="sr-spec-item">{{ item.product.weight }}</span>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Pricing Breakdown -->
+                  <div class="sr-item-pricing">
+                    <span class="sr-item-unit-price">
+                      {{ item.product.price | currency:'INR':'symbol':'1.0-0' }} × {{ item.quantity }}
+                    </span>
+                    <strong class="sr-item-subtotal">
+                      {{ getItemSubtotal(item) | currency:'INR':'symbol':'1.0-0' }}
+                    </strong>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Financial Summary Box -->
+            <div class="sr-financial-summary">
+              <div class="sr-fin-row">
+                <span class="sr-fin-label">LINE ITEMS SUBTOTAL:</span>
+                <span class="sr-fin-val">{{ order.total | currency:'INR':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="sr-fin-row">
+                <span class="sr-fin-label">COURIER DISPATCH ALLOTMENT:</span>
+                <span class="sr-fin-val sr-fin-val--free">COMPLIMENTARY // FREE</span>
+              </div>
+              <div class="sr-fin-row sr-fin-row--total">
+                <span class="sr-fin-label">TOTAL AUTHORIZED AMOUNT:</span>
+                <strong class="sr-fin-total">{{ order.total | currency:'INR':'symbol':'1.0-0' }}</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DISPATCH AUDIT LOG PANEL -->
+        <section class="sr-panel">
+          <div class="sr-panel-header">
+            <span class="sr-panel-index">// 02</span>
+            <h2 class="sr-panel-title">SYSTEM AUDIT METADATA</h2>
+          </div>
+
+          <div class="sr-panel-body sr-audit-body">
+            <div class="sr-audit-grid">
+              <div class="sr-audit-item">
+                <span class="sr-audit-label">INTERNAL ORDER ID:</span>
+                <span class="sr-audit-val sr-mono">{{ order.id }}</span>
+              </div>
+              <div class="sr-audit-item">
+                <span class="sr-audit-label">USER ACCOUNT ID:</span>
+                <span class="sr-audit-val sr-mono">{{ order.userId }}</span>
+              </div>
+              <div class="sr-audit-item">
+                <span class="sr-audit-label">REGISTERED EMAIL:</span>
+                <span class="sr-audit-val sr-mono">{{ order.userEmail }}</span>
+              </div>
+              <div class="sr-audit-item">
+                <span class="sr-audit-label">TIMESTAMP RECORDED:</span>
+                <span class="sr-audit-val sr-mono">{{ order.createdAt }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: CUSTOMER & FULFILLMENT -->
+      <div class="sr-col-side">
+        <!-- CUSTOMER & DELIVERY PANEL -->
+        <section class="sr-panel">
+          <div class="sr-panel-header">
+            <span class="sr-panel-index">// CLIENT</span>
+            <h2 class="sr-panel-title">CUSTOMER & LOGISTICS</h2>
+          </div>
+
+          <div class="sr-panel-body sr-cust-panel-body">
+            <!-- Client identity -->
+            <div class="sr-client-card">
+              <div class="sr-client-avatar">
+                {{ order.customerName ? order.customerName[0] : 'U' }}
+              </div>
+              <div class="sr-client-info">
+                <strong class="sr-client-name">{{ order.customerName || 'ANONYMOUS CLIENT' }}</strong>
+                <span class="sr-client-phone">TEL: {{ order.phone }}</span>
+                <span class="sr-client-email">{{ order.userEmail }}</span>
+              </div>
+            </div>
+
+            <!-- Delivery credentials -->
+            <div class="sr-delivery-box">
+              <span class="sr-delivery-label">DESTINATION ADDRESS:</span>
+              <p class="sr-delivery-addr">{{ order.deliveryAddress }}</p>
+              @if (order.city || order.state || order.pincode) {
+                <div class="sr-delivery-extra">
+                  @if (order.city) { <span>CITY: {{ order.city }}</span> }
+                  @if (order.state) { <span>• STATE: {{ order.state }}</span> }
+                  @if (order.pincode) { <span>• PIN: {{ order.pincode }}</span> }
+                </div>
+              }
+            </div>
+
+            <!-- Payment credentials -->
+            <div class="sr-payment-box">
+              <span class="sr-payment-label">PAYMENT SETTLEMENT:</span>
+              <div class="sr-payment-details">
+                <span class="sr-pay-type">
+                  {{ order.paymentMethod === 'online-payment' ? 'ONLINE PRE-PAID' : 'CASH ON DELIVERY (COD)' }}
+                </span>
+                <span class="sr-pay-status">[VERIFIED TRANSACTION]</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FULFILLMENT ACTIONS PANEL -->
+        <section class="sr-panel">
+          <div class="sr-panel-header">
+            <span class="sr-panel-index">// CONTROL</span>
+            <h2 class="sr-panel-title">FULFILLMENT ACTIONS</h2>
+          </div>
+
+          <div class="sr-panel-body sr-actions-panel-body">
+            <p class="sr-actions-intro">
+              Update the active dispatch milestone or trigger automated customer telemetry notifications.
+            </p>
+
+            <button
+              type="button"
+              class="sr-btn sr-btn--lime sr-btn--full"
+              (click)="openStatusModal()"
+            >
+              <span>OVERRIDE STATUS ⚙</span>
+            </button>
+
+            <!-- Operational Protocol Note -->
+            <div class="sr-dev-banner">
+              <span class="sr-banner-icon">⚙</span>
+              <span>FULFILLMENT PROTOCOL: Status modifications update database records and recalculate customer tracking timeline.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  }
+
+  <!-- STATUS UPDATE MODAL (REUSABLE IN DETAILS) -->
+  @if (isStatusModalOpen && order) {
+    <div class="sr-modal-backdrop" (click)="closeStatusModal()" (keydown.escape)="closeStatusModal()">
+      <div class="sr-modal-card" (click)="$event.stopPropagation()">
+        <!-- Modal Top Bar -->
+        <div class="sr-modal-header">
+          <div class="sr-modal-eyebrow">
+            <span class="sr-modal-alert-tag">SYS_UPDATE // STATUS OVERRIDE</span>
+          </div>
+          <button
+            type="button"
+            class="sr-modal-close"
+            (click)="closeStatusModal()"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="sr-modal-body">
+          <h3 class="sr-modal-title">UPDATE ORDER STATUS</h3>
+          <p class="sr-modal-subtitle">
+            Transition order <strong>#{{ order.id }}</strong> into a new fulfillment milestone.
+          </p>
+
+          <div class="sr-modal-order-summary">
+            <div class="sr-summary-item">
+              <span class="sr-item-label">CURRENT STATUS:</span>
+              <span class="sr-status-pill sr-status-pill--{{ order.status }}">
+                {{ order.status | uppercase }}
+              </span>
+            </div>
+            <div class="sr-summary-item">
+              <span class="sr-item-label">CUSTOMER:</span>
+              <strong class="sr-item-val">{{ order.customerName }}</strong>
+            </div>
+          </div>
+
+          <!-- Selector -->
+          <div class="sr-modal-field">
+            <label for="detailStatusSelect" class="sr-modal-label">NEW STATUS CLASSIFICATION</label>
+            <select
+              id="detailStatusSelect"
+              class="sr-select sr-select--modal"
+              [(ngModel)]="selectedNewStatus"
+            >
+              @for (st of statusOptions; track st) {
+                <option [value]="st">{{ st | uppercase }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Operational Notice -->
+          <div class="sr-modal-dev-note">
+            <span class="sr-note-icon">⚙</span>
+            <span>DISPATCH PROTOCOL: Updating status will immediately persist to backend and sync tracking manifest.</span>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="sr-modal-footer">
+          <button
+            type="button"
+            class="sr-btn sr-btn--outline"
+            (click)="closeStatusModal()"
+          >
+            <span>CANCEL / ABORT</span>
+          </button>
+
+          <button
+            type="button"
+            class="sr-btn sr-btn--lime"
+            (click)="confirmStatusUpdate()"
+          >
+            <span>CONFIRM STATUS CHANGE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

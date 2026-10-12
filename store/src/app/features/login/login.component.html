@@ -42,7 +42,32 @@
 
       <form class="sr-signin-form" [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
 
-        <p class="sr-validation-error sr-form-message" *ngIf="serverError">{{ serverError }}</p>
+        @if (isAccountBanned) {
+          <div class="sr-banned-alert-card">
+            <div class="sr-banned-top">
+              <span class="sr-banned-tag">
+                <span class="sr-banned-pulse"></span>
+                SYS_SECURITY // ACCESS BANNED
+              </span>
+              <span class="sr-banned-symbol">⛔</span>
+            </div>
+            <h3 class="sr-banned-title">ACCOUNT BANNED / BLOCKED</h3>
+            <p class="sr-banned-message">
+              This account ID <strong *ngIf="bannedAccountEmail">({{ bannedAccountEmail }})</strong> has been <strong>BANNED / BLOCKED</strong> by system administration.
+            </p>
+            <p class="sr-banned-sub">
+              Access to SOLE//RAW store services, dispatch orders, and passport authorization has been revoked. Please contact support or authenticate with a different account.
+            </p>
+            <div class="sr-banned-actions">
+              <button type="button" class="sr-banned-dismiss" (click)="resetBannedState()">
+                <span>ACKNOWLEDGE [✕]</span>
+              </button>
+            </div>
+          </div>
+        } @else if (serverError) {
+          <p class="sr-validation-error sr-form-message">{{ serverError }}</p>
+        }
+
         <p class="sr-form-success sr-form-message" *ngIf="successMessage">{{ successMessage }}</p>
 
         <div class="sr-form-field">

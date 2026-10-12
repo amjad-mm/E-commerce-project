@@ -12,7 +12,7 @@ export interface Order {
   pincode?: string;
   items: CartItem[];
   total: number;
-  paymentMethod: 'cash-on-delivery' | 'online-payment';
+  paymentMethod: 'cash-on-delivery' | 'online-payment' | 'upi' | 'card';
   status: 'placed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   createdAt: string;
 }

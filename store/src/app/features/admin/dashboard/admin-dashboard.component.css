@@ -152,6 +152,17 @@
   box-shadow: 8px 8px 0 #111111;
 }
 
+.sr-kpi-card--link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sr-kpi-card--link:hover .sr-kpi-accent {
+  color: #111111;
+  text-decoration: underline;
+}
+
 .sr-kpi-card--primary {
   background: #111111;
   color: #ffffff;

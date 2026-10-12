@@ -54,7 +54,7 @@ import { selectOrders } from '../../core/store/order.selectors';
                   <div class="sr-items-table">
                     @for (item of order.items; track item.product.id) {
                       <div class="sr-item-row">
-                        <img [src]="item.product.image" [alt]="item.product.name" class="sr-item-img" />
+                        <img [src]="item.product.image" [alt]="item.product.name" class="sr-item-img" (error)="onImgError($event)" />
                         <div class="sr-item-details">
                           <span class="sr-item-brand">{{ item.product.brand || 'SOLE//RAW' }}</span>
                           <h3 class="sr-item-name">{{ item.product.name }}</h3>
@@ -401,5 +401,12 @@ export class OrderDetailsComponent {
       );
     })
   );
+
+  onImgError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = '/asset/products/product1.png';
+    }
+  }
 }
 

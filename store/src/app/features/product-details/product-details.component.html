@@ -1,7 +1,7 @@
 <article class="sr-card">
 
   <div class="sr-card-image-wrap">
-    <img [src]="product.image" [alt]="product.name" class="sr-card-image">
+    <img [src]="product.image || '/asset/products/product1.png'" [alt]="product.name" class="sr-card-image" (error)="onImgError($event)">
     <button
       type="button"
       class="sr-wishlist-button"
@@ -12,11 +12,16 @@
     </button>
   </div>
 
+  <div class="sr-card-meta-row">
+    <span class="sr-card-brand">{{ product.brand }}</span>
+    <span class="sr-card-category">{{ product.category }}</span>
+  </div>
+
   <h3 class="sr-card-name">{{ product.name }}</h3>
 
   <span class="sr-colorway">{{ product.colorway }}</span>
 
-  <span class="sr-price">₹{{ product.price }}</span>
+  <span class="sr-price">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</span>
 
   <button class="sr-quick-add" (click)="addtocart()">QUICK ADD</button>
 

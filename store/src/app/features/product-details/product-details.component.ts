@@ -11,18 +11,19 @@ import { WishlistService } from '../../core/service/wishlist.service';
 import { selectWishlistProducts } from '../../core/store/wishlist.selectors';
 import { NotificationService } from '../../core/service/notification.service';
 
+import { CurrencyPipe } from '@angular/common';
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
-
   @Input() product!: Products;
 
-  wishlistProductIds = new Set<number>();
+  wishlistProductIds = new Set<number | string>();
 
   constructor(
     private readonly cartService: CartService,
@@ -32,12 +33,12 @@ export class ProductDetailsComponent {
     private readonly notificationService: NotificationService
   ) {
     this.store.select(selectWishlistProducts).subscribe((products) => {
-      this.wishlistProductIds = new Set(products.map((product) => product.id));
+      this.wishlistProductIds = new Set(products.map((p) => String(p.id)));
     });
   }
 
-  isWishlisted(productId: number): boolean {
-    return this.wishlistProductIds.has(productId);
+  isWishlisted(productId: number | string): boolean {
+    return this.wishlistProductIds.has(String(productId));
   }
 
   addtocart(): void {
@@ -71,5 +72,12 @@ export class ProductDetailsComponent {
           : `${this.product.name} added to wishlist`
       );
     });
+  }
+
+  onImgError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = '/asset/products/product1.png';
+    }
   }
 }

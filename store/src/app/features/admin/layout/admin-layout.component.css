@@ -1,18 +1,20 @@
 :host {
   display: block;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .sr-admin-shell {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   background-color: #faf7f2;
   color: #111111;
   font-family: Arial, 'Helvetica Neue', sans-serif;
   position: relative;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .sr-sidebar-backdrop {
@@ -23,26 +25,53 @@
   backdrop-filter: blur(2px);
 }
 
+app-admin-sidebar {
+  flex: 0 0 270px;
+  width: 270px;
+  height: 100vh;
+  z-index: 90;
+  display: block;
+}
+
 .sr-admin-main {
   flex: 1;
   min-width: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+app-admin-header {
+  flex: 0 0 64px;
+  height: 64px;
+  width: 100%;
+  z-index: 50;
+  display: block;
 }
 
 .sr-admin-content {
   flex: 1;
-  padding: 32px 32px 64px;
-  max-width: 1600px;
+  min-height: 0;
+  min-width: 0;
   width: 100%;
-  margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px 32px 64px;
   box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 900px) {
+  app-admin-sidebar {
+    flex: 0 0 0px;
+    width: 0;
+    height: 0;
+    overflow: visible;
+  }
+
   .sr-admin-content {
     padding: 24px 16px 48px;
   }
 }
-

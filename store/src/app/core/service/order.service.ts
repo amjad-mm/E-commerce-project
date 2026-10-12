@@ -27,4 +27,16 @@ export class OrderService {
   getAllOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(this.apiUrl);
   }
+
+  updateOrderStatus(id: string, status: Order['status']): Observable<Order> {
+    return this.http.patch<Order>(`${this.apiUrl}/${id}`, { status });
+  }
+
+  updateOrder(id: string, partial: Partial<Order>): Observable<Order> {
+    return this.http.patch<Order>(`${this.apiUrl}/${id}`, partial);
+  }
+
+  deleteOrder(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

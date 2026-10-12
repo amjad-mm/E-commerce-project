@@ -1,0 +1,325 @@
+<div class="sr-products-view">
+  <!-- PAGE HEADER -->
+  <header class="sr-products-header">
+    <div class="sr-header-left">
+      <div class="sr-header-eyebrow">
+        <span class="sr-tag-black">CATALOGUE // MASTER</span>
+        <span>SYS_ARCHIVE_v1.0</span>
+      </div>
+      <h1 class="sr-page-title">PRODUCTS</h1>
+      <p class="sr-page-sub">Manage the SOLE//RAW product catalogue, technical specs, and pricing allotment.</p>
+    </div>
+
+    <div class="sr-header-right">
+      <div class="sr-count-pill">
+        <span class="sr-count-label">MATCHING / TOTAL</span>
+        <span class="sr-count-value">{{ filteredProducts.length }} <small style="font-size: 11px; font-weight: 700; color: #888;">/ {{ products.length }}</small></span>
+      </div>
+
+      <a routerLink="/admin/products/add" class="sr-btn sr-btn--lime">
+        <span class="sr-btn-plus">+</span>
+        <span>ADD PRODUCT</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- SEARCH & FILTERS CONTROLS -->
+  <section class="sr-filter-panel">
+    <div class="sr-filter-header">
+      <span class="sr-filter-tag">// QUERY & TAXONOMY FILTERS</span>
+      <span class="sr-filter-sub">[LIVE FILTER ACTIVE // {{ filteredProducts.length }} OF {{ products.length }} ITEMS MATCH]</span>
+    </div>
+
+    <div class="sr-filter-controls">
+      <!-- Search Bar -->
+      <div class="sr-filter-group sr-filter-group--search">
+        <label for="productSearch" class="sr-filter-label">SEARCH CATALOGUE</label>
+        <div class="sr-search-input-wrap">
+          <span class="sr-search-icon">⌕</span>
+          <input
+            id="productSearch"
+            type="text"
+            class="sr-input sr-input--search"
+            placeholder="Search by name, SKU, or brand..."
+            [(ngModel)]="searchtext"
+          />
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="sr-filter-group">
+        <label for="categoryFilter" class="sr-filter-label">CATEGORY</label>
+        <select id="categoryFilter" class="sr-select" [(ngModel)]="selectedcategory">
+          @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="sr-filter-group">
+        <label for="brandFilter" class="sr-filter-label">BRAND</label>
+        <select id="brandFilter" class="sr-select" [(ngModel)]="selectedbrand">
+          @for (brand of brands; track brand) {
+            <option [value]="brand">{{ brand }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Sort Filter -->
+      <div class="sr-filter-group">
+        <label for="sortFilter" class="sr-filter-label">SORT ORDER</label>
+        <select id="sortFilter" class="sr-select" [(ngModel)]="selectedsort">
+          @for (sort of sortOptions; track sort) {
+            <option [value]="sort">{{ sort }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Clear Button -->
+      <div class="sr-filter-group sr-filter-group--btn">
+        <label class="sr-filter-label sr-filter-label--hidden">RESET</label>
+        <button
+          type="button"
+          class="sr-btn sr-btn--outline"
+          title="Reset all applied filters"
+          (click)="clearFilters()"
+        >
+          <span>CLEAR [✕]</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS DIRECTORY TABLE -->
+  <section class="sr-table-panel">
+    <div class="sr-table-header">
+      <div class="sr-table-title-group">
+        <span class="sr-table-index">// 01</span>
+        <h2 class="sr-table-title">CATALOGUE DIRECTORY</h2>
+      </div>
+      <span class="sr-table-status">SHOWING {{ filteredProducts.length }} OF {{ products.length }} RECORDS</span>
+    </div>
+
+    @if (isLoading) {
+      <div class="sr-table-loading">
+        <div class="sr-loading-spinner"></div>
+        <span>FETCHING SOLE//RAW CATALOGUE DATA...</span>
+      </div>
+    } @else if (products.length === 0) {
+      <!-- Empty State: Zero Products in DB -->
+      <div class="sr-empty-state">
+        <span class="sr-empty-code">ERR_ZERO_PRODUCTS // CATALOGUE EMPTY</span>
+        <p class="sr-empty-desc">No products found in database or catalogue is unpopulated.</p>
+        <a routerLink="/admin/products/add" class="sr-btn sr-btn--lime">
+          <span>ONBOARD FIRST PRODUCT</span>
+        </a>
+      </div>
+    } @else if (filteredProducts.length === 0) {
+      <!-- Empty State: Zero matches for filter query -->
+      <div class="sr-empty-state">
+        <span class="sr-empty-code">ERR_ZERO_MATCHES // 0 RESULTS FOUND</span>
+        <p class="sr-empty-desc">
+          No products match your criteria
+          @if (searchtext) { (query: "{{ searchtext }}") }
+          @if (selectedcategory !== 'ALL CATEGORIES') { [category: {{ selectedcategory }}] }
+          @if (selectedbrand !== 'ALL BRANDS') { [brand: {{ selectedbrand }}] }.
+        </p>
+        <button type="button" class="sr-btn sr-btn--lime" (click)="clearFilters()">
+          <span>RESET ACTIVE FILTERS</span>
+        </button>
+      </div>
+    } @else {
+      <!-- Responsive Table Container -->
+      <div class="sr-table-wrap">
+        <table class="sr-products-table">
+          <thead>
+            <tr>
+              <th class="sr-th-thumb">ITEM</th>
+              <th class="sr-th-main">PRODUCT SPECIFICATION</th>
+              <th class="sr-th-sku">SKU</th>
+              <th class="sr-th-brand">BRAND</th>
+              <th class="sr-th-cat">CATEGORY</th>
+              <th class="sr-th-price">PRICE</th>
+              <th class="sr-th-actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of filteredProducts; track product.id) {
+              <tr class="sr-product-tr">
+                <!-- Thumbnail -->
+                <td class="sr-td-thumb">
+                  <div class="sr-thumb-box">
+                    <img
+                      [src]="product.image"
+                      [alt]="product.name"
+                      (error)="handleImageError($event)"
+                      class="sr-thumb-img"
+                    />
+                  </div>
+                </td>
+
+                <!-- Product Name & Metadata -->
+                <td class="sr-td-main">
+                  <div class="sr-name-box">
+                    <div class="sr-name-row">
+                      <span class="sr-prod-name">{{ product.name }}</span>
+                      @if (product.tag) {
+                        <span class="sr-tag-pill">{{ product.tag }}</span>
+                      }
+                    </div>
+                    <div class="sr-meta-row">
+                      @if (product.colorway) {
+                        <span class="sr-meta-item">{{ product.colorway }}</span>
+                      }
+                      @if (product.spec) {
+                        <span class="sr-meta-divider">//</span>
+                        <span class="sr-meta-item">{{ product.spec }}</span>
+                      }
+                      @if (product.weight) {
+                        <span class="sr-meta-divider">//</span>
+                        <span class="sr-meta-item">{{ product.weight }}</span>
+                      }
+                    </div>
+                  </div>
+                </td>
+
+                <!-- SKU -->
+                <td class="sr-td-sku">
+                  <span class="sr-sku-badge">{{ product.sku }}</span>
+                </td>
+
+                <!-- Brand -->
+                <td class="sr-td-brand">
+                  <span class="sr-brand-text">{{ product.brand }}</span>
+                </td>
+
+                <!-- Category -->
+                <td class="sr-td-cat">
+                  <span class="sr-category-pill">{{ product.category }}</span>
+                </td>
+
+                <!-- Price -->
+                <td class="sr-td-price">
+                  <span class="sr-price-val">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                </td>
+
+                <!-- Actions -->
+                <td class="sr-td-actions">
+                  <div class="sr-action-group">
+                    <!-- View in Storefront -->
+                    <a
+                      [routerLink]="['/product', product.id]"
+                      target="_blank"
+                      class="sr-table-action sr-table-action--view"
+                      title="View on customer storefront"
+                    >
+                      <span>VIEW ↗</span>
+                    </a>
+
+                    <!-- Edit Specification -->
+                    <a
+                      [routerLink]="['/admin/products/edit', product.id]"
+                      class="sr-table-action sr-table-action--edit"
+                      title="Edit product parameters"
+                    >
+                      <span>EDIT ✎</span>
+                    </a>
+
+                    <!-- Delete Product -->
+                    <button
+                      type="button"
+                      class="sr-table-action sr-table-action--delete"
+                      (click)="openDeleteModal(product)"
+                      title="Delete product entry"
+                    >
+                      <span>DELETE ✕</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  @if (isDeleteModalOpen) {
+    <div class="sr-modal-backdrop" (click)="closeDeleteModal()" (keydown.escape)="closeDeleteModal()">
+      <div class="sr-modal-card" (click)="$event.stopPropagation()">
+        <!-- Modal Top Bar -->
+        <div class="sr-modal-header">
+          <div class="sr-modal-eyebrow">
+            <span class="sr-modal-alert-tag">SYS_ALERT // PURGE CONFIRMATION</span>
+          </div>
+          <button
+            type="button"
+            class="sr-modal-close"
+            (click)="closeDeleteModal()"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="sr-modal-body">
+          <h3 class="sr-modal-title">CONFIRM PRODUCT REMOVAL</h3>
+          <p class="sr-modal-warning">
+            Are you sure you want to remove this product from the SOLE//RAW catalogue?
+          </p>
+
+          <!-- Product Item Preview -->
+          @if (productToDelete) {
+            <div class="sr-modal-product-preview">
+              <div class="sr-modal-thumb">
+                <img
+                  [src]="productToDelete.image"
+                  [alt]="productToDelete.name"
+                  (error)="handleImageError($event)"
+                />
+              </div>
+              <div class="sr-modal-info">
+                <span class="sr-modal-pname">{{ productToDelete.name }}</span>
+                <div class="sr-modal-pmeta">
+                  <span>SKU: {{ productToDelete.sku }}</span>
+                  <span>•</span>
+                  <span>CATEGORY: {{ productToDelete.category }}</span>
+                  <span>•</span>
+                  <span class="sr-modal-price">{{ productToDelete.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="sr-modal-dev-note">
+            <span class="sr-note-icon">⚠</span>
+            <span>PERMANENT PURGE: Confirming will permanently remove this sneaker silhouette and SKU allotment from the database.</span>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="sr-modal-footer">
+          <button
+            type="button"
+            class="sr-btn sr-btn--outline"
+            (click)="closeDeleteModal()"
+          >
+            <span>CANCEL / ABORT</span>
+          </button>
+
+          <button
+            type="button"
+            class="sr-btn sr-btn--danger"
+            (click)="confirmDelete()"
+          >
+            <span>CONFIRM DELETE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

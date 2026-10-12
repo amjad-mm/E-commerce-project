@@ -19,6 +19,8 @@ import { Order } from './core/models/order.model';
 import { NotificationComponent } from './shared/notification/notification.component';
 import { CartService } from './core/service/cart.service';
 import { WishlistService } from './core/service/wishlist.service';
+import { AuthService } from './core/service/auth.service';
+import { NotificationService } from './core/service/notification.service';
 import { ProductViewComponent } from './features/product-view/product-view.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrderSuccessComponent } from './features/order-success/order-success.component';
@@ -36,7 +38,9 @@ export class AppComponent {
     private readonly router: Router,
     private readonly store: Store,
     private readonly cartService: CartService,
-    private readonly wishlistService: WishlistService
+    private readonly wishlistService: WishlistService,
+    private readonly authService: AuthService,
+    private readonly notificationService: NotificationService
   ) {
     this.restoreUserSession();
     this.restoreOrders();
@@ -54,9 +58,39 @@ export class AppComponent {
       localStorage.removeItem('currentUser');
     }
 
+    if (currentUser?.isBlocked) {
+      this.terminateBlockedSession(currentUser.email);
+      return;
+    }
+
     this.store.dispatch(hydrateAuth({ user: currentUser }));
     this.cartService.setUser(currentUser ? currentUser.email : null);
     this.wishlistService.setUser(currentUser ? currentUser.email : null);
+
+    // Live verification in background
+    if (currentUser) {
+      this.authService.getUserByEmail(currentUser.email).subscribe({
+        next: (dbUser) => {
+          if (dbUser && dbUser.isBlocked) {
+            this.terminateBlockedSession(dbUser.email);
+          }
+        }
+      });
+    }
+  }
+
+  private terminateBlockedSession(email: string): void {
+    localStorage.removeItem('currentUser');
+    this.store.dispatch(hydrateAuth({ user: null }));
+    this.cartService.setUser(null);
+    this.wishlistService.setUser(null);
+    this.notificationService.show(
+      'Your account has been banned or blocked by administration. Access denied.',
+      'error'
+    );
+    if (!this.isAuthRoute()) {
+      void this.router.navigate(['/login'], { queryParams: { banned: 'true', email } });
+    }
   }
 
   private restoreOrders(): void {
@@ -78,7 +112,8 @@ export class AppComponent {
   }
 
   isHomeRoute(): boolean {
-    return this.router.url === '/' || this.router.url === '';
+    const cleanUrl = this.router.url.split('?')[0].split('#')[0];
+    return cleanUrl === '/' || cleanUrl === '';
   }
 
   isAuthRoute(): boolean {

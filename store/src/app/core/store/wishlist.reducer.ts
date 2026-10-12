@@ -14,12 +14,12 @@ export const wishlistReducer = createReducer(
   initialWishlistState,
   on(WishlistActions.hydrateWishlist, (_state, { products }) => ({ products })),
   on(WishlistActions.toggleWishlist, (state, { product }) => ({
-    products: state.products.some((item) => item.id === product.id)
-      ? state.products.filter((item) => item.id !== product.id)
+    products: state.products.some((item) => String(item.id) === String(product.id))
+      ? state.products.filter((item) => String(item.id) !== String(product.id))
       : [...state.products, product]
   })),
   on(WishlistActions.removeFromWishlist, (state, { productId }) => ({
-    products: state.products.filter((product) => product.id !== productId)
+    products: state.products.filter((product) => String(product.id) !== String(productId))
   })),
   on(WishlistActions.clearWishlist, () => initialWishlistState)
 );

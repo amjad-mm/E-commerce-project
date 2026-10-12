@@ -46,11 +46,11 @@ export class CartService {
     this.store.dispatch(CartActions.addToCart({ product }));
   }
 
-  updateQuantity(productId: number, quantity: number): void {
+  updateQuantity(productId: string | number, quantity: number): void {
     this.store.dispatch(CartActions.updateQuantity({ productId, quantity: Math.floor(quantity) }));
   }
 
-  removeFromCart(productId: number): void {
+  removeFromCart(productId: string | number): void {
     this.store.dispatch(CartActions.removeFromCart({ productId }));
   }
 

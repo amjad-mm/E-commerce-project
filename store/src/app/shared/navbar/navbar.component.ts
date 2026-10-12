@@ -1,6 +1,6 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CartState } from '../../core/store/cart.reducer';
 import { selectCartItemCount } from '../../core/store/cart.selectors';
@@ -11,12 +11,11 @@ import { WishlistState } from '../../core/store/wishlist.reducer';
 import { selectWishlistCount } from '../../core/store/wishlist.selectors';
 import { CartService } from '../../core/service/cart.service';
 import { WishlistService } from '../../core/service/wishlist.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [AsyncPipe, RouterLink, RouterLinkActive],
+  imports: [AsyncPipe, UpperCasePipe, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -30,12 +29,22 @@ export class NavbarComponent {
   readonly currentUser$ = this.store.select(selectCurrentUser);
   readonly wishlistCount$ = this.store.select(selectWishlistCount);
 
+  isMobileMenuOpen = false;
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
   logout(): void {
-    // Clear the session and the logged-in user's private data.
     localStorage.removeItem('currentUser');
     this.cartService.clearCurrentUser();
     this.wishlistService.clearCurrentUser();
     this.store.dispatch(logout());
+    this.closeMobileMenu();
     void this.router.navigate(['/login']);
   }
 }

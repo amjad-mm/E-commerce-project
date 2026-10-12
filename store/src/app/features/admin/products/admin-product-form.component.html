@@ -1,0 +1,543 @@
+<div class="sr-form-view">
+  <!-- BACK NAVIGATION -->
+  <div class="sr-back-nav">
+    <a routerLink="/admin/products" class="sr-back-link">
+      <span>← RETURN TO PRODUCTS</span>
+    </a>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sr-form-header">
+    <div class="sr-header-left">
+      <div class="sr-header-eyebrow">
+        <span class="sr-tag-black">SOLE//RAW</span>
+        <span>CATALOGUE MANAGEMENT</span>
+      </div>
+      <h1 class="sr-page-title">
+        {{ isEditMode ? 'EDIT PRODUCT' : 'ADD NEW PRODUCT' }}
+      </h1>
+      <p class="sr-page-sub">
+        {{ isEditMode 
+            ? 'Update technical specifications, pricing allotment, and photography for item #' + productId 
+            : 'Register a new sneaker model into the store database with verified specifications.' }}
+      </p>
+    </div>
+
+    <div class="sr-header-right">
+      <div class="sr-mode-pill" [class.sr-mode-pill--edit]="isEditMode">
+        <span class="sr-mode-label">STATUS</span>
+        <span class="sr-mode-value">
+          {{ isEditMode ? 'EDITING #' + productId : 'NEW SNEAKER' }}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN FORM -->
+  <form class="sr-form-layout" (ngSubmit)="onSubmit()" novalidate>
+    <!-- LEFT COLUMN: PRIMARY INPUT FIELDS -->
+    <div class="sr-form-col-main">
+
+      <!-- PANEL 1: BASIC INFORMATION -->
+      <section class="sr-panel">
+        <div class="sr-panel-header">
+          <span class="sr-panel-index">// 01</span>
+          <h2 class="sr-panel-title">BASIC INFORMATION</h2>
+        </div>
+
+        <div class="sr-panel-body">
+          <div class="sr-field-grid sr-field-grid--2col">
+            <!-- Product Name -->
+            <div class="sr-field-group sr-field-group--full">
+              <label for="pName" class="sr-field-label">
+                <span>PRODUCT NAME</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="pName"
+                type="text"
+                name="name"
+                class="sr-input"
+                [class.sr-input--invalid]="isFieldInvalid('name')"
+                [(ngModel)]="formData.name"
+                placeholder="e.g. Pegasus Trail 4 GORE-TEX"
+                required
+              />
+              @if (isFieldInvalid('name')) {
+                <span class="sr-field-error">{{ getFieldError('name') }}</span>
+              }
+            </div>
+
+            <!-- SKU -->
+            <div class="sr-field-group">
+              <label for="pSku" class="sr-field-label">
+                <span>SKU IDENTIFIER</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="pSku"
+                type="text"
+                name="sku"
+                class="sr-input sr-input--mono"
+                [class.sr-input--invalid]="isFieldInvalid('sku')"
+                [(ngModel)]="formData.sku"
+                placeholder="e.g. NK-DJ7926-001"
+                required
+              />
+              @if (isFieldInvalid('sku')) {
+                <span class="sr-field-error">{{ getFieldError('sku') }}</span>
+              }
+            </div>
+
+            <!-- Brand -->
+            <div class="sr-field-group">
+              <label for="pBrand" class="sr-field-label">
+                <span>BRAND</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="pBrand"
+                type="text"
+                name="brand"
+                class="sr-input"
+                [class.sr-input--invalid]="isFieldInvalid('brand')"
+                [(ngModel)]="formData.brand"
+                placeholder="e.g. Nike, Adidas, New Balance, ASICS"
+                required
+              />
+              @if (isFieldInvalid('brand')) {
+                <span class="sr-field-error">{{ getFieldError('brand') }}</span>
+              }
+            </div>
+
+            <!-- Category -->
+            <div class="sr-field-group">
+              <label for="pCategory" class="sr-field-label">
+                <span>CATEGORY</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <select
+                id="pCategory"
+                name="category"
+                class="sr-select"
+                [class.sr-select--invalid]="isFieldInvalid('category')"
+                [(ngModel)]="formData.category"
+                required
+              >
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ cat }}</option>
+                }
+              </select>
+              @if (isFieldInvalid('category')) {
+                <span class="sr-field-error">{{ getFieldError('category') }}</span>
+              }
+            </div>
+
+            <!-- Tag / Drop Badge -->
+            <div class="sr-field-group">
+              <label for="pTag" class="sr-field-label">
+                <span>EDITORIAL TAG</span>
+              </label>
+              <input
+                id="pTag"
+                type="text"
+                name="tag"
+                class="sr-input"
+                [(ngModel)]="formData.tag"
+                placeholder="e.g. TRAIL ESSENTIAL, BESTSELLER"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: PRICING & SPECIFICATIONS -->
+      <section class="sr-panel">
+        <div class="sr-panel-header">
+          <span class="sr-panel-index">// 02</span>
+          <h2 class="sr-panel-title">PRICING & SPECIFICATIONS</h2>
+        </div>
+
+        <div class="sr-panel-body">
+          <div class="sr-field-grid sr-field-grid--2col">
+            <!-- Price -->
+            <div class="sr-field-group">
+              <label for="pPrice" class="sr-field-label">
+                <span>RETAIL PRICE (INR ₹)</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <div class="sr-price-input-wrap">
+                <span class="sr-currency-sym">₹</span>
+                <input
+                  id="pPrice"
+                  type="number"
+                  name="price"
+                  class="sr-input sr-input--price"
+                  [class.sr-input--invalid]="isFieldInvalid('price')"
+                  [(ngModel)]="formData.price"
+                  placeholder="e.g. 14495"
+                  min="1"
+                  required
+                />
+              </div>
+              @if (isFieldInvalid('price')) {
+                <span class="sr-field-error">{{ getFieldError('price') }}</span>
+              }
+            </div>
+
+            <!-- Colorway -->
+            <div class="sr-field-group">
+              <label for="pColorway" class="sr-field-label">
+                <span>COLORWAY</span>
+                <span class="sr-field-req">*</span>
+              </label>
+              <input
+                id="pColorway"
+                type="text"
+                name="colorway"
+                class="sr-input"
+                [class.sr-input--invalid]="isFieldInvalid('colorway')"
+                [(ngModel)]="formData.colorway"
+                placeholder="e.g. BLACK / VOLT / REFLECTIVE"
+                required
+              />
+              @if (isFieldInvalid('colorway')) {
+                <span class="sr-field-error">{{ getFieldError('colorway') }}</span>
+              }
+            </div>
+
+            <!-- Weight -->
+            <div class="sr-field-group">
+              <label for="pWeight" class="sr-field-label">
+                <span>SHOE WEIGHT</span>
+              </label>
+              <input
+                id="pWeight"
+                type="text"
+                name="weight"
+                class="sr-input sr-input--mono"
+                [(ngModel)]="formData.weight"
+                placeholder="e.g. 298G"
+              />
+            </div>
+
+            <!-- Color Theme Token -->
+            <div class="sr-field-group">
+              <label for="pTheme" class="sr-field-label">
+                <span>THEME ACCENT</span>
+              </label>
+              <select
+                id="pTheme"
+                name="theme"
+                class="sr-select"
+                [(ngModel)]="formData.theme"
+              >
+                @for (theme of themes; track theme) {
+                  <option [value]="theme">{{ theme | uppercase }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Spec Description -->
+            <div class="sr-field-group sr-field-group--full">
+              <label for="pSpec" class="sr-field-label">
+                <span>KEY SPECIFICATION</span>
+              </label>
+              <input
+                id="pSpec"
+                type="text"
+                name="spec"
+                class="sr-input"
+                [(ngModel)]="formData.spec"
+                placeholder="e.g. REACT FOAM // GORE-TEX MEMBRANE"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: EDITORIAL COPY -->
+      <section class="sr-panel">
+        <div class="sr-panel-header">
+          <span class="sr-panel-index">// 03</span>
+          <h2 class="sr-panel-title">PRODUCT DESCRIPTION</h2>
+        </div>
+
+        <div class="sr-panel-body">
+          <div class="sr-field-group">
+            <label for="pDesc" class="sr-field-label">
+              <span>DESCRIPTION COPY</span>
+              <span class="sr-field-req">*</span>
+            </label>
+            <textarea
+              id="pDesc"
+              name="description"
+              class="sr-textarea"
+              [class.sr-textarea--invalid]="isFieldInvalid('description')"
+              rows="4"
+              [(ngModel)]="formData.description"
+              placeholder="Describe sneaker silhouette, cushioning technology, fit characteristics, and craftsmanship..."
+              required
+            ></textarea>
+            @if (isFieldInvalid('description')) {
+              <span class="sr-field-error">{{ getFieldError('description') }}</span>
+            }
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: MULTI-PHOTO UPLOAD & LIVE PREVIEW -->
+    <div class="sr-form-col-side">
+
+      <!-- IMAGE UPLOAD PANEL -->
+      <section class="sr-panel">
+        <div class="sr-panel-header">
+          <span class="sr-panel-index">// ASSET</span>
+          <h2 class="sr-panel-title">PRODUCT PHOTOGRAPHY</h2>
+          <span class="sr-photo-count">({{ formData.images.length }} PHOTOS)</span>
+        </div>
+
+        <div class="sr-panel-body">
+          <!-- IMAGE INPUT MODE SWITCHER -->
+          <div class="sr-img-tabs">
+            <button
+              type="button"
+              class="sr-img-tab"
+              [class.sr-img-tab--active]="imageInputMode === 'upload'"
+              (click)="switchImageMode('upload')"
+            >
+              UPLOAD FILES
+            </button>
+            <button
+              type="button"
+              class="sr-img-tab"
+              [class.sr-img-tab--active]="imageInputMode === 'url'"
+              (click)="switchImageMode('url')"
+            >
+              ADD VIA URL
+            </button>
+          </div>
+
+          <!-- OPTION 1: DRAG & DROP MULTIPLE FILE UPLOAD -->
+          @if (imageInputMode === 'upload') {
+            <div class="sr-upload-section">
+              <!-- Hidden Native File Input with multiple support -->
+              <input
+                #fileInput
+                type="file"
+                multiple
+                accept="image/png, image/jpeg, image/webp, image/avif"
+                (change)="onFileSelected($event)"
+                class="sr-hidden-file-input"
+              />
+
+              <!-- Drag and Drop Dropzone -->
+              <div
+                class="sr-dropzone"
+                [class.sr-dropzone--dragging]="isDragging"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onFileDrop($event)"
+                (click)="fileInput.click()"
+              >
+                @if (isProcessingImage) {
+                  <div class="sr-dropzone-loading">
+                    <span class="sr-spinner"></span>
+                    <span class="sr-dropzone-text">OPTIMIZING & ATTACHING PHOTOS...</span>
+                  </div>
+                } @else {
+                  <div class="sr-dropzone-prompt">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="sr-dropzone-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="sr-dropzone-title">DRAG & DROP SNEAKER PHOTOS</span>
+                    <span class="sr-dropzone-sub">Drop multiple photos or click to browse files</span>
+                    <span class="sr-dropzone-specs">Supports multiple PNG, JPG, WEBP (Max 5MB each)</span>
+                  </div>
+                }
+              </div>
+
+              @if (isFieldInvalid('image')) {
+                <span class="sr-field-error">{{ getFieldError('image') }}</span>
+              }
+            </div>
+          }
+
+          <!-- OPTION 2: URL / PATH INPUT -->
+          @if (imageInputMode === 'url') {
+            <div class="sr-url-section">
+              <label for="pUrlInput" class="sr-field-label">
+                <span>IMAGE URL OR ASSET PATH</span>
+              </label>
+              <div class="sr-url-input-row">
+                <input
+                  id="pUrlInput"
+                  type="text"
+                  name="urlInput"
+                  class="sr-input sr-input--mono"
+                  [(ngModel)]="urlInput"
+                  placeholder="e.g. /asset/products/product1.png or https://..."
+                  (keydown.enter)="$event.preventDefault(); addUrlImage()"
+                />
+                <button type="button" class="sr-btn sr-btn--lime sr-btn--add-url" (click)="addUrlImage()">
+                  + ADD
+                </button>
+              </div>
+              @if (isFieldInvalid('image')) {
+                <span class="sr-field-error">{{ getFieldError('image') }}</span>
+              }
+            </div>
+          }
+
+          <!-- GALLERY THUMBNAIL MANAGER -->
+          @if (formData.images.length > 0) {
+            <div class="sr-gallery-manager">
+              <div class="sr-gallery-title-row">
+                <span class="sr-gallery-heading">GALLERY ({{ formData.images.length }})</span>
+                <span class="sr-gallery-tip">★ = COVER PHOTO</span>
+              </div>
+
+              <div class="sr-gallery-grid">
+                @for (img of formData.images; track $index) {
+                  <div
+                    class="sr-gallery-item"
+                    [class.sr-gallery-item--cover]="formData.image === img"
+                    [class.sr-gallery-item--selected]="activePreviewImage === img"
+                    (click)="selectPreview(img)"
+                  >
+                    <img [src]="img" alt="Gallery thumbnail" class="sr-gallery-thumb" />
+
+                    @if (formData.image === img) {
+                      <span class="sr-cover-badge">★ COVER</span>
+                    } @else {
+                      <button
+                        type="button"
+                        class="sr-set-cover-btn"
+                        (click)="$event.stopPropagation(); setAsCover(img)"
+                        title="Set as primary cover"
+                      >
+                        SET COVER
+                      </button>
+                    }
+
+                    <button
+                      type="button"
+                      class="sr-remove-thumb-btn"
+                      (click)="$event.stopPropagation(); removeImage($index)"
+                      title="Remove photo"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- LIVE PREVIEW BOX -->
+          <div class="sr-preview-box">
+            <div class="sr-preview-header-row">
+              <span class="sr-preview-badge">LIVE PREVIEW</span>
+              <span class="sr-preview-status">
+                {{ formData.images.length }} PHOTO{{ formData.images.length === 1 ? '' : 'S' }}
+              </span>
+            </div>
+
+            <div class="sr-preview-frame">
+              <img
+                [src]="activePreviewImage"
+                [alt]="formData.name || 'Sneaker preview'"
+                (error)="handleImageError($event)"
+                class="sr-preview-img"
+              />
+            </div>
+
+            <!-- Thumbnail Selector Strip on Live Preview -->
+            @if (formData.images.length > 1) {
+              <div class="sr-preview-thumbnails" aria-label="Preview gallery thumbnails">
+                @for (img of formData.images; track $index) {
+                  <button
+                    type="button"
+                    class="sr-preview-thumb-btn"
+                    [class.sr-preview-thumb-btn--active]="activePreviewImage === img"
+                    (click)="selectPreview(img)"
+                  >
+                    <img [src]="img" alt="Thumb" />
+                  </button>
+                }
+              </div>
+            }
+
+            <div class="sr-preview-meta">
+              <div class="sr-preview-brand">{{ formData.brand || 'BRAND' }}</div>
+              <div class="sr-preview-name">{{ formData.name || 'UNNAMED SNEAKER' }}</div>
+              <div class="sr-preview-sub-row">
+                <span class="sr-preview-sku">{{ formData.sku || 'SKU PENDING' }}</span>
+                <span class="sr-preview-price">
+                  {{ formData.price ? (formData.price | currency:'INR':'symbol':'1.0-0') : '₹ —' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPEC SUMMARY CARD -->
+      <section class="sr-panel sr-summary-panel">
+        <div class="sr-panel-header">
+          <span class="sr-panel-index">// TELEMETRY</span>
+          <h2 class="sr-panel-title">PRODUCT MANIFEST</h2>
+        </div>
+
+        <div class="sr-panel-body sr-summary-body">
+          <div class="sr-summary-row">
+            <span class="sr-sum-label">PRICE:</span>
+            <strong class="sr-sum-val">{{ formData.price ? (formData.price | currency:'INR':'symbol':'1.0-0') : 'NOT SET' }}</strong>
+          </div>
+          <div class="sr-summary-row">
+            <span class="sr-sum-label">CATEGORY:</span>
+            <span class="sr-sum-val">{{ formData.category }}</span>
+          </div>
+          <div class="sr-summary-row">
+            <span class="sr-sum-label">THEME ACCENT:</span>
+            <span class="sr-theme-pill sr-theme-pill--{{ formData.theme }}">{{ formData.theme | uppercase }}</span>
+          </div>
+          <div class="sr-summary-row">
+            <span class="sr-sum-label">EDITORIAL TAG:</span>
+            <span class="sr-sum-val">{{ formData.tag || 'NONE' }}</span>
+          </div>
+          <div class="sr-summary-row">
+            <span class="sr-sum-label">TOTAL PHOTOS:</span>
+            <span class="sr-sum-val">{{ formData.images.length }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORM SUBMISSION CONTROLS -->
+      <div class="sr-form-actions">
+        <button
+          type="button"
+          class="sr-btn sr-btn--outline sr-btn--full"
+          (click)="onCancel()"
+        >
+          <span>CANCEL / DISCARD</span>
+        </button>
+
+        <button
+          type="submit"
+          class="sr-btn sr-btn--lime sr-btn--full"
+          [disabled]="isLoading"
+        >
+          <span>{{
+            isLoading
+              ? 'SAVING SNEAKER...'
+              : isEditMode
+                ? 'UPDATE PRODUCT'
+                : 'SAVE TO CATALOGUE'
+          }}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -48,7 +48,7 @@
       </article>
 
       <!-- KPI 2: Total Orders -->
-      <article class="sr-kpi-card">
+      <a routerLink="/admin/orders" class="sr-kpi-card sr-kpi-card--link" title="Open Orders Directory">
         <div class="sr-kpi-top">
           <span class="sr-kpi-code">[KPI_02]</span>
           <span class="sr-kpi-label">TOTAL DISPATCHES</span>
@@ -56,12 +56,12 @@
         <div class="sr-kpi-number">{{ totalOrders.toString().padStart(2, '0') }}</div>
         <div class="sr-kpi-footer">
           <span class="sr-kpi-meta">RECORDED ORDERS IN DB</span>
-          <span class="sr-kpi-accent">{{ recentOrders.length }} RECENT</span>
+          <span class="sr-kpi-accent">{{ recentOrders.length }} RECENT →</span>
         </div>
-      </article>
+      </a>
 
       <!-- KPI 3: Total Customers -->
-      <article class="sr-kpi-card">
+      <a routerLink="/admin/users" class="sr-kpi-card sr-kpi-card--link" title="Open Users Directory">
         <div class="sr-kpi-top">
           <span class="sr-kpi-code">[KPI_03]</span>
           <span class="sr-kpi-label">VERIFIED CADRE</span>
@@ -69,12 +69,12 @@
         <div class="sr-kpi-number">{{ totalCustomers.toString().padStart(2, '0') }}</div>
         <div class="sr-kpi-footer">
           <span class="sr-kpi-meta">REGISTERED CUSTOMERS</span>
-          <span class="sr-kpi-accent">AUTHENTICATED</span>
+          <span class="sr-kpi-accent">AUTHENTICATED →</span>
         </div>
-      </article>
+      </a>
 
       <!-- KPI 4: Total Products -->
-      <article class="sr-kpi-card">
+      <a routerLink="/admin/products" class="sr-kpi-card sr-kpi-card--link" title="Open Products Catalogue">
         <div class="sr-kpi-top">
           <span class="sr-kpi-code">[KPI_04]</span>
           <span class="sr-kpi-label">ACTIVE SILHOUETTES</span>
@@ -82,9 +82,9 @@
         <div class="sr-kpi-number">{{ totalProducts.toString().padStart(2, '0') }}</div>
         <div class="sr-kpi-footer">
           <span class="sr-kpi-meta">CATALOG DROPS LIVE</span>
-          <span class="sr-kpi-accent">5 ARCHIVES</span>
+          <span class="sr-kpi-accent">{{ totalProducts }} ARCHIVES →</span>
         </div>
-      </article>
+      </a>
 
     </section>
 
@@ -210,7 +210,7 @@
                         </span>
                       </td>
                       <td class="sr-text-right">
-                        <a [routerLink]="['/orders', order.id]" class="sr-table-btn">
+                        <a [routerLink]="['/admin/orders', order.id]" class="sr-table-btn">
                           INSPECT [↗]
                         </a>
                       </td>

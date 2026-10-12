@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, UpperCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
@@ -7,7 +7,7 @@ import { OrderService } from '../../core/service/order.service';
 @Component({
   selector: 'app-order-success',
   standalone: true,
-  imports: [AsyncPipe, CurrencyPipe, RouterLink],
+  imports: [AsyncPipe, CurrencyPipe, DatePipe, UpperCasePipe, RouterLink],
   templateUrl: './order-success.component.html',
   styleUrl: './order-success.component.css'
 })
@@ -22,4 +22,8 @@ export class OrderSuccessComponent {
     }),
     catchError(() => of(null))
   );
+
+  printReceipt(): void {
+    window.print();
+  }
 }

@@ -72,7 +72,7 @@ import { selectOrders } from '../../core/store/order.selectors';
                   <div class="sr-thumbnails-grid">
                     @for (item of order.items; track item.product.id) {
                       <div class="sr-thumb-item">
-                        <img [src]="item.product.image" [alt]="item.product.name" />
+                        <img [src]="item.product.image" [alt]="item.product.name" (error)="onImgError($event)" />
                         <div class="sr-thumb-info">
                           <strong class="sr-thumb-name">{{ item.product.name }}</strong>
                           <span class="sr-thumb-brand">{{ item.product.brand || 'SOLE//RAW' }}</span>
@@ -372,5 +372,12 @@ export class OrdersComponent implements OnInit {
         });
       }
     });
+  }
+
+  onImgError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = '/asset/products/product1.png';
+    }
   }
 }

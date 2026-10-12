@@ -15,17 +15,46 @@ import { adminGuard } from './core/guards/admin.guard';
 
 import { AdminLayoutComponent } from './features/admin/layout/admin-layout.component';
 import { AdminDashboardComponent } from './features/admin/dashboard/admin-dashboard.component';
+import { AdminProductsComponent } from './features/admin/products/admin-products.component';
+import { AdminProductFormComponent } from './features/admin/products/admin-product-form.component';
 
 export const routes: Routes = [
 	{ path: 'cart', component: CartComponent, canActivate: [authGuard] },
 	{ path: 'product/:id', component: ProductViewComponent },
+	{ path: 'products/:id', redirectTo: 'product/:id' },
 	{ path: 'products', redirectTo: '', pathMatch: 'full' },
 	{
 		path: 'admin',
 		component: AdminLayoutComponent,
 		canActivate: [adminGuard],
 		children: [
-			{ path: '', component: AdminDashboardComponent, pathMatch: 'full' }
+			{ path: '', component: AdminDashboardComponent, pathMatch: 'full' },
+			{ path: 'products', component: AdminProductsComponent },
+			{ path: 'products/add', component: AdminProductFormComponent },
+			{ path: 'products/edit/:id', component: AdminProductFormComponent },
+			{
+				path: 'orders',
+				loadComponent: () =>
+					import('./features/admin/orders/admin-orders.component').then(
+						(m) => m.AdminOrdersComponent
+					)
+			},
+			{
+				path: 'orders/:id',
+				loadComponent: () =>
+					import('./features/admin/orders/admin-order-details.component').then(
+						(m) => m.AdminOrderDetailsComponent
+					)
+			},
+			{
+				path: 'users',
+				loadComponent: () =>
+					import('./features/admin/users/admin-users.component').then(
+						(m) => m.AdminUsersComponent
+					)
+			},
+			{ path: 'categories', redirectTo: 'products', pathMatch: 'full' },
+			{ path: 'settings', redirectTo: 'products', pathMatch: 'full' }
 		]
 	},
 	{
